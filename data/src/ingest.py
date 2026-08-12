@@ -1,13 +1,7 @@
-"""[1] 原データの取得 → raw/
+"""原データの取得
 
-datasets.py の定義に従ってダウンロードし、`raw/<データセットID>/` に原形のまま置く。
-取得結果は raw/manifest.json に記録する（いつ・どのURLから・どのハッシュのものを
-取ったかが残らないと、スコアの再現ができないため）。
-
-使い方:
-    uv run python src/ingest.py              # URL確定分をすべて取得
-    uv run python src/ingest.py --only D10 D13
-    uv run python src/ingest.py --list       # 定義と取得状況の一覧
+datasets.py の定義に従ってダウンロード、`raw/<データセットID>/` に配置
+取得結果は raw/manifest.json に記録（いつ・どのURLから・どのハッシュのものを取ったか）
 """
 
 from __future__ import annotations
@@ -50,14 +44,18 @@ def _load_manifest() -> dict:
     return {}
 
 
-def download(ds: Dataset, force: bool = False, extract: bool = True) -> Path | None:
-    """1データセットを取得する。取得済みなら再取得しない（--force で上書き）。"""
+def download(ds: Dataset) -> Path | None:
+    """1データセットを取得する
+    基本的に取得済みなら再取得しない
+    再取得する場合は `raw/<データセットID>/` を消してから実行
+    （全件再取得 `make clean-all`）
+    """
     if not ds.is_resolved:
         logger.warning("[%s] download_url が未確定のためスキップ: %s", ds.id, ds.name)
         return None
 
     dest = target_path(ds)
-    if dest.exists() and not force:
+    if dest.exists():
         logger.info("[%s] 取得済みのためスキップ: %s", ds.id, dest.name)
         return dest
 
@@ -74,7 +72,7 @@ def download(ds: Dataset, force: bool = False, extract: bool = True) -> Path | N
     tmp.replace(dest)
     logger.info("[%s] 取得完了: %s (%.1f KB)", ds.id, dest.name, dest.stat().st_size / 1024)
 
-    if extract and zipfile.is_zipfile(dest):
+    if zipfile.is_zipfile(dest):
         _extract_zip(ds, dest)
 
     _record(ds, dest)
@@ -120,7 +118,7 @@ def print_list() -> None:
     pending = datasets.unresolved()
     if pending:
         print()
-        print(f"URL未確定が {len(pending)} 件あります（仕様書12章のデータ実査で埋める対象）:")
+        print(f"URL未確定が {len(pending)} 件あります（データ実査で埋める対象）:")
         for ds in pending:
             print(f"  - {ds.id} {ds.name} … {ds.catalog_url or 'カタログURLも未確認'}")
 
@@ -128,13 +126,10 @@ def print_list() -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="原データを raw/ に取得する")
     parser.add_argument("--only", nargs="+", metavar="ID", help="対象データセットID（例: D10 D13）")
-    parser.add_argument("--force", action="store_true", help="取得済みでも再取得する")
-    parser.add_argument("--no-extract", action="store_true", help="zip を展開しない")
     parser.add_argument("--list", action="store_true", help="定義と取得状況を一覧表示して終了")
-    parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args(argv)
 
-    setup_logging(args.verbose)
+    setup_logging()
     ensure_dirs()
 
     if args.list:
@@ -148,7 +143,7 @@ def main(argv: list[str] | None = None) -> int:
     ok, skipped, failed = 0, 0, 0
     for ds in targets:
         try:
-            path = download(ds, force=args.force, extract=not args.no_extract)
+            path = download(ds)
         except requests.RequestException as e:
             logger.error("[%s] 取得失敗: %s", ds.id, e)
             failed += 1

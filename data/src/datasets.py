@@ -1,10 +1,4 @@
-"""使用オープンデータ（D1〜D19）の定義。
-
-仕様書 6.1 の一覧に対応する。`download_url` は実ファイルのURLが確定したものだけ
-埋めてあり、未確定のものは None（ingest ではスキップされ、`--list` に未確定と出る）。
-ここに書いた出典情報がそのまま municipalities.json の meta.sources になるため、
-画面から原典を辿れるかどうかはこのファイルの正確さに依存する。
-"""
+"""使用オープンデータ（D1〜D19）の定義。"""
 
 from __future__ import annotations
 
@@ -219,7 +213,7 @@ def resolved() -> list[Dataset]:
 
 
 def unresolved() -> list[Dataset]:
-    """URL未確定のデータセット（仕様書12章のデータ実査で埋める対象）。"""
+    """URL未確定のデータセット（データ実査で埋める対象）。"""
     return [d for d in _DATASETS if not d.is_resolved]
 
 

@@ -1,4 +1,4 @@
-"""6軸と指標の定義（仕様書 4.3 / 4.4 に対応）。
+"""6軸と指標の定義。
 
 スコア算出のルールはすべてこのファイルに集約する。指標を足す・外す・向きを変える
 といった調整は、原則ここの1エントリを直すだけで score.py まで通る。
@@ -263,7 +263,7 @@ def indicators_for_axis(axis_key: str, scored_only: bool = False) -> list[Indica
     ]
 
 
-# 仕様書 4.4 のプリセット。フロントのワンタップ切替に使うため meta に埋め込む。
+# プリセット。フロントのワンタップ切替に使うため meta に埋め込む。
 # 重みの列順は AXES の定義順（しずけさ / いきぬき / しごとば / 出社 / コスト / つながり）。
 _PRESET_TABLE: tuple[tuple, ...] = (
     ("full_remote", "フルリモート集中型", 2.0, 1.5, 1.5, 0.2, 1.0, 0.5),
@@ -277,5 +277,5 @@ PRESETS: tuple[dict, ...] = tuple(
     for key, label, *weights in _PRESET_TABLE
 )
 
-# 重みの初期値は全軸均等（仕様書 4.1）
+# 重みの初期値は全軸均等
 DEFAULT_WEIGHTS: dict[str, float] = {k: 1.0 for k in AXIS_KEYS}
