@@ -303,7 +303,6 @@ def demo_values(seed: int = 20260812) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     # (区部の中心値, 多摩の中心値, ばらつき)
     profile: dict[str, tuple[float, float, float]] = {
-        "road_noise_leq": (68, 58, 4),
         "pm25_annual_avg": (11, 8.5, 1.5),
         "arterial_road_density": (4.5, 1.8, 1.0),
         "traffic_volume": (32_000, 14_000, 6_000),
@@ -332,8 +331,8 @@ def demo_values(seed: int = 20260812) -> tuple[pd.DataFrame, pd.DataFrame]:
         data[key] = values
     frame = pd.DataFrame(data, index=pd.Index(codes, name="code"))
 
-    # 欠損の見え方を確認するための穴。騒音は R1 のとおり全域では揃わない想定。
-    frame.loc[rng.choice(codes, 18, replace=False), "road_noise_leq"] = np.nan
+    # 欠損の見え方を確認するための穴
+    frame.loc[rng.choice(codes, 18, replace=False), "traffic_volume"] = np.nan
     frame.loc[rng.choice(codes, 6, replace=False), "walking_course_count"] = np.nan
     frame.loc[["13307", "13308"], "bicycle_lane_ratio"] = np.nan
     return frame, base

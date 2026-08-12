@@ -1,6 +1,6 @@
 """[3] 空間結合（GeoPandas）: 点/線/面データを自治体ポリゴンに集約する
 
-先に `build_boundaries()` で行政区域ポリゴン（D19）を interim/boundaries.geojson に
+先に `build_boundaries()` で行政区域ポリゴン（D17）を interim/boundaries.geojson に
 整えてから、各データを集約する。長さ・面積は緯度経度のままでは正しく測れないため、
 平面直角座標系 第IX系（EPSG:6677）に変換してから計算する。
 
@@ -58,12 +58,12 @@ def _gpd():
 
 
 def build_boundaries(source: Path | None = None) -> Path:
-    """D19（国土数値情報 N03）から53自治体のポリゴンを作る。
+    """D17（国土数値情報 N03）から53自治体のポリゴンを作る。
 
     同一自治体が複数ポリゴンに分かれている（飛地・埋立地）ため code で dissolve する。
     """
     gpd = _gpd()
-    src = source or find_raw_file("D19", "*.geojson")
+    src = source or find_raw_file("D17", "*.geojson")
     logger.info("行政区域ポリゴンを読み込み: %s", src)
     gdf = gpd.read_file(src)
 
@@ -127,7 +127,7 @@ def count_points(points, boundaries=None) -> pd.DataFrame:
 
 
 def mean_points(points, value_col: str, boundaries=None) -> pd.DataFrame:
-    """点が持つ観測値を自治体ごとに平均する（PM2.5・騒音の測定局など）。"""
+    """点が持つ観測値を自治体ごとに平均する（大気測定局など）。"""
     joined = points_to_code(points, boundaries)
     joined["_v"] = joined[value_col].map(parse_number)
     out = joined.groupby("code")["_v"].mean().rename("value").reset_index().dropna()
@@ -197,28 +197,32 @@ def join_pm25() -> IndicatorFrames:
     return {"pm25_annual_avg": mean_points(stations, value_col)}
 
 
-@spatial_handler("D5")
+@spatial_handler("D4")
 def join_green() -> IndicatorFrames:
     """緑地ポリゴンの面積比から緑被率を出す。"""
     gpd = _gpd()
-    green = gpd.read_file(find_raw_file("D5", "*.geojson"))
+    green = gpd.read_file(find_raw_file("D4", "*.geojson"))
     return {"green_coverage_ratio": area_ratio(green)}
 
 
-@spatial_handler("D19")
+@spatial_handler("D18")
 def join_arterial_roads() -> IndicatorFrames:
-    """都道（線）の総延長を面積で割って幹線道路密度を出す。"""
+    """緊急輸送道路（線）の総延長を面積で割って幹線道路密度を出す。
+
+    都のカタログに都道そのものの線データがないため、国道・都道の主要路線で
+    構成される緊急輸送道路ネットワークを幹線道路の代理として使う。
+    """
     gpd = _gpd()
-    roads = gpd.read_file(find_raw_file("D19", "*road*.geojson"))
+    roads = gpd.read_file(find_raw_file("D18", "*.shp"))
     lengths = line_length_km(roads)
     return {"arterial_road_density": density_by_area(lengths)}
 
 
-@spatial_handler("D12")
+@spatial_handler("D10")
 def join_transit() -> IndicatorFrames:
     """GTFS の stops.txt（駅・バス停）から駅アクセス密度を出す。"""
     gpd = _gpd()
-    stops_txt = find_raw_file("D12", "stops.txt")
+    stops_txt = find_raw_file("D10", "stops.txt")
     stops = pd.read_csv(stops_txt)
     points = gpd.GeoDataFrame(
         stops,

@@ -186,7 +186,7 @@
     "generated_at": "2026-09-01",
     "version": "0.2",
     "sources": [
-      { "id": "D10", "name": "「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ",
+      { "id": "D8", "name": "「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ",
         "org": "東京都産業労働局", "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000012d0000000019",
         "license": "CC BY 4.0（東京都オープンデータ利用規約）", "updated_at": null,
         "notes": "掲載許諾済みの施設のみ収録のため網羅性に限界がある。…" }
@@ -203,9 +203,9 @@
         "commute": 98.1, "cost": 12.5, "community": 76.3
       },
       "indicators": {
-        "satellite_office_count":   { "value": 55,   "per_10k": 1.58, "score": 96.2, "source": "D10" },
+        "satellite_office_count":   { "value": 55,   "per_10k": 1.58, "score": 96.2, "source": "D8" },
         "pm25_annual_avg":          { "value": 9.8,  "unit": "μg/m3", "score": 31.0, "source": "D1"  },
-        "land_price_residential":   { "value": 812000, "unit": "円/m2", "score": 8.4, "source": "D13" },
+        "land_price_residential":   { "value": 812000, "unit": "円/m2", "score": 8.4, "source": "D11" },
         "park_density":             { "value": null, "score": null, "status": "no_data" }
       }
     }
@@ -213,7 +213,7 @@
 }
 ```
 - **欠損は `null` + `status: "no_data"` とし、0で埋めない**。地図上はハッチング（斜線）で「データなし」を明示する。
-- `area_km2` と `population`（全指標の分母）はD18から取る。1ファイルに両方が入っている。
+- `area_km2` と `population`（全指標の分母）はD16から取る。1ファイルに両方が入っている。
 
 ### 6.3 データ加工パイプライン
 1. [原データ (CSV/GIS/API)]

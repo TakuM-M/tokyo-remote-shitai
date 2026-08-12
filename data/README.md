@@ -20,7 +20,7 @@ make score          # ウィンザライズ → min-max → 軸スコア → pro
 make all            # 上を順に実行
 
 make demo           # ダミーデータで processed/municipalities.sample.json を生成
-make datasets       # D1〜D20 の定義と取得状況
+make datasets       # D1〜D18 の定義と取得状況
 make test lint
 ```
 
@@ -30,7 +30,7 @@ make test lint
 各スクリプトは直接叩いてもよい（`--only` などの引数を渡すときはこちら）。
 
 ```bash
-uv run python src/ingest.py --only D10 D13
+uv run python src/ingest.py --only D8 D11
 uv run python src/ingest.py --heavy          # 大容量ファイルもあわせて取得
 uv run python src/normalize.py --status
 uv run python src/spatial_join.py --boundaries
@@ -55,7 +55,7 @@ uv run python src/score.py --demo
 |---|---|
 | `config.py` | パス・座標系・ログ設定 |
 | `municipalities.py` | 53自治体マスタ。表記ゆれ・旧市名・住所文字列からコードを解決 |
-| `datasets.py` | D1〜D20 の出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
+| `datasets.py` | D1〜D18 の出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
 | `indicators.py` | 6軸と指標の定義（向き・分母・単位）、プリセット重み |
 | `io_utils.py` | 文字コード自動判定、数値パース、JSON/CSV入出力 |
 | `ingest.py` | ダウンロードと取得履歴の記録 |
@@ -84,7 +84,7 @@ uv run python src/score.py --demo
         "weights": { "quiet": 2.0, "…": 0.2 } }
     ],
     "sources": [                       // 出典。画面から原典へ辿るためのリンク元
-      { "id": "D10", "name": "…", "org": "…", "url": "https://…",
+      { "id": "D8", "name": "…", "org": "…", "url": "https://…",
         "license": "CC BY 4.0（東京都オープンデータ利用規約）",
         "updated_at": null,              // データ側の年次。「令和8年地価公示」のような和暦表記
         "notes": "…" }
@@ -98,9 +98,9 @@ uv run python src/score.py --demo
                   "commute": 98.1, "cost": 12.5, "community": 76.3 },
       "indicators": {
         "satellite_office_count": { "value": 55, "per_10k": 1.58, "unit": "件",
-                                    "score": 96.2, "source": "D10", "status": "ok" },
+                                    "score": 96.2, "source": "D8", "status": "ok" },
         "park_count":             { "value": null, "score": null,
-                                    "source": "D9", "status": "no_data" }
+                                    "source": "D7", "status": "no_data" }
       }
     }
   ]

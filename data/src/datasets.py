@@ -20,8 +20,7 @@ LICENSE_MLIT = "国土数値情報 利用約款（公共データ利用規約 PD
 
 # ok      … ダウンロードURLが確定していて、そのまま取得できる
 # pending … データ自体は存在するが、利用開始に手続きが要る（ODPTのユーザ登録など）
-# dropped … 実地調査の結果、本プロダクトでは使わないと判断した
-Status = Literal["ok", "pending", "dropped"]
+Status = Literal["ok", "pending"]
 
 
 @dataclass(frozen=True)
@@ -108,19 +107,6 @@ _DATASETS: tuple[Dataset, ...] = (
     ),
     Dataset(
         id="D2",
-        name="自動車騒音の常時監視結果",
-        org="各区市町村",
-        axes=("quiet",),
-        format="CSV",
-        status="dropped",
-        notes=(
-            "カタログ経由で辿れるのは目黒区（BODIK）など個別自治体の公開分のみで、"
-            "53自治体分は揃わない。区市町村データのため利用規約の個別確認も必要になる。"
-            "騒音は D4（交通量）と D20（幹線道路密度）で代理する。"
-        ),
-    ),
-    Dataset(
-        id="D3",
         name="交通量統計表",
         org="警視庁",
         axes=("quiet",),
@@ -152,7 +138,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D4",
+        id="D3",
         name="平成27年度　全国道路交通情報調査道路交通センサス",
         org="東京都建設局",
         axes=("quiet",),
@@ -179,7 +165,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D5",
+        id="D4",
         name="緑のオープンデータ（GISデータ）",
         org="東京都都市整備局",
         axes=("refresh",),
@@ -215,18 +201,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D6",
-        name="エコロジカル・ネットワークマップ",
-        org="東京都環境局",
-        axes=("refresh",),
-        format="PDF",
-        status="dropped",
-        catalog_id="t000009d0000000028",
-        license=LICENSE_CC_BY,
-        notes="配布物が全14件ともPDF地図で、GISデータや数値表がない。指標化できないため使わない。",
-    ),
-    Dataset(
-        id="D7",
+        id="D5",
         name="TOKYO WALKING MAP",
         org="東京都保健医療局",
         axes=("refresh",),
@@ -251,7 +226,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D8",
+        id="D6",
         name="自転車走行空間について",
         org="東京都建設局",
         axes=("refresh",),
@@ -275,7 +250,7 @@ _DATASETS: tuple[Dataset, ...] = (
         notes="都道分のみで区市町村道は含まれない。その旨を画面に明記する。",
     ),
     Dataset(
-        id="D9",
+        id="D7",
         name="公共施設一覧",
         org="東京都デジタルサービス局",
         axes=("refresh", "workspace", "community"),
@@ -292,11 +267,11 @@ _DATASETS: tuple[Dataset, ...] = (
         notes=(
             "収録は都立図書館・都立文化施設・都立公園／庭園のみ。市区町村名列は空で、"
             "コード列にも都のコードしか入らないため、住所または緯度経度から自治体を判定する。"
-            "区市町村立施設は D5（公園）などで補う。文字コードは CP932。"
+            "区市町村立施設は D4（公園）などで補う。文字コードは CP932。"
         ),
     ),
     Dataset(
-        id="D10",
+        id="D8",
         name="「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ",
         org="東京都産業労働局",
         axes=("workspace",),
@@ -316,7 +291,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D11",
+        id="D9",
         name="施設関連情報_生涯学習センター",
         org="東京都教育庁",
         axes=("workspace",),
@@ -337,7 +312,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D12",
+        id="D10",
         name="東京都交通局 都営バス・都営地下鉄オープンデータ",
         org="東京都交通局",
         axes=("commute",),
@@ -346,13 +321,14 @@ _DATASETS: tuple[Dataset, ...] = (
         catalog_id="t000018d0000000052",
         license="公共交通オープンデータセンター 開発者サイトの利用条件",
         notes=(
-            "カタログのリソースはすべて ckan.odpt.org へのリンクで、実データの取得には"
-            "公共交通オープンデータセンター（odpt.org）への無料ユーザ登録とAPIキーが要る。"
+            "カタログのリソースはすべて ckan.odpt.org へのリンク。静的データ自体は"
+            "api-public.odpt.org から認証なしで取得できるが、開発者サイトの利用条件が"
+            "CC BY とは別に定められているため、条件を読むまで取得先を確定させない。"
             "登録して条件を確認するまで取得先を確定できない。都営のみでJR・私鉄は含まれない。"
         ),
     ),
     Dataset(
-        id="D13",
+        id="D11",
         name="地価公示（東京都分）",
         org="東京都財務局",
         axes=("cost",),
@@ -374,7 +350,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D14",
+        id="D12",
         name="東京都基準地価格（地価調査）",
         org="東京都財務局",
         axes=("cost",),
@@ -389,10 +365,10 @@ _DATASETS: tuple[Dataset, ...] = (
                 filename="r7_kijunchi_kakaku.csv",
             ),
         ),
-        notes="D13と同じ構造（表題行＋5桁コード、CP932）。D13で地点が不足する自治体の補完に使う。",
+        notes="D11と同じ構造（表題行＋5桁コード、CP932）。D11で地点が不足する自治体の補完に使う。",
     ),
     Dataset(
-        id="D15",
+        id="D13",
         name="土地利用現況調査GISデータ",
         org="東京都都市整備局",
         axes=("cost",),
@@ -422,7 +398,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D16",
+        id="D14",
         name="特定非営利活動法人（ＮＰＯ法人）情報",
         org="東京都生活文化スポーツ局",
         axes=("community",),
@@ -444,7 +420,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D17",
+        id="D15",
         name="令和２年国勢調査による東京都の昼間人口（従業地・通学地による人口）",
         org="東京都総務局",
         axes=("community",),
@@ -466,7 +442,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D18",
+        id="D16",
         name="東京都の人口（推計）",
         org="東京都総務局",
         axes=("common",),
@@ -490,7 +466,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D19",
+        id="D17",
         name="行政区域データ（国土数値情報 N03）",
         org="国土交通省 国土数値情報ダウンロードサイト",
         axes=("common",),
@@ -511,7 +487,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D20",
+        id="D18",
         name="緊急輸送道路",
         org="東京都建設局",
         axes=("quiet",),
@@ -550,11 +526,6 @@ def resolved() -> list[Dataset]:
 def pending() -> list[Dataset]:
     """利用手続きが済めば使えるデータセット。"""
     return [d for d in _DATASETS if d.status == "pending"]
-
-
-def dropped() -> list[Dataset]:
-    """実地調査の結果、使わないと判断したデータセット。"""
-    return [d for d in _DATASETS if d.status == "dropped"]
 
 
 def sources_for(dataset_ids: set[str] | list[str]) -> list[dict]:

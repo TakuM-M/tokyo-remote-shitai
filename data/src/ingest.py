@@ -120,7 +120,7 @@ def _record(ds: Dataset, res: Resource, path: Path) -> None:
 
 
 def _status_label(ds: Dataset) -> str:
-    return {"ok": "URL未確定", "pending": "利用手続き待ち", "dropped": "不採用"}[ds.status]
+    return {"ok": "URL未確定", "pending": "利用手続き待ち"}[ds.status]
 
 
 def print_list() -> None:
@@ -140,13 +140,12 @@ def print_list() -> None:
             status = "未取得"
         print(f"{ds.id:<5} {status:<14} {','.join(ds.axes):<22} {ds.name}")
 
-    for label, group in (("利用手続き待ち", datasets.pending()), ("不採用", datasets.dropped())):
-        if group:
-            print()
-            print(f"{label}が {len(group)} 件あります:")
-            for ds in group:
-                print(f"  - {ds.id} {ds.name}")
-                print(f"      {ds.notes}")
+    if pending := datasets.pending():
+        print()
+        print(f"利用手続き待ちが {len(pending)} 件あります:")
+        for ds in pending:
+            print(f"  - {ds.id} {ds.name}")
+            print(f"      {ds.notes}")
 
     heavy = [(d, r) for d in datasets.resolved() for r in d.resources if r.heavy]
     if heavy:
@@ -158,7 +157,7 @@ def print_list() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="原データを raw/ に取得する")
-    parser.add_argument("--only", nargs="+", metavar="ID", help="対象データセットID（例: D10 D13）")
+    parser.add_argument("--only", nargs="+", metavar="ID", help="対象データセットID（例: D8 D11）")
     parser.add_argument("--heavy", action="store_true", help="大容量ファイルもあわせて取得する")
     parser.add_argument("--list", action="store_true", help="定義と取得状況を一覧表示して終了")
     args = parser.parse_args(argv)

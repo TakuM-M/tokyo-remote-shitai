@@ -2,7 +2,7 @@
 
 データセットごとの読み方は下部のハンドラに書く。ハンドラは
 `dict[指標キー, DataFrame(code, value)]` を返し、共通処理が
-`interim/indicators/<指標キー>.csv` に書き出す。D18 だけは分母（面積・人口）を
+`interim/indicators/<指標キー>.csv` に書き出す。D16 だけは分母（面積・人口）を
 作るため `interim/municipal_base.csv` を返す。
 
 実ファイルの列名は入手後に確定するため、`pick_column()` で候補名から推測する
@@ -10,7 +10,7 @@
 
 使い方:
     uv run python src/normalize.py            # 実装済みハンドラをすべて実行
-    uv run python src/normalize.py --only D10
+    uv run python src/normalize.py --only D8
     uv run python src/normalize.py --status   # 実装状況の一覧
 """
 
@@ -149,13 +149,13 @@ def find_raw_file(dataset_id: str, pattern: str = "*.csv") -> Path:
 # ---------------------------------------------------------------- ハンドラ
 
 
-@handler("D18")
+@handler("D16")
 def normalize_base() -> IndicatorFrames:
     """統計年鑑から面積・人口（全指標の分母）を作り、municipal_base.csv に書く。
 
     面積は ha 表記のことがあるため km2 に統一する。
     """
-    df = read_csv(find_raw_file("D18"))
+    df = read_csv(find_raw_file("D16"))
     df = resolve_codes(df)
     area_col = pick_column(df, "area")
     pop_col = pick_column(df, "population")
@@ -175,28 +175,28 @@ def normalize_base() -> IndicatorFrames:
     return {}
 
 
-@handler("D10")
+@handler("D8")
 def normalize_satellite_offices() -> IndicatorFrames:
     """TOKYOテレワークアプリ掲載サテライトオフィスを自治体ごとに数える。"""
-    df = read_csv(find_raw_file("D10"))
+    df = read_csv(find_raw_file("D8"))
     return {"satellite_office_count": count_by_municipality(df)}
 
 
-@handler("D11")
+@handler("D9")
 def normalize_culture_facilities() -> IndicatorFrames:
     """生涯学習センター・文化施設の件数。"""
-    df = read_csv(find_raw_file("D11"))
+    df = read_csv(find_raw_file("D9"))
     return {"culture_facility_count": count_by_municipality(df)}
 
 
-@handler("D16")
+@handler("D14")
 def normalize_npo() -> IndicatorFrames:
     """認証NPO法人を主たる事務所の所在地で数える。"""
-    df = read_csv(find_raw_file("D16"))
+    df = read_csv(find_raw_file("D14"))
     return {"npo_count": count_by_municipality(df)}
 
 
-# 公共施設一覧（D9）は1ファイルに複数種別が混在するため、名称のキーワードで分類する
+# 公共施設一覧（D7）は1ファイルに複数種別が混在するため、名称のキーワードで分類する
 FACILITY_KEYWORDS: dict[str, tuple[str, ...]] = {
     "library_count": ("図書館", "図書室"),
     "park_count": ("公園", "緑地", "庭園"),
@@ -211,37 +211,37 @@ FACILITY_KEYWORDS: dict[str, tuple[str, ...]] = {
 }
 
 
-@handler("D9")
+@handler("D7")
 def normalize_public_facilities() -> IndicatorFrames:
     """公共施設一覧を種別ごとに分類して件数化する。"""
-    df = read_csv(find_raw_file("D9"))
+    df = read_csv(find_raw_file("D7"))
     name_col = pick_column(df, "name")
     frames: IndicatorFrames = {}
     for key, keywords in FACILITY_KEYWORDS.items():
         matched = df[df[name_col].astype(str).str.contains("|".join(keywords), na=False)]
-        logger.info("[D9] %s: %d件", key, len(matched))
+        logger.info("[D7] %s: %d件", key, len(matched))
         if len(matched):
             frames[key] = count_by_municipality(matched)
     return frames
 
 
-@handler("D13")
+@handler("D11")
 def normalize_land_price() -> IndicatorFrames:
     """地価公示のうち用途「住宅地」を自治体内で平均する。"""
-    df = read_csv(find_raw_file("D13"))
+    df = read_csv(find_raw_file("D11"))
     usage_col = pick_column(df, "usage", required=False)
     if usage_col:
         before = len(df)
         df = df[df[usage_col].astype(str).str.contains("住宅", na=False)]
-        logger.info("[D13] 用途『住宅地』で絞込み: %d → %d件", before, len(df))
+        logger.info("[D11] 用途『住宅地』で絞込み: %d → %d件", before, len(df))
     price_col = pick_column(df, "price")
     return {"land_price_residential": mean_by_municipality(df, price_col)}
 
 
-@handler("D17")
+@handler("D15")
 def normalize_day_night_ratio() -> IndicatorFrames:
     """昼夜間人口比率（参考指標）。"""
-    df = read_csv(find_raw_file("D17", "*.csv"))
+    df = read_csv(find_raw_file("D15", "*.csv"))
     df = resolve_codes(df)
     ratio_col = pick_column(df, "population")  # 実ファイル確認後に比率列へ差し替える
     return {"day_night_population_ratio": mean_by_municipality(df, ratio_col)}
