@@ -20,14 +20,18 @@ make score          # ウィンザライズ → min-max → 軸スコア → pro
 make all            # 上を順に実行
 
 make demo           # ダミーデータで processed/municipalities.sample.json を生成
-make datasets       # D1〜D19 の定義と取得状況
+make datasets       # D1〜D20 の定義と取得状況
 make test lint
 ```
+
+`make ingest` は 100MB を超えるファイル（土地利用現況調査GIS、緑のオープンデータの樹林地）を既定では取得しない。
+必要になったら `--heavy` を渡すか、`--only` でIDを指定する。
 
 各スクリプトは直接叩いてもよい（`--only` などの引数を渡すときはこちら）。
 
 ```bash
 uv run python src/ingest.py --only D10 D13
+uv run python src/ingest.py --heavy          # 大容量ファイルもあわせて取得
 uv run python src/normalize.py --status
 uv run python src/spatial_join.py --boundaries
 uv run python src/score.py --demo
@@ -38,7 +42,8 @@ uv run python src/score.py --demo
 | パス | 中身 | Git |
 |---|---|---|
 | `src/` | パイプライン本体（`.py` をフラットに配置） | 追跡 |
-| `raw/` | 取得した原データそのまま。`manifest.json` に取得日時とSHA256 | 除外 |
+| `raw/<データセットID>/` | 取得した原データそのまま。zipは同名ディレクトリに展開済み | 除外 |
+| `raw/manifest.json` | ファイルごとの取得元URL・取得日時・SHA256 | 除外 |
 | `interim/` | 正規化済みの中間データ | 除外 |
 | `interim/indicators/<指標キー>.csv` | 指標ごとの `code,value` | 除外 |
 | `interim/municipal_base.csv` | 面積・人口（全指標の分母） | 除外 |
@@ -50,7 +55,7 @@ uv run python src/score.py --demo
 |---|---|
 | `config.py` | パス・座標系・ログ設定 |
 | `municipalities.py` | 53自治体マスタ。表記ゆれ・旧市名・住所文字列からコードを解決 |
-| `datasets.py` | D1〜D19 の出典定義。ここがそのまま JSON の `meta.sources` になる |
+| `datasets.py` | D1〜D20 の出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
 | `indicators.py` | 6軸と指標の定義（向き・分母・単位）、プリセット重み |
 | `io_utils.py` | 文字コード自動判定、数値パース、JSON/CSV入出力 |
 | `ingest.py` | ダウンロードと取得履歴の記録 |
@@ -80,7 +85,9 @@ uv run python src/score.py --demo
     ],
     "sources": [                       // 出典。画面から原典へ辿るためのリンク元
       { "id": "D10", "name": "…", "org": "…", "url": "https://…",
-        "license": "CC BY", "updated_at": "2025-xx-xx", "notes": "…" }
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": null,              // データ側の年次。「令和8年地価公示」のような和暦表記
+        "notes": "…" }
     ]
   },
   "municipalities": [
