@@ -1,7 +1,12 @@
-"""原データの取得
+""" rawデータの取得
 
 datasets.py の定義に従ってダウンロード、`raw/<データセットID>/` に配置
-1データセットが複数ファイルからなることがあるので、Resource 単位で取得する
+
+基本的に取得済みなら再取得しない
+再取得する場合は `raw/<データセットID>/` を消してから実行
+（全件再取得 `make clean-all`）
+--heavy オプションで大容量ファイルも取得する
+    
 取得結果は raw/manifest.json に記録（いつ・どのURLから・どのハッシュのものを取ったか）
 """
 
@@ -63,12 +68,7 @@ def fetch(ds: Dataset, res: Resource) -> Path:
 
 
 def download(ds: Dataset, include_heavy: bool = False) -> tuple[int, int]:
-    """1データセットの全ファイルを取得し、（取得数, スキップ数）を返す。
-
-    基本的に取得済みなら再取得しない
-    再取得する場合は `raw/<データセットID>/` を消してから実行
-    （全件再取得 `make clean-all`）
-    """
+    """1データセットの全ファイルを取得し、（取得数, スキップ数）を返す"""
     if not ds.is_resolved:
         logger.warning("[%s] %s のためスキップ: %s", ds.id, _status_label(ds), ds.name)
         return 0, len(ds.resources)
@@ -120,7 +120,7 @@ def _record(ds: Dataset, res: Resource, path: Path) -> None:
 
 
 def _status_label(ds: Dataset) -> str:
-    return {"ok": "URL未確定", "pending": "利用手続き待ち"}[ds.status]
+    return {"ok": "URL未確定", "pending": "利用条件確認中"}[ds.status]
 
 
 def print_list() -> None:
@@ -142,7 +142,7 @@ def print_list() -> None:
 
     if pending := datasets.pending():
         print()
-        print(f"利用手続き待ちが {len(pending)} 件あります:")
+        print(f"利用条件の確認待ちが {len(pending)} 件あります:")
         for ds in pending:
             print(f"  - {ds.id} {ds.name}")
             print(f"      {ds.notes}")

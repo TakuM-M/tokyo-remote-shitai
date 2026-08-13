@@ -1,12 +1,11 @@
 # 使用データ一覧（D1〜D18）
 
-定義の実体は [`data/src/datasets.py`](../data/src/datasets.py)。取得状況は `make datasets`、取得は `make ingest`。
-ライセンスの考え方とクレジット表記は [data_license_check.md](./data_license_check.md)、採否や差替の経緯は [dev_note.md](./dev_note.md) を参照。
+- 定義の実体 [`data/src/datasets.py`](../data/src/datasets.py)
+- 取得状況は `make datasets`, 取得は `make ingest`。
+- ライセンスの考え方とクレジット表記 [data_license_check.md](./data_license_check.md)
+- 採否や差替の経緯は [dev_note.md](./dev_note.md) 
 
 ## 1. 一覧
-
-状態は datasets.py の `status` に対応する。手続き待ち＝`pending`、それ以外は `ok`。
-「参考」は取得はするが軸スコアには算入しない見込みのもの。検討したが使わないと決めたデータは4節にある。
 
 | # | データセット名称 | 出所 | 用途 | 形式 | 状態 |
 |---|---|---|---|---|---|
@@ -19,7 +18,7 @@
 | D7 | 公共施設一覧 | デジタルサービス局 | いきぬき/しごとば/つながり | CSV | 使用 |
 | D8 | 「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ | 産業労働局 | しごとば | CSV | 使用 |
 | D9 | 施設関連情報_生涯学習センター | 教育庁 | しごとば | CSV | 使用 |
-| D10 | 東京都交通局 都営バス・都営地下鉄オープンデータ | 交通局 | 出社 | GTFS/JSON | 手続き待ち |
+| D10 | 東京都交通局 都営バス・都営地下鉄オープンデータ | 交通局 | 出社 | GTFS/JSON | 使用（都営のみ） |
 | D11 | 地価公示（東京都分） | 財務局 | コスト | CSV | 使用 |
 | D12 | 東京都基準地価格（地価調査） | 財務局 | コスト | CSV | 使用 |
 | D13 | 土地利用現況調査GISデータ | 都市整備局 | コスト | SHP | 使用 |
@@ -45,7 +44,7 @@
 | D7 | facilities | [t000029d0000000030](https://catalog.data.metro.tokyo.lg.jp/dataset/t000029d0000000030) | `.../suisyoudataset/130001_public_facility.csv` |
 | D8 | offices | [t000012d0000000019](https://catalog.data.metro.tokyo.lg.jp/dataset/t000012d0000000019) | `.../sangyouroudou/tokyo-telework2401.csv` |
 | D9 | centers | [t000021d2000000023](https://catalog.data.metro.tokyo.lg.jp/dataset/t000021d2000000023) | `.../kyouiku/R3/skshubetu_8.csv` |
-| D10 | — | [t000018d0000000052](https://catalog.data.metro.tokyo.lg.jp/dataset/t000018d0000000052) | 未確定（`api-public.odpt.org` から取得可能だが利用条件の確認待ち） |
+| D10 | gtfs_bus / stations | [t000018d0000000052](https://catalog.data.metro.tokyo.lg.jp/dataset/t000018d0000000052) | `api-public.odpt.org/api/v4/files/Toei/data/ToeiBus-GTFS.zip`、`api-public.odpt.org/api/v4/odpt:Station?odpt:operator=odpt.Operator:Toei` |
 | D11 | points | [t000004d0000000004](https://catalog.data.metro.tokyo.lg.jp/dataset/t000004d0000000004) | `.../documents/d/zaimu/12_R8kouji_chiten_opendata` |
 | D12 | points | [t000004d0000000001](https://catalog.data.metro.tokyo.lg.jp/dataset/t000004d0000000001) | `.../kijun/R7nen/05-02_r7data_kakaku.csv` |
 | D13 | kubu / tama | [t000008d2000000019](https://catalog.data.metro.tokyo.lg.jp/dataset/t000008d2000000019) | `.../toshiseibi/R03.zip`、`R04.zip` |
@@ -71,6 +70,7 @@
 | D7 | 住所 / 緯度経度 | CP932 | — | 推奨データセット準拠のCSV。コード列は都のコードのみ、市区町村名列は空 |
 | D8 | コード列（区市町村コード） | UTF-8 BOM | — | CSV。5桁コードが入るので空間結合は不要 |
 | D9 | 自治体名 / 緯度経度 | CP932 | — | CSV。区市町村名・施設名・所在地・緯度経度 |
+| D10 | 空間結合 | UTF-8 | GTFS有効期間 2026-08-13〜2029-08-12 | GTFS-JPのZIP（9.1MB、展開後は stop_times.txt だけで95MB）と駅のJSON。stops.txt はポール3,692件と停留所1,674件が混在し、`parent_station` が空の行が停留所そのもの。駅JSONは路線ごとに1レコードで149件・実駅数141 |
 | D11 | コード列（都道府県市区町村コード） | CP932 | 令和8年地価公示 | CSV。1行目が表題でヘッダは2行目。用途は「標準地番号（用途）」で区分し、住宅地は 0 |
 | D12 | コード列（都道府県市区町村コード） | CP932 | 令和7年地価調査 | D11と同構造 |
 | D13 | 空間結合 | — | 区部:令和3年 / 多摩・島しょ:令和4年 | シェープファイル。区部と多摩・島しょで別ファイル・別年次。2ファイル計約670MB |
@@ -80,7 +80,10 @@
 | D17 | 基準ポリゴンそのもの | — | 令和8年1月1日 | シェープファイル＋GeoJSON。ファイル名の `13` が東京都、`20260101` が年次 |
 | D18 | 空間結合 | — | — | シェープファイル。ZIP内の格納名はCP932 |
 
-D10 は取得しないため省略。
+D10 のカバレッジには注意が要る。収録は都営分だけで、JR・私鉄・民間バス・コミュニティバスを含まない。
+実際に自治体へ落とすと **53自治体中27自治体にしか点がなく、目黒区と多摩25市町村は0件**（欠損として扱う）。
+値が出る自治体でも、東急・小田急バスが主体の世田谷区は 0.05件/km²、大田区は 0.29件/km² と実態からかけ離れる。
+`station_density` と `transit_options` を軸スコアに算入するかは要判断（[dev_note.md](./dev_note.md) の積み残し）。
 
 ## 4. 検討したが不採用にしたデータ
 

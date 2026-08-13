@@ -1,9 +1,4 @@
-"""使用オープンデータの定義。
-
-URL は 2026-08-12 に東京都オープンデータカタログ（CKAN API）から取得し、
-実ファイルが返ることを HTTP レスポンスで確認済み。カタログ掲載データは
-東京都オープンデータ利用規約に基づき CC BY 4.0（改変・商用可、クレジット必須）。
-"""
+"""使用オープンデータの定義"""
 
 from __future__ import annotations
 
@@ -17,9 +12,11 @@ LICENSE_CC_BY = "CC BY 4.0（東京都オープンデータ利用規約）"
 # 都カタログには載るがライセンス欄が「その他」で、個別の注意事項PDFが優先されるもの
 LICENSE_TOKYO_OTHER = "東京都オープンデータ利用規約（個別の注意事項あり）"
 LICENSE_MLIT = "国土数値情報 利用約款（公共データ利用規約 PDL1.0）"
+# 都カタログには載るが実体は公共交通オープンデータセンター（odpt.org）にあるもの
+LICENSE_ODPT = "CC BY 4.0（公共交通オープンデータセンター）"
 
 # ok      … ダウンロードURLが確定していて、そのまま取得できる
-# pending … データ自体は存在するが、利用開始に手続きが要る（ODPTのユーザ登録など）
+# pending … データ自体は存在するが、利用条件の確認が済んでおらず取得先を確定させていない
 Status = Literal["ok", "pending"]
 
 
@@ -317,14 +314,28 @@ _DATASETS: tuple[Dataset, ...] = (
         org="東京都交通局",
         axes=("commute",),
         format="GTFS/JSON",
-        status="pending",
         catalog_id="t000018d0000000052",
-        license="公共交通オープンデータセンター 開発者サイトの利用条件",
+        license=LICENSE_ODPT,
+        resources=(
+            Resource(
+                key="gtfs_bus",
+                url="https://api-public.odpt.org/api/v4/files/Toei/data/ToeiBus-GTFS.zip",
+                filename="toei_bus_gtfs.zip",
+                notes="GTFS-JP。stops.txt がバス停、routes.txt が系統。",
+            ),
+            Resource(
+                key="stations",
+                url="https://api-public.odpt.org/api/v4/odpt:Station?odpt:operator=odpt.Operator:Toei",
+                filename="toei_stations.json",
+                notes="都営地下鉄・都電荒川線・日暮里舎人ライナーの駅。URLに拡張子がないため保存名を明示する。",
+            ),
+        ),
         notes=(
-            "カタログのリソースはすべて ckan.odpt.org へのリンク。静的データ自体は"
-            "api-public.odpt.org から認証なしで取得できるが、開発者サイトの利用条件が"
-            "CC BY とは別に定められているため、条件を読むまで取得先を確定させない。"
-            "登録して条件を確認するまで取得先を確定できない。都営のみでJR・私鉄は含まれない。"
+            "カタログのリソースはすべて ckan.odpt.org へのリンク。静的データは"
+            "api-public.odpt.org から認証なしで取得できる。ユーザ登録が要るのは"
+            "トークン付きの api.odpt.org 経路とリアルタイム系（GTFS-RT・ロケーション情報）で、"
+            "今回の指標には要らない。GTFSの stops.txt は都営バスのバス停だけで鉄道駅を"
+            "含まないため、駅は odpt:Station を別に取る。都営のみでJR・私鉄は含まれない。"
         ),
     ),
     Dataset(
@@ -524,7 +535,7 @@ def resolved() -> list[Dataset]:
 
 
 def pending() -> list[Dataset]:
-    """利用手続きが済めば使えるデータセット。"""
+    """利用条件の確認が済めば使えるデータセット。"""
     return [d for d in _DATASETS if d.status == "pending"]
 
 
