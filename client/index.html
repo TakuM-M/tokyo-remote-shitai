@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RemoteLife Tokyo — データ確認デモ</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --panel: #ffffff;
+    --border: #dfe3e8;
+    --text: #1f2328;
+    --muted: #6b7280;
+    --accent: #2c7fb8;
+    --warn: #b45309;
+    --bad: #b91c1c;
+    --ok: #15803d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 15px; margin: 0; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  header .spacer { flex: 1; }
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+  }
+  .badge.demo { background: #fef3c7; border-color: #fcd34d; color: var(--warn); }
+  .badge.real { background: #dcfce7; border-color: #86efac; color: var(--ok); }
+
+  main {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr) 320px;
+    gap: 12px;
+    padding: 12px;
+    align-items: start;
+  }
+  @media (max-width: 1100px) {
+    main { grid-template-columns: 1fr; }
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+  }
+  .panel + .panel { margin-top: 12px; }
+  .panel h2 {
+    font-size: 12px;
+    margin: 0 0 8px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+
+  /* 重みスライダー */
+  .weight-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 4px; }
+  .weight-row .val { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .weight-row input[type=range] { grid-column: 1 / -1; width: 100%; margin: 0 0 6px; }
+  .axis-null { color: var(--bad); font-size: 11px; }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+  button {
+    font: inherit;
+    font-size: 11px;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text);
+  }
+  button:hover { background: #eef2f6; }
+  button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* 地図 */
+  #map-wrap { position: relative; }
+  svg#map { width: 100%; height: auto; display: block; }
+  svg#map path.muni {
+    stroke: #ffffff;
+    stroke-width: .6;
+    cursor: pointer;
+  }
+  svg#map path.muni:hover { stroke: #111; stroke-width: 1.4; }
+  svg#map path.muni.selected { stroke: #111; stroke-width: 1.8; }
+  #tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(17, 19, 22, .92);
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: pre;
+    opacity: 0;
+    transition: opacity .1s;
+  }
+  .legend { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; font-size: 11px; color: var(--muted); }
+  .legend i { width: 26px; height: 12px; display: inline-block; }
+
+  /* ランキング */
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th, td { text-align: left; padding: 3px 4px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 600; font-size: 11px; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.row { cursor: pointer; }
+  tr.row:hover { background: #eef2f6; }
+  tr.row.selected { background: #dbeafe; }
+  /* 算出できた軸が少ない自治体は、順位をそのまま信用できない */
+  tr.row.thin td { color: var(--muted); }
+  tr.row.thin td.used { color: var(--bad); }
+  .scroll { max-height: 420px; overflow-y: auto; }
+
+  /* カバレッジ */
+  .cov-row { display: grid; grid-template-columns: 1fr 44px; gap: 6px; align-items: center; margin-bottom: 2px; }
+  .cov-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+  .cov-bar { height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden; }
+  .cov-bar > span { display: block; height: 100%; background: var(--accent); }
+  .cov-n { font-size: 11px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+  .cov-row.zero .cov-n { color: var(--bad); }
+  .cov-row.zero .cov-label { color: var(--bad); }
+
+  /* 詳細 */
+  .detail-name { font-size: 15px; font-weight: 600; }
+  .detail-sub { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
+  .score-big { font-size: 26px; font-variant-numeric: tabular-nums; }
+  .axis-bar { height: 6px; background: #e5e7eb; border-radius: 3px; overflow: hidden; }
+  .axis-bar > span { display: block; height: 100%; background: var(--accent); }
+  .nodata { color: var(--bad); }
+  details.ind summary { cursor: pointer; font-size: 11px; color: var(--muted); margin-top: 8px; }
+  .status-ok { color: var(--ok); }
+  .status-no_data { color: var(--bad); }
+  a { color: var(--accent); }
+  .note { color: var(--muted); font-size: 11px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>RemoteLife Tokyo</h1>
+  <span class="sub">データ確認用デモ</span>
+  <span id="src-badge" class="badge">読み込み中…</span>
+  <span class="spacer"></span>
+  <span class="sub">データソース:</span>
+  <button id="btn-real" class="active">実データ</button>
+  <button id="btn-sample">ダミー(sample)</button>
+  <span id="meta-info" class="sub"></span>
+</header>
+
+<div id="error" class="panel" style="display:none; margin:12px; color:var(--bad)"></div>
+
+<main id="app" style="display:none">
+  <!-- 左: 重み・塗り分け -->
+  <div>
+    <div class="panel">
+      <h2>重み</h2>
+      <div class="presets" id="presets"></div>
+      <div id="weights"></div>
+      <div class="note">総合 = Σ(軸スコア×重み) / Σ(重み)。欠損軸は分母からも除外する。</div>
+    </div>
+    <div class="panel">
+      <h2>塗り分け</h2>
+      <div class="presets" id="fill-modes"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="panel">
+      <h2>指標カバレッジ</h2>
+      <div id="coverage"></div>
+    </div>
+  </div>
+
+  <!-- 中央: 地図 -->
+  <div>
+    <div class="panel" id="map-wrap">
+      <h2 id="map-title">総合スコア</h2>
+      <svg id="map"></svg>
+      <div id="tooltip"></div>
+    </div>
+    <div class="panel">
+      <h2>軸スコアの算出状況</h2>
+      <div id="axis-status"></div>
+    </div>
+  </div>
+
+  <!-- 右: ランキング・詳細 -->
+  <div>
+    <div class="panel">
+      <h2>ランキング</h2>
+      <div class="note" id="rank-caveat"></div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th class="num">#</th><th>自治体</th><th class="num">総合</th><th class="num">算出軸</th></tr></thead>
+          <tbody id="ranking"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel" id="detail"></div>
+  </div>
+</main>
+
+<script>
+"use strict";
+
+// ---- 設定 ---------------------------------------------------------------
+const PATHS = {
+  real:   "../data/processed/municipalities.json",
+  sample: "../data/processed/municipalities.sample.json",
+  geo:    "../data/interim/boundaries.geojson",
+};
+// 0-20 / 20-40 / 40-60 / 60-80 / 80-100 の5段階
+const RAMP = ["#ffffd9", "#c7e9b4", "#41b6c4", "#2c7fb8", "#253494"];
+const NO_DATA_FILL = "url(#hatch)";
+
+const state = {
+  data: null,      // municipalities.json
+  geo: null,       // boundaries.geojson
+  weights: {},     // 軸キー -> 重み
+  fillMode: "total",   // "total" または 軸キー
+  selected: null,  // 自治体コード
+  source: "real",
+};
+
+// ---- ユーティリティ -----------------------------------------------------
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = (v, d = 1) => (v === null || v === undefined ? "—" : Number(v).toLocaleString("ja-JP", { maximumFractionDigits: d }));
+
+function colorFor(score) {
+  if (score === null || score === undefined) return NO_DATA_FILL;
+  return RAMP[Math.min(4, Math.floor(score / 20))];
+}
+
+/** 総合スコア。欠損軸は重みの分母からも外し、全軸欠損なら null を返す。 */
+function totalScore(muni) {
+  let num = 0, den = 0, used = 0;
+  for (const axis of state.data.meta.axes) {
+    const s = muni.scores[axis.key];
+    const w = state.weights[axis.key];
+    if (s === null || s === undefined || !w) continue;
+    num += s * w;
+    den += w;
+    used += 1;
+  }
+  return { score: den > 0 ? num / den : null, used };
+}
+
+function fillValue(muni) {
+  if (state.fillMode === "total") return totalScore(muni).score;
+  return muni.scores[state.fillMode] ?? null;
+}
+
+// ---- 地図（GeoJSON を素のSVGに投影）------------------------------------
+function buildMap() {
+  const svg = $("map");
+  svg.innerHTML = "";
+  if (!state.geo) {
+    svg.outerHTML = '<div class="note" id="map">boundaries.geojson が無いため地図は表示しない（<code>data/interim/</code> は Git 管理外）。ランキングと詳細のみで確認できる。</div>';
+    return;
+  }
+
+  // 全座標の緯度経度範囲を取る
+  let minLon = 180, maxLon = -180, minLat = 90, maxLat = -90;
+  const eachRing = (geom, fn) => {
+    const polys = geom.type === "Polygon" ? [geom.coordinates] : geom.coordinates;
+    for (const poly of polys) for (const ring of poly) fn(ring);
+  };
+  for (const f of state.geo.features) {
+    eachRing(f.geometry, (ring) => {
+      for (const [lon, lat] of ring) {
+        if (lon < minLon) minLon = lon;
+        if (lon > maxLon) maxLon = lon;
+        if (lat < minLat) minLat = lat;
+        if (lat > maxLat) maxLat = lat;
+      }
+    });
+  }
+  // 正距円筒図法。経度方向を cos(中心緯度) で縮めて形の歪みを抑える
+  const kx = Math.cos(((minLat + maxLat) / 2) * Math.PI / 180);
+  const SCALE = 1000;
+  const px = (lon) => (lon - minLon) * kx * SCALE;
+  const py = (lat) => (maxLat - lat) * SCALE;
+  const W = px(maxLon), H = py(minLat);
+  svg.setAttribute("viewBox", `0 0 ${W.toFixed(1)} ${H.toFixed(1)}`);
+
+  const ringPath = (ring) =>
+    "M" + ring.map(([lon, lat]) => `${px(lon).toFixed(1)},${py(lat).toFixed(1)}`).join("L") + "Z";
+
+  // データなしを示すハッチング
+  let out = `<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="#f3f4f6"/><line x1="0" y1="0" x2="0" y2="6" stroke="#9ca3af" stroke-width="2"/>
+    </pattern></defs>`;
+
+  for (const f of state.geo.features) {
+    const code = f.properties.code;
+    let d = "";
+    eachRing(f.geometry, (ring) => { d += ringPath(ring); });
+    out += `<path class="muni" data-code="${code}" d="${d}" fill="#eee"></path>`;
+  }
+  svg.innerHTML = out;
+
+  const tip = $("tooltip");
+  svg.querySelectorAll("path.muni").forEach((el) => {
+    const code = el.dataset.code;
+    el.addEventListener("mousemove", (e) => {
+      const m = byCode(code);
+      const v = fillValue(m);
+      const label = state.fillMode === "total" ? "総合" : axisLabel(state.fillMode);
+      tip.textContent = `${m.name}\n${label}: ${v === null ? "データなし" : v.toFixed(1)}`;
+      const r = $("map-wrap").getBoundingClientRect();
+      tip.style.left = (e.clientX - r.left + 12) + "px";
+      tip.style.top = (e.clientY - r.top + 12) + "px";
+      tip.style.opacity = 1;
+    });
+    el.addEventListener("mouseleave", () => { tip.style.opacity = 0; });
+    el.addEventListener("click", () => select(code));
+  });
+}
+
+function paintMap() {
+  document.querySelectorAll("svg#map path.muni").forEach((el) => {
+    const m = byCode(el.dataset.code);
+    el.setAttribute("fill", m ? colorFor(fillValue(m)) : NO_DATA_FILL);
+    el.classList.toggle("selected", el.dataset.code === state.selected);
+  });
+}
+
+// ---- 描画 ---------------------------------------------------------------
+const byCode = (code) => state.data.municipalities.find((m) => m.code === code);
+const axisLabel = (key) => state.data.meta.axes.find((a) => a.key === key).label;
+
+function renderWeights() {
+  const axes = state.data.meta.axes;
+  $("presets").innerHTML =
+    `<button data-preset="__default">均等</button>` +
+    state.data.meta.presets.map((p) => `<button data-preset="${p.key}">${esc(p.label)}</button>`).join("");
+  $("presets").querySelectorAll("button").forEach((b) => {
+    b.onclick = () => {
+      const key = b.dataset.preset;
+      const w = key === "__default"
+        ? state.data.meta.default_weights
+        : state.data.meta.presets.find((p) => p.key === key).weights;
+      state.weights = { ...w };
+      renderWeights();
+      renderAll();
+    };
+  });
+
+  $("weights").innerHTML = axes.map((a) => {
+    // その軸のスコアを持つ自治体が1つも無いなら、重みを動かしても結果は変わらない
+    const n = state.data.municipalities.filter((m) => m.scores[a.key] !== null).length;
+    return `<div class="weight-row">
+        <label for="w-${a.key}">${esc(a.label)}${n === 0 ? ' <span class="axis-null">全欠損</span>' : ""}</label>
+        <span class="val" id="wv-${a.key}">${state.weights[a.key].toFixed(1)}</span>
+        <input type="range" id="w-${a.key}" min="0" max="2" step="0.1" value="${state.weights[a.key]}">
+      </div>`;
+  }).join("");
+
+  axes.forEach((a) => {
+    $("w-" + a.key).oninput = (e) => {
+      state.weights[a.key] = Number(e.target.value);
+      $("wv-" + a.key).textContent = state.weights[a.key].toFixed(1);
+      renderAll();
+    };
+  });
+}
+
+function renderFillModes() {
+  const axes = state.data.meta.axes;
+  $("fill-modes").innerHTML =
+    `<button data-mode="total">総合</button>` +
+    axes.map((a) => `<button data-mode="${a.key}">${esc(a.label)}</button>`).join("");
+  $("fill-modes").querySelectorAll("button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.mode === state.fillMode);
+    b.onclick = () => { state.fillMode = b.dataset.mode; renderFillModes(); renderAll(); };
+  });
+  $("map-title").textContent = state.fillMode === "total" ? "総合スコア" : axisLabel(state.fillMode) + " の軸スコア";
+  $("legend").innerHTML =
+    "<span>0</span>" + RAMP.map((c) => `<i style="background:${c}"></i>`).join("") + "<span>100</span>" +
+    `<i style="background:${NO_DATA_FILL}; margin-left:8px"></i><span>データなし</span>`;
+}
+
+function renderRanking() {
+  const rows = state.data.municipalities
+    .map((m) => ({ m, ...totalScore(m) }))
+    .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+  const nAxes = state.data.meta.axes.length;
+  const thin = rows.filter((r) => r.score !== null && r.used < nAxes).length;
+  $("rank-caveat").innerHTML = `全${rows.length}自治体。` + (thin
+    ? `<span class="nodata">うち${thin}件は${nAxes}軸すべては揃っていない</span>（少ない軸の平均なので順位はまだ参考値）。`
+    : "全自治体で全軸が揃っている。");
+
+  $("ranking").innerHTML = rows.map((r, i) => `
+    <tr class="row ${r.m.code === state.selected ? "selected" : ""} ${r.used < nAxes ? "thin" : ""}" data-code="${r.m.code}">
+      <td class="num">${r.score === null ? "—" : i + 1}</td>
+      <td>${esc(r.m.name)}</td>
+      <td class="num">${r.score === null ? '<span class="nodata">データなし</span>' : r.score.toFixed(1)}</td>
+      <td class="num used">${r.used}/${nAxes}</td>
+    </tr>`).join("");
+  $("ranking").querySelectorAll("tr.row").forEach((tr) => {
+    tr.onclick = () => select(tr.dataset.code);
+  });
+}
+
+function renderCoverage() {
+  const N = state.data.municipalities.length;
+  const inds = state.data.meta.axes.flatMap((a) => a.indicators.map((i) => ({ ...i, axis: a.label })));
+  $("coverage").innerHTML = inds.map((ind) => {
+    const n = state.data.municipalities.filter((m) => (m.indicators[ind.key] || {}).status === "ok").length;
+    return `<div class="cov-row ${n === 0 ? "zero" : ""}" title="${esc(ind.axis)} / ${esc(ind.definition || "")}">
+        <div>
+          <div class="cov-label">${esc(ind.label)}${ind.reference_only ? "（参考）" : ""}</div>
+          <div class="cov-bar"><span style="width:${(n / N * 100).toFixed(0)}%"></span></div>
+        </div>
+        <div class="cov-n">${n}/${N}</div>
+      </div>`;
+  }).join("");
+}
+
+function renderAxisStatus() {
+  const N = state.data.municipalities.length;
+  $("axis-status").innerHTML = state.data.meta.axes.map((a) => {
+    const n = state.data.municipalities.filter((m) => m.scores[a.key] !== null).length;
+    const nInd = a.indicators.filter((i) => !i.reference_only).length;
+    const nIndOk = a.indicators.filter((i) =>
+      !i.reference_only && state.data.municipalities.some((m) => (m.indicators[i.key] || {}).status === "ok")
+    ).length;
+    return `<div class="cov-row ${n === 0 ? "zero" : ""}">
+        <div>
+          <div class="cov-label">${esc(a.label)} <span class="note">指標 ${nIndOk}/${nInd} 本が取得済み</span></div>
+          <div class="cov-bar"><span style="width:${(n / N * 100).toFixed(0)}%"></span></div>
+        </div>
+        <div class="cov-n">${n}/${N}</div>
+      </div>`;
+  }).join("");
+}
+
+function renderDetail() {
+  const el = $("detail");
+  if (!state.selected) {
+    el.innerHTML = '<h2>詳細</h2><div class="note">地図かランキングから自治体を選ぶ。</div>';
+    return;
+  }
+  const m = byCode(state.selected);
+  const t = totalScore(m);
+  const sources = Object.fromEntries(state.data.meta.sources.map((s) => [s.id, s]));
+
+  const axesHtml = state.data.meta.axes.map((a) => {
+    const s = m.scores[a.key];
+    const indsHtml = a.indicators.map((ind) => {
+      const v = m.indicators[ind.key] || { status: "no_data" };
+      const src = sources[ind.source];
+      const per = v.per_10k !== undefined ? `（${fmt(v.per_10k, 2)} /万人）`
+                : v.per_km2 !== undefined ? `（${fmt(v.per_km2, 2)} /km²）` : "";
+      return `<tr>
+          <td>${esc(ind.label)}${ind.reference_only ? "<span class='note'>※参考</span>" : ""}</td>
+          <td class="num">${v.status === "ok" ? fmt(v.value, 2) + " " + esc(ind.unit || "") + per : '<span class="status-no_data">なし</span>'}</td>
+          <td class="num">${v.score === null || v.score === undefined ? "—" : v.score.toFixed(1)}</td>
+          <td>${src ? `<a href="${esc(src.url)}" target="_blank" rel="noopener" title="${esc(src.name)}">${esc(ind.source)}</a>` : esc(ind.source || "")}</td>
+        </tr>`;
+    }).join("");
+    return `<div style="margin-top:8px">
+        <div class="weight-row">
+          <span>${esc(a.label)} <span class="note">×${state.weights[a.key].toFixed(1)}</span></span>
+          <span class="val">${s === null ? '<span class="nodata">データなし</span>' : s.toFixed(1)}</span>
+        </div>
+        <div class="axis-bar"><span style="width:${s === null ? 0 : s}%; background:${s === null ? "#e5e7eb" : colorFor(s)}"></span></div>
+        <details class="ind"><summary>指標の内訳（${a.indicators.length}本）</summary>
+          <table><thead><tr><th>指標</th><th class="num">実測値</th><th class="num">score</th><th>出典</th></tr></thead>
+          <tbody>${indsHtml}</tbody></table>
+        </details>
+      </div>`;
+  }).join("");
+
+  el.innerHTML = `
+    <h2>詳細</h2>
+    <div class="detail-name">${esc(m.name)} <span class="note">${esc(m.code)}</span></div>
+    <div class="detail-sub">${esc(m.region)} / ${esc(m.kind)} ・ ${fmt(m.area_km2, 2)} km² ・ 人口 ${fmt(m.population, 0)}</div>
+    <div class="score-big">${t.score === null ? '<span class="nodata">データなし</span>' : t.score.toFixed(1)}</div>
+    <div class="note">総合スコア（6軸中 ${t.used} 軸で算出）</div>
+    ${axesHtml}`;
+}
+
+function select(code) {
+  state.selected = state.selected === code ? null : code;
+  paintMap();
+  renderRanking();
+  renderDetail();
+}
+
+function renderAll() {
+  paintMap();
+  renderRanking();
+  renderDetail();
+}
+
+// ---- 読み込み -----------------------------------------------------------
+async function loadJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`${url} : ${res.status} ${res.statusText}`);
+  return res.json();
+}
+
+async function load(source) {
+  state.source = source;
+  $("btn-real").classList.toggle("active", source === "real");
+  $("btn-sample").classList.toggle("active", source === "sample");
+  try {
+    state.data = await loadJson(PATHS[source]);
+  } catch (e) {
+    $("app").style.display = "none";
+    $("error").style.display = "";
+    $("error").innerHTML = `<b>データを読めなかった:</b> ${esc(e.message)}<br>
+      リポジトリのルートで <code>python3 -m http.server 8000</code> を実行し、
+      <code>http://localhost:8000/client/</code> を開く。<br>
+      実データが未生成なら <code>cd data &amp;&amp; make score</code>（ダミーなら <code>make demo</code>）。`;
+    return;
+  }
+  if (state.geo === null) {
+    // 境界データは Git 管理外なので、無くても動くようにする
+    state.geo = await loadJson(PATHS.geo).catch(() => false);
+  }
+
+  const meta = state.data.meta;
+  state.weights = { ...meta.default_weights };
+  state.selected = null;
+  $("src-badge").textContent = meta.demo ? "ダミーデータ" : "実データ";
+  $("src-badge").className = "badge " + (meta.demo ? "demo" : "real");
+  $("meta-info").textContent = `生成 ${meta.generated_at} / v${meta.version} / 出典 ${meta.sources.length}件`;
+
+  $("error").style.display = "none";
+  $("app").style.display = "";
+  renderWeights();
+  renderFillModes();
+  renderCoverage();
+  renderAxisStatus();
+  buildMap();
+  renderAll();
+}
+
+$("btn-real").onclick = () => load("real");
+$("btn-sample").onclick = () => load("sample");
+load("real");
+</script>
+</body>
+</html>
