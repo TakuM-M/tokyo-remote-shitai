@@ -182,7 +182,7 @@ INDICATORS: tuple[Indicator, ...] = (
         dataset_id="D10",
         unit="件",
         denominator="area_km2",
-        definition="鉄道駅数とバス停数の合計 ÷ 面積。",
+        definition="都営の鉄道駅数とバス停数の合計 ÷ 面積。JR・私鉄・民間バスは含まない。",
     ),
     Indicator(
         key="transit_options",
@@ -191,7 +191,7 @@ INDICATORS: tuple[Indicator, ...] = (
         direction="higher_is_better",
         dataset_id="D10",
         unit="系統",
-        definition="都営バス系統数（コミュニティバスの有無を加点）。",
+        definition="自治体内に停留所がある都営バスの系統数。コミュニティバスは含まない。",
     ),
     # 軸5: くらしのコスト
     Indicator(

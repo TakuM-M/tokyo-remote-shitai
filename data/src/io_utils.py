@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import codecs
 import hashlib
 import json
 import logging
@@ -22,16 +23,25 @@ logger = logging.getLogger(__name__)
 # 試す順序。cp932 を utf-8 より先に置くと UTF-8 が化けるため、この順を守る。
 ENCODINGS = ("utf-8-sig", "utf-8", "cp932", "euc_jp")
 
+# 判定に使う先頭バイト数。全部読むと数百MBのファイルで無駄が大きい。
+SNIFF_BYTES = 1 << 20
+
 # 欠損を表す記号。0 と区別する（0で埋めない方針）。
 NA_TOKENS = {"", "-", "‐", "—", "–", "…", "・・・", "n.a.", "N.A.", "NA", "不明", "非該当", "×"}
 
 
 def detect_encoding(path: Path) -> str:
-    """先頭数KBを試し読みして文字コードを判定する。"""
-    head = path.read_bytes()[:65536]
+    """先頭を試し読みして文字コードを判定する。
+
+    切り出した末尾がマルチバイト文字の途中に当たると、素の `bytes.decode()` では
+    正しい文字コードでも失敗する。持ち越し可能なインクリメンタルデコーダで判定し、
+    末尾の欠けは無視する（`final=False`）。
+    """
+    with path.open("rb") as f:
+        head = f.read(SNIFF_BYTES)
     for enc in ENCODINGS:
         try:
-            head.decode(enc)
+            codecs.getincrementaldecoder(enc)().decode(head)
         except UnicodeDecodeError:
             continue
         return enc
