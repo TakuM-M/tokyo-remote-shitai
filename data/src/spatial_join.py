@@ -1,12 +1,6 @@
-"""[3] 空間結合（GeoPandas）: 点/線/面データを自治体ポリゴンに集約する
+""" 空間結合（GeoPandas）: 点/線/面データを自治体ポリゴンに集約する
 
-先に `build_boundaries()` で行政区域ポリゴン（D17）を interim/boundaries.geojson に
-整えてから、各データを集約する。長さ・面積は緯度経度のままでは正しく測れないため、
-平面直角座標系 第IX系（EPSG:6677）に変換してから計算する。
-
-使い方:
-    uv run python src/spatial_join.py --boundaries   # ポリゴンの整備のみ
-    uv run python src/spatial_join.py                # 実装済みハンドラを実行
+データによっては緯度経度しかない。幾何学的な点/線/面データを自治体ポリゴンに落とすことで、自治体ごとの集計値を得る。
 """
 
 from __future__ import annotations
@@ -26,8 +20,8 @@ from config import (
     ensure_dirs,
     setup_logging,
 )
-from io_utils import parse_number
-from normalize import IndicatorFrames, find_raw_file, write_indicators
+from io_utils import parse_number, read_json
+from normalize import IndicatorFrames, find_raw_file, find_raw_files, write_indicators
 
 logger = logging.getLogger(__name__)
 
@@ -106,6 +100,12 @@ def load_boundaries(planar: bool = False):
 # ---------------------------------------------------------------- 集約の基本操作
 
 
+def _to_points(df: pd.DataFrame):
+    """lat / lon 列を持つ表を点データにする。"""
+    gpd = _gpd()
+    return gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df["lon"], df["lat"]), crs=CRS_WGS84)
+
+
 def points_to_code(points, boundaries=None):
     """点データに自治体コードを付ける（境界外の点は落とす）。"""
     gpd = _gpd()
@@ -181,27 +181,36 @@ def density_by_area(counts: pd.DataFrame, boundaries=None) -> pd.DataFrame:
 # ---------------------------------------------------------------- ハンドラ
 
 
-@spatial_handler("D1")
-def join_pm25() -> IndicatorFrames:
-    """大気測定局（点）の年間平均値を自治体に落とす。
-
-    局のない自治体は欠損のままにする（近傍局での補完を入れる場合は、
-    補完した旨を指標側の status に残せるようにしてから行う）。
-    """
-    gpd = _gpd()
-    src = find_raw_file("D1", "*.geojson")
-    stations = gpd.read_file(src)
-    value_col = next((c for c in stations.columns if "PM2" in str(c).upper()), None)
-    if value_col is None:
-        raise KeyError(f"PM2.5 の値列が見つかりません: {list(stations.columns)}")
-    return {"pm25_annual_avg": mean_points(stations, value_col)}
+# 緑のオープンデータ（D4）から緑被率に使わないレイヤ。ファイル名に含まれる語で外す。
+GREEN_EXCLUDED = (
+    "_pt",  # 庭園_pt は点データで面積を持たない（同名のポリゴンが別にある）
+    "計画決定",  # 海上公園(計画決定区域) は未整備の計画区域
+    "予定",  # 海上公園予定地
+)
 
 
 @spatial_handler("D4")
 def join_green() -> IndicatorFrames:
-    """緑地ポリゴンの面積比から緑被率を出す。"""
+    """公園・緑地と樹林地のポリゴンから緑被率（自治体面積に占める割合）を出す。
+
+    レイヤが用途別に多数のSHPに分かれており、公園と樹林地は重なることがある。
+    `area_ratio` 側で先に全ポリゴンを溶かしてから面積を測るので二重計上にはならない。
+    未整備の計画区域と点データのレイヤは対象から外す。
+    """
     gpd = _gpd()
-    green = gpd.read_file(find_raw_file("D4", "*.geojson"))
+    layers = [
+        p for p in find_raw_files("D4", "*.shp") if not any(x in p.stem for x in GREEN_EXCLUDED)
+    ]
+    frames = []
+    for path in layers:
+        gdf = gpd.read_file(path).to_crs(CRS_PLANE)
+        # 面を持たないレイヤが混ざっても落ちないようにポリゴンだけ残す
+        gdf = gdf[gdf.geom_type.isin(("Polygon", "MultiPolygon"))]
+        logger.info("[D4] %s: %dポリゴン", path.stem, len(gdf))
+        frames.append(gdf.loc[:, ["geometry"]])
+    green = gpd.GeoDataFrame(pd.concat(frames, ignore_index=True), crs=CRS_PLANE)
+    # 自己交差を含むポリゴンがあると union に失敗するため先に直す
+    green["geometry"] = green.geometry.make_valid()
     return {"green_coverage_ratio": area_ratio(green)}
 
 
@@ -218,18 +227,78 @@ def join_arterial_roads() -> IndicatorFrames:
     return {"arterial_road_density": density_by_area(lengths)}
 
 
+def _rail_stations() -> pd.DataFrame:
+    """都営地下鉄・都電荒川線・日暮里舎人ライナーの駅。
+
+    odpt:Station は路線ごとに1レコードなので、新宿・三田などの乗換駅が
+    路線の数だけ重複する。駅名でまとめて1件に落とす。
+    """
+    records = read_json(find_raw_file("D10", "toei_stations.json"))
+    df = pd.DataFrame(records).drop_duplicates(subset=["dc:title"])
+    return pd.DataFrame(
+        {
+            "id": df["owl:sameAs"],
+            "lat": df["geo:lat"].astype(float),
+            "lon": df["geo:long"].astype(float),
+        }
+    )
+
+
+def _bus_route_counts(gtfs_dir: Path, stops: pd.DataFrame, code_by_stop: pd.Series) -> pd.DataFrame:
+    """自治体ごとの都営バス系統数。
+
+    stop_times.txt が参照するのはポールの stop_id なので、
+    ポール → 親停留所 → 自治体 とたどってから系統をユニークに数える。
+    """
+    trips = pd.read_csv(gtfs_dir / "trips.txt", usecols=["trip_id", "route_id"], dtype=str)
+    times = pd.read_csv(gtfs_dir / "stop_times.txt", usecols=["trip_id", "stop_id"], dtype=str)
+    served = times.merge(trips, on="trip_id").drop_duplicates(subset=["stop_id", "route_id"])
+    served["code"] = (
+        served["stop_id"].map(stops.set_index("stop_id")["parent_station"]).map(code_by_stop)
+    )
+    out = (
+        served.dropna(subset=["code"])
+        .groupby("code")["route_id"]
+        .nunique()
+        .rename("value")
+        .reset_index()
+    )
+    muni.check_coverage(out["code"], "都営バス系統数")
+    return out
+
+
 @spatial_handler("D10")
 def join_transit() -> IndicatorFrames:
-    """GTFS の stops.txt（駅・バス停）から駅アクセス密度を出す。"""
-    gpd = _gpd()
-    stops_txt = find_raw_file("D10", "stops.txt")
-    stops = pd.read_csv(stops_txt)
-    points = gpd.GeoDataFrame(
-        stops,
-        geometry=gpd.points_from_xy(stops["stop_lon"], stops["stop_lat"]),
-        crs=CRS_WGS84,
+    """都営バスの停留所と都営鉄道の駅から、駅アクセス密度と系統数を出す。
+
+    収録されるのは都営分だけで、JR・私鉄・民間バス・コミュニティバスを含まない。
+    都営バスが走らない多摩地域の大半は点が1件も落ちないが、0では埋めずに
+    欠損のままにする（地図上は「データなし」として扱う）。
+    """
+    gtfs_dir = find_raw_file("D10", "stops.txt").parent
+    stops = pd.read_csv(gtfs_dir / "stops.txt", dtype=str)
+    # 親を持たない行が停留所そのもの。ポール（location_type=0）は同じ停留所に
+    # 上下線ぶんぶら下がるため、そのまま数えると二重計上になる
+    bus = stops[stops["parent_station"].isna()]
+    bus_points = _to_points(
+        pd.DataFrame(
+            {
+                "id": bus["stop_id"],
+                "lat": bus["stop_lat"].astype(float),
+                "lon": bus["stop_lon"].astype(float),
+            }
+        )
     )
-    return {"station_density": density_by_area(count_points(points))}
+    rail_points = _to_points(_rail_stations())
+
+    boundaries = load_boundaries()
+    bus_joined = points_to_code(bus_points, boundaries)
+    counts = count_points(pd.concat([bus_points, rail_points], ignore_index=True), boundaries)
+    code_by_stop = bus_joined.set_index("id")["code"]
+    return {
+        "station_density": density_by_area(counts, boundaries),
+        "transit_options": _bus_route_counts(gtfs_dir, stops, code_by_stop),
+    }
 
 
 # ---------------------------------------------------------------- エントリポイント

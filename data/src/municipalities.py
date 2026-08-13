@@ -1,11 +1,9 @@
-"""対象自治体（東京都 23区 + 多摩26市3町1村 = 53自治体）のマスタ。
+"""対象自治体（東京都 23区 + 多摩26市3町1村 = 53自治体）のマスタ
 
-識別子は5桁の全国地方公共団体コード（例: 新宿区 = 13104）。
-オープンデータ側の表記ゆれ（「東京都新宿区」「新宿 区」など）を吸収して
-コードに解決するのがこのモジュールの役割。
+識別子は5桁の全国地方公共団体コード（例: 新宿区 = 13104）
 
-島しょ部（大島町ほか9町村）は仕様上の対象外。ただしデータ側には含まれるため、
-`is_target()` で明示的に判定してから除外する。
+島しょ部（大島町ほか9町村）は仕様上の対象外。
+ただしデータ側には含まれるため、`is_target()` で明示的に判定してから除外する。
 """
 
 from __future__ import annotations
@@ -13,6 +11,7 @@ from __future__ import annotations
 import logging
 import re
 import unicodedata
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 import pandas as pd
@@ -131,7 +130,7 @@ def normalize_name(raw: object) -> str:
 
 
 def code_from_name(raw: object) -> str | None:
-    """自治体名からコードを引く。解決できなければ None。"""
+    """自治体名・住所からコードを引く。解決できなければ None。"""
     name = normalize_name(raw)
     if not name:
         return None
@@ -140,7 +139,11 @@ def code_from_name(raw: object) -> str | None:
             return m.code
     if name in ALIASES:
         return ALIASES[name]
-    # 「新宿区役所」「府中市立◯◯」のように接尾辞が付いているケース
+    # 「新宿区役所」「東京都西多摩郡瑞穂町箱根ケ崎25番地」のように後ろに続きがあるケース。
+    # 郡名つきの別名を先に見る（「西多摩郡瑞穂町…」は自治体名の前方一致では拾えない）。
+    for alias, code in ALIASES.items():
+        if name.startswith(alias):
+            return code
     for m in MUNICIPALITIES:
         if name.startswith(m.name):
             return m.code
@@ -168,31 +171,38 @@ def is_target(code: object) -> bool:
 
 def attach_code(
     df: pd.DataFrame,
-    name_col: str | None = None,
+    name_col: str | Sequence[str] | None = None,
     code_col: str | None = None,
     out_col: str = "code",
     drop_unmatched: bool = True,
 ) -> pd.DataFrame:
     """自治体コード列を付与する。
 
-    `code_col` があればそれを優先し、無ければ `name_col` から名前解決する。
+    `code_col` を最優先し、埋まらなかった行だけ `name_col` で名前解決する。
+    `name_col` に複数の列を渡すと、前から順に「まだ解決できていない行」だけを埋める。
+    自治体名列が空で住所にしか手がかりがないデータ（D7）向けの動作。
     対象外・解決不能な行は既定で落とし、件数を警告ログに出す（黙って消さない）。
     """
     out = df.copy()
-    if code_col is not None and code_col in out.columns:
-        out[out_col] = out[code_col].map(normalize_code)
-        # コードが対象外でも名前で拾える場合があるので補完する
-        if name_col is not None and name_col in out.columns:
-            missing = out[out_col].isna()
-            out.loc[missing, out_col] = out.loc[missing, name_col].map(code_from_name)
-    elif name_col is not None and name_col in out.columns:
-        out[out_col] = out[name_col].map(code_from_name)
-    else:
+    name_cols = [name_col] if isinstance(name_col, str) else list(name_col or [])
+    name_cols = [c for c in name_cols if c in out.columns]
+    use_code = code_col is not None and code_col in out.columns
+    if not use_code and not name_cols:
         raise ValueError("name_col か code_col のいずれかは実在する列名である必要があります")
+
+    if use_code:
+        out[out_col] = out[code_col].map(normalize_code)
+    else:
+        out[out_col] = None
+    for col in name_cols:
+        missing = out[out_col].isna()
+        if not missing.any():
+            break
+        out.loc[missing, out_col] = out.loc[missing, col].map(code_from_name)
 
     unmatched = out[out_col].isna()
     if unmatched.any():
-        label_col = name_col or code_col
+        label_col = name_cols[0] if name_cols else code_col
         samples = out.loc[unmatched, label_col].astype(str).unique()[:5] if label_col else []
         logger.warning(
             "自治体コードに解決できない行が %d 件（対象外の島しょ部・都外を含む）: %s",

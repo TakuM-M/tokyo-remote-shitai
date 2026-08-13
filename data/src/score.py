@@ -1,4 +1,4 @@
-"""[4] interim/ → processed/municipalities.json（スコア算出）
+""" interim/ → processed/municipalities.json（スコア算出）
 
 以下の手順を実装する:
     1. 面積あたり / 人口1万人あたりに換算して規模の差を除く
@@ -7,15 +7,12 @@
     4. 「低いほど良い」指標は 100 - score で反転
     5. 軸スコア = 軸内の指標スコアの単純平均
 
-総合スコアはここでは出さない。重みはユーザーが動かすものなので、
-Σ(軸スコア × 重み) / Σ(重み) はフロント側で計算する。
+総合スコア:
+- 重みはユーザーが動かすため、ここでは計算しない。
+- Σ(軸スコア × 重み) / Σ(重み) はフロント側で計算する。
 
 欠損は0で埋めず `value: null` + `status: "no_data"` として残す。
 埋めてしまうと「データが無い自治体」が「悪い自治体」に化けるため。
-
-使い方:
-    uv run python src/score.py
-    uv run python src/score.py --demo   # スキーマ確認用のダミーデータ
 """
 
 from __future__ import annotations

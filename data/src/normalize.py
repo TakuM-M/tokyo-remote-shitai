@@ -1,17 +1,6 @@
-"""[2] raw/ → interim/（文字コード変換・自治体コード付与・単位統一）
+""" raw/ → interim/（文字コード変換・自治体コード付与・単位統一）
 
-データセットごとの読み方は下部のハンドラに書く。ハンドラは
-`dict[指標キー, DataFrame(code, value)]` を返し、共通処理が
-`interim/indicators/<指標キー>.csv` に書き出す。D16 だけは分母（面積・人口）を
-作るため `interim/municipal_base.csv` を返す。
 
-実ファイルの列名は入手後に確定するため、`pick_column()` で候補名から推測する
-方式にしてある。推測が外れたらハンドラ側で列名を直接指定すればよい。
-
-使い方:
-    uv run python src/normalize.py            # 実装済みハンドラをすべて実行
-    uv run python src/normalize.py --only D8
-    uv run python src/normalize.py --status   # 実装状況の一覧
 """
 
 from __future__ import annotations
@@ -48,24 +37,38 @@ def handler(dataset_id: str) -> Callable[[Handler], Handler]:
 
 # ---------------------------------------------------------------- 共通ユーティリティ
 
-# 実ファイルで使われがちな列名の候補。前方一致で探す。
+# 実ファイルで使われがちな列名の候補。完全一致を優先し、無ければ部分一致で探す。
 COLUMN_CANDIDATES: dict[str, tuple[str, ...]] = {
-    "address": ("住所", "所在地", "所在地住所", "施設所在地", "address", "所在"),
+    "address": ("住所", "所在地", "所在地住所", "施設所在地", "主たる事務所", "address", "所在"),
     "municipality": ("市区町村", "区市町村", "自治体", "市区町村名", "区市町村名", "地域", "地区"),
-    "code": ("団体コード", "全国地方公共団体コード", "市区町村コード", "自治体コード", "code"),
+    "code": (
+        "団体コード",
+        "全国地方公共団体コード",
+        "市区町村コード",
+        "区市町村コード",
+        "自治体コード",
+        "地域コード",
+        "都道府県市区町村コード",
+        "code",
+    ),
     "name": ("名称", "施設名", "施設名称", "事業所名", "法人名称", "name"),
     "area": ("面積", "総面積", "行政区域面積"),
     "population": ("人口", "総人口", "住民基本台帳人口"),
-    "price": ("価格", "公示価格", "価格（円/m2）", "地価"),
-    "usage": ("用途", "用途区分", "利用現況", "地域区分"),
+    "price": ("当年価格", "価格", "公示価格", "価格（円/m2）", "地価"),
+    "usage": ("標準地番号（用途）", "用途区分", "用途", "利用現況", "地域区分"),
     "lat": ("緯度", "lat", "latitude"),
     "lon": ("経度", "lon", "lng", "longitude"),
 }
 
 
-def pick_column(df: pd.DataFrame, kind: str, required: bool = True) -> str | None:
-    """候補名から列を1つ選ぶ。見つからなければ（required なら）例外。"""
-    candidates = COLUMN_CANDIDATES[kind]
+def pick_from(
+    df: pd.DataFrame, candidates: tuple[str, ...], required: bool = True, label: str = ""
+) -> str | None:
+    """候補名から列を1つ選ぶ。完全一致を全候補について試してから部分一致に落とす。
+
+    「価格」で「当年価格（円）」と「前年価格（円）」の両方が引っかかるような場合は、
+    候補の並び順が優先度になる（先に書いたものが勝つ）。
+    """
     for cand in candidates:
         for col in df.columns:
             if str(col).strip() == cand:
@@ -76,23 +79,36 @@ def pick_column(df: pd.DataFrame, kind: str, required: bool = True) -> str | Non
                 return str(col)
     if required:
         raise KeyError(
-            f"{kind} に相当する列が見つかりません。候補={candidates} / 実際の列={list(df.columns)}"
+            f"{label or '対象'} に相当する列が見つかりません。"
+            f"候補={candidates} / 実際の列={list(df.columns)}"
         )
     return None
 
 
-def resolve_codes(df: pd.DataFrame) -> pd.DataFrame:
-    """コード列・自治体名列・住所列のいずれかから `code` 列を作る。
+def pick_column(df: pd.DataFrame, kind: str, required: bool = True) -> str | None:
+    """`COLUMN_CANDIDATES` に登録した種別から列を1つ選ぶ。"""
+    return pick_from(df, COLUMN_CANDIDATES[kind], required, kind)
 
-    住所文字列（例: 東京都新宿区西新宿2-8-1）からでも自治体名の前方一致で解決できる。
+
+def resolve_codes(df: pd.DataFrame) -> pd.DataFrame:
+    """コード列・自治体名列・住所列から `code` 列を作る。
+
+    コード列を最優先し、埋まらなかった行を自治体名 → 住所の順で補う。
+    D7 のように自治体名列が空でコード列にも都のコードしか入らないデータは、
+    住所文字列（例: 東京都新宿区西新宿2-8-1）から前方一致で解決することになる。
     """
     code_col = pick_column(df, "code", required=False)
-    name_col = pick_column(df, "municipality", required=False) or pick_column(
-        df, "address", required=False
-    )
-    if code_col is None and name_col is None:
+    name_cols = [
+        c
+        for c in (
+            pick_column(df, "municipality", required=False),
+            pick_column(df, "address", required=False),
+        )
+        if c
+    ]
+    if code_col is None and not name_cols:
         raise KeyError(f"自治体を特定できる列がありません: {list(df.columns)}")
-    return muni.attach_code(df, name_col=name_col, code_col=code_col)
+    return muni.attach_code(df, name_col=name_cols, code_col=code_col)
 
 
 def count_by_municipality(df: pd.DataFrame) -> pd.DataFrame:
@@ -133,14 +149,20 @@ def raw_dir_for(dataset_id: str) -> Path:
     return RAW_DIR / dataset_id
 
 
-def find_raw_file(dataset_id: str, pattern: str = "*.csv") -> Path:
-    """raw/<ID>/ から対象ファイルを1つ探す（zip展開後のサブディレクトリも見る）。"""
+def find_raw_files(dataset_id: str, pattern: str = "*.csv") -> list[Path]:
+    """raw/<ID>/ から対象ファイルを探す（zip展開後のサブディレクトリも見る）。"""
     base = raw_dir_for(dataset_id)
     if not base.exists():
         raise FileNotFoundError(f"{base} がありません。先に ingest を実行してください。")
     hits = sorted(base.rglob(pattern))
     if not hits:
         raise FileNotFoundError(f"{base} に {pattern} が見つかりません。")
+    return hits
+
+
+def find_raw_file(dataset_id: str, pattern: str = "*.csv") -> Path:
+    """raw/<ID>/ から対象ファイルを1つ探す。複数ヒットしたら先頭を使う。"""
+    hits = find_raw_files(dataset_id, pattern)
     if len(hits) > 1:
         logger.info("[%s] %d件ヒット。先頭を使用: %s", dataset_id, len(hits), hits[0].name)
     return hits[0]
@@ -151,8 +173,10 @@ def find_raw_file(dataset_id: str, pattern: str = "*.csv") -> Path:
 
 @handler("D16")
 def normalize_base() -> IndicatorFrames:
-    """統計年鑑から面積・人口（全指標の分母）を作り、municipal_base.csv に書く。
+    """人口推計から面積・人口（全指標の分母）を作り、municipal_base.csv に書く。
 
+    区部・市部・総数といった集計行が同じ表に混ざるが、地域コードが 13000/13100 など
+    自治体コードでないため `resolve_codes` の段階で落ちる。
     面積は ha 表記のことがあるため km2 に統一する。
     """
     df = read_csv(find_raw_file("D16"))
@@ -175,6 +199,58 @@ def normalize_base() -> IndicatorFrames:
     return {}
 
 
+# 大気測定局マスタ・1分値CSVはどちらもヘッダ行を持たないため列名を与える。
+# 局マスタが市区町村コードを持つので、緯度経度はあっても空間結合は要らない。
+# むしろ区境に建つ局は座標だけだと隣の自治体に落ちる（甲州街道大原局は
+# 渋谷区笹塚だが、座標は杉並区側に出る）ため、登録上のコードを正とする。
+STATION_COLUMNS = (
+    "局コード",
+    "局名",
+    "都道府県コード",
+    "都道府県名",
+    "市区町村コード",
+    "測定局コード",
+    "カナ",
+    "住所",
+    "緯度",
+    "経度",
+)
+PM25_COLUMNS = ("局コード", "項目コード", "年", "月", "日", "時", "分", "値")
+
+
+def pm25_station_means() -> pd.DataFrame:
+    """1分値CSVから測定局ごとの平均濃度(μg/m3)を出す。
+
+    - 公開されているのは直近50日分の速報値だけなので、年平均ではなく期間平均になる。
+    - 値が「欠測」の行は平均から除く（0では埋めない）。
+    - 1分値は器差でわずかに負に振れることがあるが、平均すれば打ち消し合うので残す。
+    """
+    frames = [
+        read_csv(path, header=None, names=PM25_COLUMNS, usecols=["局コード", "値"])
+        for path in find_raw_files("D1", "*PM2.5*.csv")
+    ]
+    raw = pd.concat(frames, ignore_index=True)
+    raw["_v"] = raw["値"].map(parse_number)
+    valid = raw.dropna(subset=["_v"])
+    logger.info(
+        "[D1] 1分値 %d件のうち有効 %d件（欠測 %d件）", len(raw), len(valid), len(raw) - len(valid)
+    )
+    return valid.groupby("局コード")["_v"].mean().rename("pm25").reset_index()
+
+
+@handler("D1")
+def normalize_pm25() -> IndicatorFrames:
+    """大気測定局の1分値を局ごとに平均し、さらに自治体ごとに平均する。
+
+    局のない自治体は欠損のままにする（近傍局での補完を入れる場合は、
+    補完した旨を指標側の status に残せるようにしてから行う）。
+    """
+    master = read_csv(find_raw_file("D1", "stations.csv"), header=None, names=STATION_COLUMNS)
+    stations = master.merge(pm25_station_means(), on="局コード", how="inner")
+    logger.info("[D1] 測定局 %d局のうち PM2.5 の値がある局: %d", len(master), len(stations))
+    return {"pm25_annual_avg": mean_by_municipality(stations, "pm25")}
+
+
 @handler("D8")
 def normalize_satellite_offices() -> IndicatorFrames:
     """TOKYOテレワークアプリ掲載サテライトオフィスを自治体ごとに数える。"""
@@ -191,59 +267,89 @@ def normalize_culture_facilities() -> IndicatorFrames:
 
 @handler("D14")
 def normalize_npo() -> IndicatorFrames:
-    """認証NPO法人を主たる事務所の所在地で数える。"""
-    df = read_csv(find_raw_file("D14"))
+    """認証NPO法人を主たる事務所の所在地で数える。
+
+    1行目が表題で、ヘッダは2行目にある。自治体名の列は無く、住所文字列から解決する。
+    """
+    df = read_csv(find_raw_file("D14"), header=1)
     return {"npo_count": count_by_municipality(df)}
 
 
-# 公共施設一覧（D7）は1ファイルに複数種別が混在するため、名称のキーワードで分類する
+# 公共施設一覧（D7）は1ファイルに複数種別が混在する。推奨データセットの POIコードで
+# 分類できるため、こちらを主に使う。1512a=図書館 / 1002a=自然公園 / 1003a=都市公園 /
+# 1004a=庭園 / 0801a=博物館 / 0802a=美術館 / 1012a=文化会館。
+FACILITY_POI_CODES: dict[str, tuple[str, ...]] = {
+    "library_count": ("1512a",),
+    "park_count": ("1002a", "1003a", "1004a"),
+    # 集会所・コミュニティ施設に当たる POIコードは、都立施設だけの本データには入らない
+    "community_facility_count": ("1301a", "1302a"),
+}
+
+# POIコード列が無いファイルに差し替わったときの保険。名称のキーワードで拾う。
 FACILITY_KEYWORDS: dict[str, tuple[str, ...]] = {
     "library_count": ("図書館", "図書室"),
     "park_count": ("公園", "緑地", "庭園"),
-    "community_facility_count": (
-        "集会",
-        "コミュニティ",
-        "地区センター",
-        "区民館",
-        "公民館",
-        "会館",
-    ),
+    "community_facility_count": ("集会", "コミュニティ", "地区センター", "区民館", "公民館"),
 }
 
 
 @handler("D7")
 def normalize_public_facilities() -> IndicatorFrames:
-    """公共施設一覧を種別ごとに分類して件数化する。"""
+    """公共施設一覧を種別ごとに分類して件数化する。
+
+    収録は都立施設のみで、自治体名列は空・コード列も都のコード（13100…）しか入らない。
+    自治体の判定は住所文字列から行う（`resolve_codes` が住所まで見る）。
+    """
     df = read_csv(find_raw_file("D7"))
+    poi_col = pick_from(df, ("POIコード",), required=False, label="POIコード")
     name_col = pick_column(df, "name")
+
     frames: IndicatorFrames = {}
-    for key, keywords in FACILITY_KEYWORDS.items():
-        matched = df[df[name_col].astype(str).str.contains("|".join(keywords), na=False)]
+    for key in FACILITY_POI_CODES:
+        if poi_col:
+            matched = df[df[poi_col].astype(str).str.strip().isin(FACILITY_POI_CODES[key])]
+        else:
+            pattern = "|".join(FACILITY_KEYWORDS[key])
+            matched = df[df[name_col].astype(str).str.contains(pattern, na=False)]
+        if not len(matched):
+            # 0件を0で埋めると「施設が無い自治体」と区別できなくなるので、指標ごと出さない
+            logger.warning("[D7] %s: 該当する施設が0件。この指標は no_data のままになる", key)
+            continue
         logger.info("[D7] %s: %d件", key, len(matched))
-        if len(matched):
-            frames[key] = count_by_municipality(matched)
+        frames[key] = count_by_municipality(matched)
     return frames
+
+
+# 地価公示の「標準地番号（用途）」の区分。住宅地だけを地価水準の指標に使う。
+LAND_USE_RESIDENTIAL = 0
 
 
 @handler("D11")
 def normalize_land_price() -> IndicatorFrames:
-    """地価公示のうち用途「住宅地」を自治体内で平均する。"""
-    df = read_csv(find_raw_file("D11"))
-    usage_col = pick_column(df, "usage", required=False)
-    if usage_col:
-        before = len(df)
-        df = df[df[usage_col].astype(str).str.contains("住宅", na=False)]
-        logger.info("[D11] 用途『住宅地』で絞込み: %d → %d件", before, len(df))
+    """地価公示のうち用途「住宅地」の㎡単価を自治体内で平均する。
+
+    1行目が表題で、ヘッダは2行目にある。用途は「用途区分」（＝用途地域）ではなく
+    「標準地番号（用途）」の数字で判別する（住宅地=0 / 商業地=5 / 工業地=9）。
+    価格は当年の1㎡当たり価格を採る。
+    """
+    df = read_csv(find_raw_file("D11"), header=1)
+    usage_col = pick_column(df, "usage")
+    before = len(df)
+    df = df[df[usage_col].map(parse_number) == LAND_USE_RESIDENTIAL]
+    logger.info("[D11] 用途『住宅地』で絞込み: %d → %d件", before, len(df))
     price_col = pick_column(df, "price")
     return {"land_price_residential": mean_by_municipality(df, price_col)}
 
 
 @handler("D15")
 def normalize_day_night_ratio() -> IndicatorFrames:
-    """昼夜間人口比率（参考指標）。"""
-    df = read_csv(find_raw_file("D15", "*.csv"))
-    df = resolve_codes(df)
-    ratio_col = pick_column(df, "population")  # 実ファイル確認後に比率列へ差し替える
+    """昼夜間人口比率（参考指標）。
+
+    第1表は1自治体1行で、比率が算出済みの列として入っている。
+    昼間人口・常住人口の列と紛らわしいため列名を明示して取る。
+    """
+    df = read_csv(find_raw_file("D15"))
+    ratio_col = pick_from(df, ("昼夜間人口比率／総数", "昼夜間人口比率"), label="昼夜間人口比率")
     return {"day_night_population_ratio": mean_by_municipality(df, ratio_col)}
 
 
@@ -279,7 +385,6 @@ def print_status() -> None:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="raw/ を interim/ に正規化する")
-    parser.add_argument("--only", nargs="+", metavar="ID", help="対象データセットID")
     parser.add_argument("--status", action="store_true", help="実装状況を一覧表示して終了")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args(argv)
@@ -291,7 +396,7 @@ def main(argv: list[str] | None = None) -> int:
         print_status()
         return 0
 
-    targets = args.only or list(HANDLERS)
+    targets = list(HANDLERS)
     ok, failed = 0, 0
     for dataset_id in targets:
         if dataset_id not in HANDLERS:
