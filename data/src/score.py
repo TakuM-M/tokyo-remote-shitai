@@ -1,21 +1,18 @@
-"""[4] interim/ → processed/municipalities.json（スコア算出）
+""" interim/ → processed/municipalities.json（スコア算出）
 
-仕様書 4.2 の手順をそのまま実装する:
+以下の手順を実装する:
     1. 面積あたり / 人口1万人あたりに換算して規模の差を除く
     2. 上下5パーセンタイルでウィンザライズ（都心の外れ値でスケールが潰れるのを防ぐ）
     3. min-max で 0〜100 にスケーリング
     4. 「低いほど良い」指標は 100 - score で反転
     5. 軸スコア = 軸内の指標スコアの単純平均
 
-総合スコアはここでは出さない。重みはユーザーが動かすものなので、
-Σ(軸スコア × 重み) / Σ(重み) はフロント側で計算する。
+総合スコア:
+- 重みはユーザーが動かすため、ここでは計算しない。
+- Σ(軸スコア × 重み) / Σ(重み) はフロント側で計算する。
 
 欠損は0で埋めず `value: null` + `status: "no_data"` として残す。
 埋めてしまうと「データが無い自治体」が「悪い自治体」に化けるため。
-
-使い方:
-    uv run python src/score.py
-    uv run python src/score.py --demo   # スキーマ確認用のダミーデータ
 """
 
 from __future__ import annotations
@@ -303,7 +300,6 @@ def demo_values(seed: int = 20260812) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     # (区部の中心値, 多摩の中心値, ばらつき)
     profile: dict[str, tuple[float, float, float]] = {
-        "road_noise_leq": (68, 58, 4),
         "pm25_annual_avg": (11, 8.5, 1.5),
         "arterial_road_density": (4.5, 1.8, 1.0),
         "traffic_volume": (32_000, 14_000, 6_000),
@@ -332,8 +328,8 @@ def demo_values(seed: int = 20260812) -> tuple[pd.DataFrame, pd.DataFrame]:
         data[key] = values
     frame = pd.DataFrame(data, index=pd.Index(codes, name="code"))
 
-    # 欠損の見え方を確認するための穴。騒音は R1 のとおり全域では揃わない想定。
-    frame.loc[rng.choice(codes, 18, replace=False), "road_noise_leq"] = np.nan
+    # 欠損の見え方を確認するための穴
+    frame.loc[rng.choice(codes, 18, replace=False), "traffic_volume"] = np.nan
     frame.loc[rng.choice(codes, 6, replace=False), "walking_course_count"] = np.nan
     frame.loc[["13307", "13308"], "bicycle_lane_ratio"] = np.nan
     return frame, base
