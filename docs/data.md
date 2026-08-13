@@ -1,6 +1,6 @@
 # 使用データ一覧（D1〜D18）
 
-- 定義の実体 [`data/src/datasets.py`](../data/src/datasets.py)
+- 定義の実体 [`data/src/defs/datasets.py`](../data/src/defs/datasets.py)
 - 取得状況は `make datasets`, 取得は `make ingest`。
 - ライセンスの考え方とクレジット表記 [data_license_check.md](./data_license_check.md)
 - 採否や差替の経緯は [dev_note.md](./dev_note.md) 

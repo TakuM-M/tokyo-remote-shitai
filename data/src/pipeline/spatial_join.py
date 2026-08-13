@@ -12,16 +12,21 @@ from pathlib import Path
 
 import pandas as pd
 
-import municipalities as muni
-from config import (
+from core import municipalities as muni
+from core.config import (
     BOUNDARY_GEOJSON,
     CRS_PLANE,
     CRS_WGS84,
     ensure_dirs,
     setup_logging,
 )
-from io_utils import parse_number, read_json
-from normalize import IndicatorFrames, find_raw_file, find_raw_files, write_indicators
+from core.io_utils import parse_number, read_json
+from pipeline.normalize import (
+    IndicatorFrames,
+    find_raw_file,
+    find_raw_files,
+    write_indicators,
+)
 
 logger = logging.getLogger(__name__)
 

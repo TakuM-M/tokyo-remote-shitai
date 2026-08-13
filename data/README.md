@@ -28,20 +28,22 @@ make test lint
 必要になったら `--heavy` を渡すか、`--only` でIDを指定する。
 
 各スクリプトは直接叩いてもよい（`--only` などの引数を渡すときはこちら）。
+`src/` を import パスに通し、モジュールとして実行する。
 
 ```bash
-uv run python src/ingest.py --only D8 D11
-uv run python src/ingest.py --heavy          # 大容量ファイルもあわせて取得
-uv run python src/normalize.py --status
-uv run python src/spatial_join.py --boundaries
-uv run python src/score.py --demo
+export PYTHONPATH=src
+uv run python -m pipeline.ingest --only D8 D11
+uv run python -m pipeline.ingest --heavy          # 大容量ファイルもあわせて取得
+uv run python -m pipeline.normalize --status
+uv run python -m pipeline.spatial_join --boundaries
+uv run python -m pipeline.score --demo
 ```
 
 ## ディレクトリ
 
 | パス | 中身 | Git |
 |---|---|---|
-| `src/` | パイプライン本体（`.py` をフラットに配置） | 追跡 |
+| `src/` | パイプライン本体。役割ごとにサブパッケージに分割 | 追跡 |
 | `raw/<データセットID>/` | 取得した原データそのまま。zipは同名ディレクトリに展開済み | 除外 |
 | `raw/manifest.json` | ファイルごとの取得元URL・取得日時・SHA256 | 除外 |
 | `interim/` | 正規化済みの中間データ | 除外 |
@@ -51,17 +53,36 @@ uv run python src/score.py --demo
 
 ## モジュール
 
+```
+src/
+├── core/       共通基盤（設定・入出力・自治体マスタ）
+├── defs/       定義（データ出典・指標）
+├── pipeline/   加工パイプライン本体
+└── analysis/   データの状態を調べる補助スクリプト
+```
+
+依存の向きは `analysis`・`pipeline` → `defs` → `core` の一方向。`core` と `defs` は他を import しない。
+
 | ファイル | 役割 |
 |---|---|
-| `config.py` | パス・座標系・ログ設定 |
-| `municipalities.py` | 53自治体マスタ。表記ゆれ・旧市名・住所文字列からコードを解決 |
-| `datasets.py` | D1〜D18 の出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
-| `indicators.py` | 6軸と指標の定義（向き・分母・単位）、プリセット重み |
-| `io_utils.py` | 文字コード自動判定、数値パース、JSON/CSV入出力 |
-| `ingest.py` | ダウンロードと取得履歴の記録 |
-| `normalize.py` | データセット別の読み取りハンドラ |
-| `spatial_join.py` | GeoPandas による点/線/面 → 自治体の集約 |
-| `score.py` | 正規化とスコア算出、JSON出力 |
+| `core/config.py` | パス・座標系・ログ設定 |
+| `core/io_utils.py` | 文字コード自動判定、数値パース、JSON/CSV入出力 |
+| `core/municipalities.py` | 53自治体マスタ。表記ゆれ・旧市名・住所文字列からコードを解決 |
+| `defs/datasets.py` | D1〜D18 の出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
+| `defs/indicators.py` | 6軸と指標の定義（向き・分母・単位）、プリセット重み |
+| `pipeline/ingest.py` | ダウンロードと取得履歴の記録 |
+| `pipeline/normalize.py` | データセット別の読み取りハンドラ |
+| `pipeline/spatial_join.py` | GeoPandas による点/線/面 → 自治体の集約 |
+| `pipeline/score.py` | 正規化とスコア算出、JSON出力 |
+
+`analysis/` は成果物の生成には関与しない調査用。現時点ではいずれも中身は未実装。
+
+| ファイル | 役割 |
+|---|---|
+| `analysis/raw_inventory.py` | raw/ の棚卸し（ファイル一覧・サイズ・文字コード・行数、manifest との突き合わせ） |
+| `analysis/missing_report.py` | 指標×自治体の欠損率と、欠けている自治体の内訳 |
+| `analysis/indicator_stats.py` | 指標ごとの分布サマリ（min/max・分位点・外れ値候補・ウィンザライズの影響） |
+| `analysis/validate_output.py` | `processed/municipalities.json` のスキーマ・値域・欠損表現の検証 |
 
 ## 出力スキーマ（`processed/municipalities.json`）
 

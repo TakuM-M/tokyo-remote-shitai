@@ -12,9 +12,9 @@ from pathlib import Path
 
 import pandas as pd
 
-import municipalities as muni
-from config import BASE_CSV, INDICATOR_DIR, RAW_DIR, ensure_dirs, setup_logging
-from io_utils import ha_to_km2, parse_number, read_csv, write_interim_csv
+from core import municipalities as muni
+from core.config import BASE_CSV, INDICATOR_DIR, RAW_DIR, ensure_dirs, setup_logging
+from core.io_utils import ha_to_km2, parse_number, read_csv, write_interim_csv
 
 logger = logging.getLogger(__name__)
 
@@ -365,8 +365,8 @@ def run(dataset_id: str) -> IndicatorFrames:
 
 
 def print_status() -> None:
-    import datasets
-    from spatial_join import SPATIAL_HANDLERS
+    from defs import datasets
+    from pipeline.spatial_join import SPATIAL_HANDLERS
 
     print(f"{'ID':<5} {'処理':<12} {'raw/':<6} データセット")
     print("-" * 84)

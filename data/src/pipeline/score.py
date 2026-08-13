@@ -25,9 +25,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-import datasets
-import municipalities as muni
-from config import (
+from core import municipalities as muni
+from core.config import (
     BASE_CSV,
     DEMO_JSON,
     INDICATOR_DIR,
@@ -36,7 +35,9 @@ from config import (
     ensure_dirs,
     setup_logging,
 )
-from indicators import (
+from core.io_utils import write_json
+from defs import datasets
+from defs.indicators import (
     AXES,
     DEFAULT_WEIGHTS,
     INDICATOR_BY_KEY,
@@ -44,7 +45,6 @@ from indicators import (
     PRESETS,
     Indicator,
 )
-from io_utils import write_json
 
 logger = logging.getLogger(__name__)
 

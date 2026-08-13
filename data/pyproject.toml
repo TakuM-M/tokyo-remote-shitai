@@ -18,7 +18,7 @@ dev = [
     "ruff>=0.6",
 ]
 
-# src/ 直下にスクリプトを並べる構成のため、自身はパッケージとしてインストールしない
+# src/ に PYTHONPATH を通して実行する構成のため、自身はパッケージとしてインストールしない
 [tool.uv]
 package = false
 
@@ -29,6 +29,9 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "defs", "pipeline", "analysis"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

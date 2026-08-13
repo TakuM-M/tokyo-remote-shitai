@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-import municipalities as muni
+from core import municipalities as muni
 
 
 def test_master_has_53_municipalities():

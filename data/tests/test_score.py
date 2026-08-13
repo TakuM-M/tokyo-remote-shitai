@@ -3,8 +3,8 @@
 import numpy as np
 import pandas as pd
 
-import score
-from indicators import INDICATOR_BY_KEY
+from defs.indicators import INDICATOR_BY_KEY
+from pipeline import score
 
 
 def test_minmax_scales_to_0_100():

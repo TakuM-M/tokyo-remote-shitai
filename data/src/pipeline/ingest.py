@@ -1,4 +1,4 @@
-""" rawデータの取得
+"""rawデータの取得
 
 datasets.py の定義に従ってダウンロード、`raw/<データセットID>/` に配置
 
@@ -20,10 +20,10 @@ from pathlib import Path
 
 import requests
 
-import datasets
-from config import MANIFEST_JSON, RAW_DIR, ensure_dirs, setup_logging
-from datasets import Dataset, Resource
-from io_utils import read_json, sha256_of, write_json
+from core.config import MANIFEST_JSON, RAW_DIR, ensure_dirs, setup_logging
+from core.io_utils import read_json, sha256_of, write_json
+from defs import datasets
+from defs.datasets import Dataset, Resource
 
 logger = logging.getLogger(__name__)
 

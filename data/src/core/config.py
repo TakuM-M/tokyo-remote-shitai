@@ -6,8 +6,8 @@ import logging
 import os
 from pathlib import Path
 
-# data/src/config.py → data/
-DATA_ROOT = Path(os.environ.get("REMOTELIFE_DATA_ROOT", Path(__file__).resolve().parents[1]))
+# data/src/core/config.py → data/
+DATA_ROOT = Path(os.environ.get("REMOTELIFE_DATA_ROOT", Path(__file__).resolve().parents[2]))
 
 RAW_DIR = DATA_ROOT / "raw"
 INTERIM_DIR = DATA_ROOT / "interim"
