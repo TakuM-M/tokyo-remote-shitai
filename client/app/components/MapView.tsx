@@ -78,7 +78,7 @@ export default function MapView() {
     const loadSource = () => {
       if (map.getSource('tokyo-municipalities')) return;
 
-      fetch('/data/interim/boundaries.geojson')
+      fetch('/data/boundaries.geojson')
         .then((res) => {
           if (!res.ok) throw new Error('GeoJSON not found');
           return res.json();

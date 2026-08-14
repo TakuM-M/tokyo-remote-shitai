@@ -83,7 +83,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await fetch('/data/processed/municipalities.json');
+        const res = await fetch('/data/municipalities.json');
         if (!res.ok) throw new Error(`Failed to load data: ${res.status}`);
         const data: MunicipalityData = await res.json();
         dispatch({ type: 'SET_DATA', payload: data });
