@@ -102,8 +102,7 @@ export default function MapView() {
             source: 'tokyo-municipalities',
             paint: {
               'fill-color': [
-                'case',
-                ['has', 'fillColor', ['feature-state', {}]],
+                'coalesce',
                 ['feature-state', 'fillColor'],
                 NO_DATA_COLOR,
               ] as unknown as ExpressionSpecification,
