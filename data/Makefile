@@ -9,7 +9,7 @@ setup:
 
 ## 生データを raw/ に取得
 ingest:
-	$(PY) -m pipeline.ingest
+	$(PY) -m pipeline.01-ingest
 
 ## raw/ → interim/（文字コード変換・自治体コード付与・単位統一）
 normalize:

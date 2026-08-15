@@ -77,7 +77,7 @@ def test_demo_document_matches_schema():
     }
     office = shinjuku["indicators"]["satellite_office_count"]
     assert office["status"] == "ok"
-    assert office["source"] == "D8"
+    assert office["source"] == "D-workspace-01"
     assert "per_10k" in office  # 人口1万人あたりに換算されている
 
     # 欠損は 0 ではなく null + no_data

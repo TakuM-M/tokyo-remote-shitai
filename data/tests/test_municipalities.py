@@ -27,6 +27,7 @@ def test_code_from_name_handles_variations():
     # 旧自治体名は合併先へ
     assert muni.code_from_name("田無市") == "13229"
     assert muni.code_from_name("桧原村") == "13307"  # 異体字
+    assert muni.code_from_name("西多摩郡桧原村人里事貫") == "13307"  # 郡名つき＋異体字
 
     # 対象外
     assert muni.code_from_name("横浜市") is None

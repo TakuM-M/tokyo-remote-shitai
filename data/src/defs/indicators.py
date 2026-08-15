@@ -1,7 +1,6 @@
 """6軸と指標の定義。
 
-スコア算出のルールはすべてこのファイルに集約する。指標を足す・外す・向きを変える
-といった調整は、原則ここの1エントリを直すだけで score.py まで通る。
+スコア算出のルールはすべてこのファイルに集約
 """
 
 from __future__ import annotations
@@ -10,7 +9,6 @@ from dataclasses import dataclass
 from typing import Literal
 
 Direction = Literal["higher_is_better", "lower_is_better"]
-# 規模の差を除去するための分母。None は「すでに密度・比率・平均になっている値」。
 Denominator = Literal["area_km2", "population_10k"] | None
 
 
@@ -64,7 +62,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="PM2.5",
         axis="quiet",
         direction="lower_is_better",
-        dataset_id="D1",
+        dataset_id="D-quiet-01",
         unit="μg/m3",
         definition="大気測定局の測定値（速報値）を自治体内で平均。",
     ),
@@ -73,18 +71,18 @@ INDICATORS: tuple[Indicator, ...] = (
         label="幹線道路密度",
         axis="quiet",
         direction="lower_is_better",
-        dataset_id="D18",
+        dataset_id="D-quiet-04",
         unit="km/km2",
         definition="緊急輸送道路の総延長 ÷ 面積。",
     ),
     Indicator(
-        key="traffic_volume",
-        label="交通量",
+        key="road_noise_leq",
+        label="道路交通騒音",
         axis="quiet",
         direction="lower_is_better",
-        dataset_id="D2",
-        unit="台/日",
-        definition="主要地点の平日24時間交通量の自治体内平均。",
+        dataset_id="D-quiet-02",
+        unit="dB",
+        definition="幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を自治体内で平均。",
     ),
     # 軸2: いきぬき
     Indicator(
@@ -92,7 +90,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="緑被率",
         axis="refresh",
         direction="higher_is_better",
-        dataset_id="D4",
+        dataset_id="D-refresh-01",
         unit="%",
         definition="緑地面積 ÷ 総面積。",
     ),
@@ -101,7 +99,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="公園密度",
         axis="refresh",
         direction="higher_is_better",
-        dataset_id="D7",
+        dataset_id="D-common-01",
         unit="件",
         denominator="area_km2",
         definition="都立＋区市町村立公園の数 ÷ 面積。",
@@ -111,7 +109,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="散歩コース",
         axis="refresh",
         direction="higher_is_better",
-        dataset_id="D5",
+        dataset_id="D-refresh-02",
         unit="件",
         definition="TOKYO WALKING MAP の掲載コース数。",
     ),
@@ -120,7 +118,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="自転車走行空間",
         axis="refresh",
         direction="higher_is_better",
-        dataset_id="D6",
+        dataset_id="D-refresh-03",
         unit="%",
         definition="自転車走行空間の整備延長 ÷ 道路総延長。都道分のみ。",
     ),
@@ -130,7 +128,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="サテライトオフィス",
         axis="workspace",
         direction="higher_is_better",
-        dataset_id="D8",
+        dataset_id="D-workspace-01",
         unit="件",
         denominator="population_10k",
         definition="TOKYOテレワークアプリ掲載施設数 ÷ 人口1万人。",
@@ -140,7 +138,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="図書館",
         axis="workspace",
         direction="higher_is_better",
-        dataset_id="D7",
+        dataset_id="D-common-01",
         unit="件",
         denominator="population_10k",
         definition="都立・区市町村立図書館数 ÷ 人口1万人。",
@@ -150,7 +148,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="文化施設",
         axis="workspace",
         direction="higher_is_better",
-        dataset_id="D9",
+        dataset_id="D-workspace-02",
         unit="件",
         denominator="population_10k",
         definition="生涯学習センター・文化施設数 ÷ 人口1万人。",
@@ -161,7 +159,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="主要拠点までの所要時間",
         axis="commute",
         direction="lower_is_better",
-        dataset_id="D10",
+        dataset_id="D-commute-01",
         unit="分",
         definition="自治体代表駅から東京/新宿/渋谷/品川への最短所要時間の平均。",
     ),
@@ -170,7 +168,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="乗換回数",
         axis="commute",
         direction="lower_is_better",
-        dataset_id="D10",
+        dataset_id="D-commute-01",
         unit="回",
         definition="同上の平均乗換回数。",
     ),
@@ -179,7 +177,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="駅アクセス",
         axis="commute",
         direction="higher_is_better",
-        dataset_id="D10",
+        dataset_id="D-commute-01",
         unit="件",
         denominator="area_km2",
         definition="都営の鉄道駅数とバス停数の合計 ÷ 面積。JR・私鉄・民間バスは含まない。",
@@ -189,7 +187,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="交通の選択肢",
         axis="commute",
         direction="higher_is_better",
-        dataset_id="D10",
+        dataset_id="D-commute-01",
         unit="系統",
         definition="自治体内に停留所がある都営バスの系統数。コミュニティバスは含まない。",
     ),
@@ -199,7 +197,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="地価水準",
         axis="cost",
         direction="lower_is_better",
-        dataset_id="D11",
+        dataset_id="D-cost-01",
         unit="円/m2",
         definition="地価公示（用途:住宅地）の自治体内平均㎡単価。",
     ),
@@ -208,7 +206,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="住宅の広さ余地",
         axis="cost",
         direction="higher_is_better",
-        dataset_id="D13",
+        dataset_id="D-cost-03",
         unit="m2/棟",
         definition="土地利用現況調査より、住宅系用途の1棟あたり面積。",
     ),
@@ -218,7 +216,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="NPO密度",
         axis="community",
         direction="higher_is_better",
-        dataset_id="D14",
+        dataset_id="D-community-01",
         unit="件",
         denominator="population_10k",
         definition="認証NPO法人数 ÷ 人口1万人。",
@@ -228,7 +226,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="地域活動の場",
         axis="community",
         direction="higher_is_better",
-        dataset_id="D7",
+        dataset_id="D-common-01",
         unit="件",
         denominator="population_10k",
         definition="集会所・コミュニティ施設数 ÷ 人口1万人。",
@@ -238,7 +236,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="昼夜間人口比率",
         axis="community",
         direction="lower_is_better",
-        dataset_id="D15",
+        dataset_id="D-community-02",
         unit="%",
         include_in_axis=False,  # 参考指標。軸スコアには入れない
         definition="昼間人口 ÷ 夜間人口。低いほど『昼も人がいる住宅地』の傾向。",

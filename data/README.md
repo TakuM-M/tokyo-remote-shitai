@@ -20,7 +20,7 @@ make score          # ウィンザライズ → min-max → 軸スコア → pro
 make all            # 上を順に実行
 
 make demo           # ダミーデータで processed/municipalities.sample.json を生成
-make datasets       # D1〜D18 の定義と取得状況
+make datasets       # 全18データセットの定義と取得状況
 make test lint
 ```
 
@@ -46,14 +46,13 @@ make report         # 上記をまとめて可視化 → analysis/report.html
 
 ```bash
 export PYTHONPATH=src
-uv run python -m pipeline.ingest --only D8 D11
+uv run python -m pipeline.ingest --only D-workspace-01 D-cost-01
 uv run python -m pipeline.ingest --heavy          # 大容量ファイルもあわせて取得
 uv run python -m pipeline.normalize --status
 uv run python -m pipeline.spatial_join --boundaries
 uv run python -m pipeline.score --demo
 
 uv run python -m analysis.raw_inventory --verify         # SHA256 を再計算して照合
-uv run python -m analysis.missing_report --full          # 自治体ごとの欠損を全件表示
 uv run python -m analysis.indicator_stats --indicator park_count   # 1指標の内訳
 uv run python -m analysis.validate_output --demo         # ダミーデータの出力を検証
 ```
@@ -88,10 +87,11 @@ src/
 | `core/config.py` | パス・座標系・ログ設定 |
 | `core/io_utils.py` | 文字コード自動判定、数値パース、JSON/CSV入出力 |
 | `core/municipalities.py` | 53自治体マスタ。表記ゆれ・旧市名・住所文字列からコードを解決 |
-| `defs/datasets.py` | D1〜D18 の出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
+| `defs/datasets.py` | 全18データセットの出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
 | `defs/indicators.py` | 6軸と指標の定義（向き・分母・単位）、プリセット重み |
 | `pipeline/ingest.py` | ダウンロードと取得履歴の記録 |
 | `pipeline/normalize.py` | データセット別の読み取りハンドラ |
+| `pipeline/road_noise.py` | D-quiet-02 の年度別CSVを1指標にまとめる（欠測年は過去の年度で補完） |
 | `pipeline/spatial_join.py` | GeoPandas による点/線/面 → 自治体の集約 |
 | `pipeline/score.py` | 正規化とスコア算出、JSON出力 |
 
@@ -119,7 +119,7 @@ src/
         "indicators": [
           { "key": "pm25_annual_avg", "label": "PM2.5", "unit": "μg/m3",
             "direction": "lower_is_better", "definition": "…",
-            "source": "D1", "reference_only": false }
+            "source": "D-quiet-01", "reference_only": false }
         ] }
     ],
     "default_weights": { "quiet": 1.0, "…": 1.0 },
@@ -128,7 +128,7 @@ src/
         "weights": { "quiet": 2.0, "…": 0.2 } }
     ],
     "sources": [                       // 出典。画面から原典へ辿るためのリンク元
-      { "id": "D8", "name": "…", "org": "…", "url": "https://…",
+      { "id": "D-workspace-01", "name": "…", "org": "…", "url": "https://…",
         "license": "CC BY 4.0（東京都オープンデータ利用規約）",
         "updated_at": null,              // データ側の年次。「令和8年地価公示」のような和暦表記
         "notes": "…" }
@@ -142,9 +142,9 @@ src/
                   "commute": 98.1, "cost": 12.5, "community": 76.3 },
       "indicators": {
         "satellite_office_count": { "value": 55, "per_10k": 1.58, "unit": "件",
-                                    "score": 96.2, "source": "D8", "status": "ok" },
+                                    "score": 96.2, "source": "D-workspace-01", "status": "ok" },
         "park_count":             { "value": null, "score": null,
-                                    "source": "D7", "status": "no_data" }
+                                    "source": "D-common-01", "status": "no_data" }
       }
     }
   ]

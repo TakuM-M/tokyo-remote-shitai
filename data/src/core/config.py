@@ -22,7 +22,7 @@ INDICATOR_DIR = INTERIM_DIR / "indicators"
 # 面積・人口など「◯◯あたり」の分母になる基礎データ
 BASE_CSV = INTERIM_DIR / "municipal_base.csv"
 
-# 空間結合の基準になる行政区域ポリゴン（D17 を正規化したもの）
+# 空間結合の基準になる行政区域ポリゴン（D-common-03 を正規化したもの）
 BOUNDARY_GEOJSON = INTERIM_DIR / "boundaries.geojson"
 
 # ingest が書くダウンロード履歴
