@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-08-13",
+    "generated_at": "2026-08-14",
     "version": "0.2",
     "axes": [
       {
@@ -422,7 +422,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.8924,
+          "value": 5.9256,
           "score": 0.0,
           "source": "D1",
           "unit": "μg/m3",
@@ -443,7 +443,7 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 19.5523,
+          "value": 13.6696,
           "score": 100.0,
           "source": "D4",
           "unit": "%",
@@ -571,8 +571,8 @@
       "area_km2": 10.21,
       "population": 183861.0,
       "scores": {
-        "quiet": 6.6,
-        "refresh": 32.9,
+        "quiet": 6.5,
+        "refresh": 38.7,
         "workspace": 69.5,
         "commute": 83.0,
         "cost": 0.0,
@@ -580,8 +580,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.6427,
-          "score": 13.3,
+          "value": 5.6587,
+          "score": 13.0,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -601,8 +601,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.7012,
-          "score": 45.2,
+          "value": 6.6885,
+          "score": 56.8,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -730,7 +730,7 @@
       "population": 273125.0,
       "scores": {
         "quiet": 50.0,
-        "refresh": 92.4,
+        "refresh": 78.2,
         "workspace": 42.0,
         "commute": 65.9,
         "cost": 0.0,
@@ -738,7 +738,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.4221,
+          "value": 4.4236,
           "score": 100.0,
           "source": "D1",
           "unit": "μg/m3",
@@ -759,8 +759,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 10.6501,
-          "score": 84.7,
+          "value": 6.6479,
+          "score": 56.3,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -887,8 +887,8 @@
       "area_km2": 18.22,
       "population": 361787.0,
       "scores": {
-        "quiet": 30.0,
-        "refresh": 27.5,
+        "quiet": 29.4,
+        "refresh": 30.0,
         "workspace": 29.9,
         "commute": 60.6,
         "cost": 42.7,
@@ -896,8 +896,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.1949,
-          "score": 52.0,
+          "value": 5.2228,
+          "score": 50.7,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -917,8 +917,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 7.1337,
-          "score": 49.5,
+          "value": 6.487,
+          "score": 54.5,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -1046,7 +1046,7 @@
       "population": 250863.0,
       "scores": {
         "quiet": 10.8,
-        "refresh": 67.4,
+        "refresh": 57.9,
         "workspace": 3.6,
         "commute": 75.2,
         "cost": 25.2,
@@ -1054,7 +1054,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.5907,
+          "value": 5.6029,
           "score": 17.8,
           "source": "D1",
           "unit": "μg/m3",
@@ -1075,8 +1075,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 7.7007,
-          "score": 55.2,
+          "value": 4.8368,
+          "score": 36.2,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -1203,8 +1203,8 @@
       "area_km2": 10.11,
       "population": 228742.0,
       "scores": {
-        "quiet": 16.4,
-        "refresh": 62.6,
+        "quiet": 17.3,
+        "refresh": 65.6,
         "workspace": 28.6,
         "commute": 84.9,
         "cost": 32.2,
@@ -1212,8 +1212,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.4843,
-          "score": 27.0,
+          "value": 5.4757,
+          "score": 28.8,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -1233,8 +1233,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 9.1268,
-          "score": 69.5,
+          "value": 8.375,
+          "score": 75.6,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -1361,8 +1361,8 @@
       "area_km2": 13.77,
       "population": 285803.0,
       "scores": {
-        "quiet": 45.8,
-        "refresh": 50.4,
+        "quiet": 45.2,
+        "refresh": 54.2,
         "workspace": 18.2,
         "commute": 76.1,
         "cost": 71.5,
@@ -1370,8 +1370,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.0659,
-          "score": 63.2,
+          "value": 5.0898,
+          "score": 62.2,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -1391,8 +1391,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 5.9907,
-          "score": 38.1,
+          "value": 5.6976,
+          "score": 45.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -1519,8 +1519,8 @@
       "area_km2": 42.99,
       "population": 554093.0,
       "scores": {
-        "quiet": 29.9,
-        "refresh": 91.9,
+        "quiet": 29.7,
+        "refresh": 97.6,
         "workspace": 9.1,
         "commute": 58.3,
         "cost": 68.8,
@@ -1528,8 +1528,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.5317,
-          "score": 22.9,
+          "value": 5.549,
+          "score": 22.5,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -1549,8 +1549,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 10.5618,
-          "score": 83.8,
+          "value": 10.1521,
+          "score": 95.3,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -1677,8 +1677,8 @@
       "area_km2": 22.85,
       "population": 429096.0,
       "scores": {
-        "quiet": 20.6,
-        "refresh": 69.1,
+        "quiet": 20.8,
+        "refresh": 70.4,
         "workspace": 25.7,
         "commute": 31.0,
         "cost": 36.5,
@@ -1686,8 +1686,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.7805,
-          "score": 1.4,
+          "value": 5.7894,
+          "score": 1.6,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -1707,8 +1707,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.6069,
-          "score": 44.3,
+          "value": 5.7965,
+          "score": 46.8,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -1835,8 +1835,8 @@
       "area_km2": 14.67,
       "population": 287556.0,
       "scores": {
-        "quiet": 52.7,
-        "refresh": 20.5,
+        "quiet": 52.6,
+        "refresh": 15.6,
         "workspace": 12.0,
         "commute": null,
         "cost": 27.6,
@@ -1844,8 +1844,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.3238,
-          "score": 40.9,
+          "value": 5.3397,
+          "score": 40.6,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -1865,8 +1865,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 5.2643,
-          "score": 30.8,
+          "value": 3.4624,
+          "score": 20.9,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -1994,7 +1994,7 @@
       "population": 762357.0,
       "scores": {
         "quiet": 55.4,
-        "refresh": 35.6,
+        "refresh": 37.6,
         "workspace": 3.0,
         "commute": 2.0,
         "cost": 69.6,
@@ -2002,7 +2002,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.3062,
+          "value": 5.3193,
           "score": 42.4,
           "source": "D1",
           "unit": "μg/m3",
@@ -2023,8 +2023,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 5.5727,
-          "score": 33.9,
+          "value": 4.986,
+          "score": 37.8,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -2151,8 +2151,8 @@
       "area_km2": 58.05,
       "population": 959397.0,
       "scores": {
-        "quiet": 69.2,
-        "refresh": 28.2,
+        "quiet": 69.7,
+        "refresh": 24.3,
         "workspace": 10.5,
         "commute": 0.0,
         "cost": 62.2,
@@ -2160,8 +2160,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.0528,
-          "score": 64.3,
+          "value": 5.0554,
+          "score": 65.2,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -2181,8 +2181,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.7928,
-          "score": 46.1,
+          "value": 5.0235,
+          "score": 38.2,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -2309,8 +2309,8 @@
       "area_km2": 15.11,
       "population": 238786.0,
       "scores": {
-        "quiet": 20.8,
-        "refresh": 65.2,
+        "quiet": 21.3,
+        "refresh": 66.4,
         "workspace": 65.6,
         "commute": 45.2,
         "cost": 1.6,
@@ -2318,8 +2318,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.7843,
-          "score": 1.1,
+          "value": 5.7853,
+          "score": 2.0,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -2339,8 +2339,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 11.9456,
-          "score": 97.7,
+          "value": 10.9378,
+          "score": 100.0,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -2467,8 +2467,8 @@
       "area_km2": 15.59,
       "population": 356415.0,
       "scores": {
-        "quiet": 62.2,
-        "refresh": 12.8,
+        "quiet": 62.6,
+        "refresh": 15.7,
         "workspace": 7.1,
         "commute": 18.6,
         "cost": 62.1,
@@ -2476,8 +2476,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.8588,
-          "score": 81.1,
+          "value": 4.8619,
+          "score": 82.0,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -2497,8 +2497,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 3.4614,
-          "score": 12.8,
+          "value": 2.9996,
+          "score": 15.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -2625,8 +2625,8 @@
       "area_km2": 34.06,
       "population": 600500.0,
       "scores": {
-        "quiet": 50.1,
-        "refresh": 25.0,
+        "quiet": 50.8,
+        "refresh": 22.8,
         "workspace": 1.3,
         "commute": 4.8,
         "cost": 66.5,
@@ -2634,8 +2634,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.2813,
-          "score": 44.5,
+          "value": 5.278,
+          "score": 45.9,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -2655,8 +2655,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 5.4655,
-          "score": 32.9,
+          "value": 4.1482,
+          "score": 28.5,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -2783,8 +2783,8 @@
       "area_km2": 13.01,
       "population": 307015.0,
       "scores": {
-        "quiet": 53.3,
-        "refresh": 18.5,
+        "quiet": 53.6,
+        "refresh": 16.9,
         "workspace": 28.3,
         "commute": 48.6,
         "cost": 54.9,
@@ -2792,8 +2792,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.9858,
-          "score": 70.1,
+          "value": 4.9926,
+          "score": 70.7,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -2813,8 +2813,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 4.0282,
-          "score": 18.5,
+          "value": 3.1057,
+          "score": 16.9,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -2941,8 +2941,8 @@
       "area_km2": 20.61,
       "population": 370696.0,
       "scores": {
-        "quiet": 44.2,
-        "refresh": 20.8,
+        "quiet": 44.0,
+        "refresh": 21.5,
         "workspace": 16.9,
         "commute": 33.6,
         "cost": 64.3,
@@ -2950,8 +2950,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.2799,
-          "score": 44.7,
+          "value": 5.2961,
+          "score": 44.4,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -2971,8 +2971,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.0339,
-          "score": 38.5,
+          "value": 5.1518,
+          "score": 39.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -3099,8 +3099,8 @@
       "area_km2": 10.16,
       "population": 228121.0,
       "scores": {
-        "quiet": 33.2,
-        "refresh": 40.6,
+        "quiet": 33.6,
+        "refresh": 44.4,
         "workspace": 11.0,
         "commute": 75.4,
         "cost": 65.6,
@@ -3108,8 +3108,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.4464,
-          "score": 30.3,
+          "value": 5.4479,
+          "score": 31.2,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -3129,8 +3129,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 4.7466,
-          "score": 25.7,
+          "value": 4.5992,
+          "score": 33.5,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -3257,8 +3257,8 @@
       "area_km2": 32.22,
       "population": 598863.0,
       "scores": {
-        "quiet": 44.6,
-        "refresh": 32.4,
+        "quiet": 46.8,
+        "refresh": 33.2,
         "workspace": 5.6,
         "commute": 1.0,
         "cost": 74.8,
@@ -3266,8 +3266,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.3059,
-          "score": 42.4,
+          "value": 5.2676,
+          "score": 46.8,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -3287,8 +3287,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.771,
-          "score": 45.9,
+          "value": 5.8676,
+          "score": 47.6,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -3415,8 +3415,8 @@
       "area_km2": 48.08,
       "population": 764094.0,
       "scores": {
-        "quiet": 72.2,
-        "refresh": 21.8,
+        "quiet": 72.4,
+        "refresh": 21.0,
         "workspace": 1.2,
         "commute": 6.0,
         "cost": 78.8,
@@ -3424,8 +3424,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.8579,
-          "score": 81.2,
+          "value": 4.8669,
+          "score": 81.5,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -3445,8 +3445,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 5.7402,
-          "score": 35.6,
+          "value": 4.6202,
+          "score": 33.8,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -3574,7 +3574,7 @@
       "population": 707720.0,
       "scores": {
         "quiet": 48.2,
-        "refresh": 28.0,
+        "refresh": 29.2,
         "workspace": 1.4,
         "commute": 27.8,
         "cost": 82.7,
@@ -3582,8 +3582,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.3006,
-          "score": 42.9,
+          "value": 5.3108,
+          "score": 43.1,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -3603,8 +3603,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 7.1785,
-          "score": 50.0,
+          "value": 6.3086,
+          "score": 52.5,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -3731,8 +3731,8 @@
       "area_km2": 34.8,
       "population": 469442.0,
       "scores": {
-        "quiet": 67.0,
-        "refresh": 27.4,
+        "quiet": 67.4,
+        "refresh": 30.4,
         "workspace": 8.8,
         "commute": 12.6,
         "cost": 84.0,
@@ -3740,8 +3740,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.9291,
-          "score": 75.0,
+          "value": 4.9348,
+          "score": 75.7,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -3761,8 +3761,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 7.6565,
-          "score": 54.8,
+          "value": 7.0495,
+          "score": 60.8,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -3889,8 +3889,8 @@
       "area_km2": 49.9,
       "population": 709372.0,
       "scores": {
-        "quiet": 62.6,
-        "refresh": 41.7,
+        "quiet": 62.3,
+        "refresh": 45.0,
         "workspace": 3.4,
         "commute": 55.3,
         "cost": 81.0,
@@ -3898,8 +3898,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.9481,
-          "score": 73.4,
+          "value": 4.9664,
+          "score": 72.9,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -3919,8 +3919,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 9.0656,
-          "score": 68.9,
+          "value": 8.3823,
+          "score": 75.6,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -4048,7 +4048,7 @@
       "population": 574576.0,
       "scores": {
         "quiet": 48.0,
-        "refresh": 15.6,
+        "refresh": 17.2,
         "workspace": 10.4,
         "commute": null,
         "cost": 98.2,
@@ -4056,7 +4056,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 7.0559,
+          "value": 7.0427,
           "score": 0.0,
           "source": "D1",
           "unit": "μg/m3",
@@ -4077,8 +4077,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 4.7863,
-          "score": 26.1,
+          "value": 4.229,
+          "score": 29.4,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -4205,8 +4205,8 @@
       "area_km2": 24.36,
       "population": 189836.0,
       "scores": {
-        "quiet": 50.6,
-        "refresh": 66.9,
+        "quiet": 51.7,
+        "refresh": 56.8,
         "workspace": 15.5,
         "commute": null,
         "cost": 88.4,
@@ -4214,8 +4214,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.1966,
-          "score": 51.9,
+          "value": 5.1838,
+          "score": 54.1,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -4235,8 +4235,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 8.8669,
-          "score": 66.9,
+          "value": 6.6926,
+          "score": 56.8,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -4363,8 +4363,8 @@
       "area_km2": 10.98,
       "population": 151083.0,
       "scores": {
-        "quiet": 54.2,
-        "refresh": 50.8,
+        "quiet": 54.8,
+        "refresh": 48.4,
         "workspace": 27.6,
         "commute": null,
         "cost": 67.1,
@@ -4372,8 +4372,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.0153,
-          "score": 67.5,
+          "value": 5.0164,
+          "score": 68.6,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -4393,8 +4393,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 7.305,
-          "score": 51.3,
+          "value": 5.7727,
+          "score": 46.6,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -4521,8 +4521,8 @@
       "area_km2": 16.42,
       "population": 195553.0,
       "scores": {
-        "quiet": 47.1,
-        "refresh": 64.0,
+        "quiet": 47.4,
+        "refresh": 28.0,
         "workspace": 11.1,
         "commute": null,
         "cost": 78.2,
@@ -4530,8 +4530,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.4831,
-          "score": 27.1,
+          "value": 5.4877,
+          "score": 27.8,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -4551,8 +4551,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 8.5827,
-          "score": 64.0,
+          "value": 4.1061,
+          "score": 28.0,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -4679,8 +4679,8 @@
       "area_km2": 103.31,
       "population": 129221.0,
       "scores": {
-        "quiet": 77.0,
-        "refresh": 2.8,
+        "quiet": 78.6,
+        "refresh": 0.0,
         "workspace": null,
         "commute": 17.9,
         "cost": 100.0,
@@ -4688,8 +4688,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.1544,
-          "score": 55.5,
+          "value": 5.1303,
+          "score": 58.7,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -4709,8 +4709,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 2.4595,
-          "score": 2.8,
+          "value": 1.0693,
+          "score": 0.0,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -4837,8 +4837,8 @@
       "area_km2": 29.43,
       "population": 264144.0,
       "scores": {
-        "quiet": 73.0,
-        "refresh": 60.8,
+        "quiet": 73.3,
+        "refresh": 59.4,
         "workspace": 8.6,
         "commute": null,
         "cost": 85.8,
@@ -4846,8 +4846,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.8829,
-          "score": 79.0,
+          "value": 4.8909,
+          "score": 79.5,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -4867,8 +4867,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 12.1261,
-          "score": 99.5,
+          "value": 10.2715,
+          "score": 96.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -4996,7 +4996,7 @@
       "population": 117505.0,
       "scores": {
         "quiet": 55.0,
-        "refresh": 84.6,
+        "refresh": 56.8,
         "workspace": null,
         "commute": null,
         "cost": 93.6,
@@ -5025,8 +5025,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 10.6383,
-          "score": 84.6,
+          "value": 6.691,
+          "score": 56.8,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -5154,7 +5154,7 @@
       "population": 247057.0,
       "scores": {
         "quiet": 81.4,
-        "refresh": 37.9,
+        "refresh": 31.6,
         "workspace": 7.4,
         "commute": null,
         "cost": 81.9,
@@ -5162,7 +5162,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.6031,
+          "value": 4.6094,
           "score": 100.0,
           "source": "D1",
           "unit": "μg/m3",
@@ -5183,8 +5183,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 9.5071,
-          "score": 73.3,
+          "value": 7.0291,
+          "score": 60.6,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -5311,8 +5311,8 @@
       "area_km2": 71.55,
       "population": 421872.0,
       "scores": {
-        "quiet": 55.4,
-        "refresh": 35.8,
+        "quiet": 55.8,
+        "refresh": 36.2,
         "workspace": 7.9,
         "commute": null,
         "cost": 95.9,
@@ -5320,8 +5320,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.4975,
-          "score": 25.9,
+          "value": 5.4989,
+          "score": 26.8,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -5341,8 +5341,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 9.2626,
-          "score": 70.8,
+          "value": 8.0059,
+          "score": 71.4,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -5470,7 +5470,7 @@
       "population": 129790.0,
       "scores": {
         "quiet": 82.8,
-        "refresh": 74.2,
+        "refresh": 70.2,
         "workspace": 3.4,
         "commute": null,
         "cost": 83.9,
@@ -5478,7 +5478,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.6214,
+          "value": 4.6374,
           "score": 100.0,
           "source": "D1",
           "unit": "μg/m3",
@@ -5499,8 +5499,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 12.9539,
-          "score": 100.0,
+          "value": 9.8639,
+          "score": 92.1,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -5627,8 +5627,8 @@
       "area_km2": 20.51,
       "population": 199564.0,
       "scores": {
-        "quiet": 56.0,
-        "refresh": 28.4,
+        "quiet": 56.4,
+        "refresh": 13.2,
         "workspace": 0.0,
         "commute": 3.2,
         "cost": 91.3,
@@ -5636,8 +5636,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.181,
-          "score": 53.2,
+          "value": 5.1853,
+          "score": 54.0,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -5657,8 +5657,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 7.5381,
-          "score": 53.6,
+          "value": 3.6655,
+          "score": 23.1,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -5785,8 +5785,8 @@
       "area_km2": 27.55,
       "population": 190763.0,
       "scores": {
-        "quiet": 63.6,
-        "refresh": 48.7,
+        "quiet": 64.2,
+        "refresh": 43.7,
         "workspace": 0.0,
         "commute": null,
         "cost": 93.4,
@@ -5794,8 +5794,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.3097,
-          "score": 42.1,
+          "value": 5.307,
+          "score": 43.4,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -5815,8 +5815,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 7.0535,
-          "score": 48.7,
+          "value": 5.5103,
+          "score": 43.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -5943,8 +5943,8 @@
       "area_km2": 17.14,
       "population": 152566.0,
       "scores": {
-        "quiet": 69.5,
-        "refresh": 57.7,
+        "quiet": 69.9,
+        "refresh": 57.3,
         "workspace": 0.0,
         "commute": null,
         "cost": 93.9,
@@ -5952,8 +5952,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.1152,
-          "score": 58.9,
+          "value": 5.1194,
+          "score": 59.7,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -5973,8 +5973,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 8.9518,
-          "score": 67.7,
+          "value": 7.6018,
+          "score": 66.9,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -6102,7 +6102,7 @@
       "population": 129022.0,
       "scores": {
         "quiet": 68.7,
-        "refresh": 46.8,
+        "refresh": 30.4,
         "workspace": 50.2,
         "commute": null,
         "cost": 86.0,
@@ -6131,8 +6131,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.7676,
-          "score": 45.9,
+          "value": 2.7826,
+          "score": 13.3,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -6259,8 +6259,8 @@
       "area_km2": 8.15,
       "population": 77055.0,
       "scores": {
-        "quiet": 29.7,
-        "refresh": 40.3,
+        "quiet": 30.6,
+        "refresh": 10.9,
         "workspace": 7.3,
         "commute": null,
         "cost": 82.7,
@@ -6268,8 +6268,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.6182,
-          "score": 15.4,
+          "value": 5.6112,
+          "score": 17.1,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -6289,8 +6289,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.2057,
-          "score": 40.3,
+          "value": 2.565,
+          "score": 10.9,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -6417,8 +6417,8 @@
       "area_km2": 10.16,
       "population": 57388.0,
       "scores": {
-        "quiet": 56.1,
-        "refresh": 26.6,
+        "quiet": 56.7,
+        "refresh": 23.2,
         "workspace": null,
         "commute": null,
         "cost": 95.9,
@@ -6426,8 +6426,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.0196,
-          "score": 67.2,
+          "value": 5.0192,
+          "score": 68.4,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -6447,8 +6447,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 5.4327,
-          "score": 32.5,
+          "value": 3.8832,
+          "score": 25.5,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -6575,8 +6575,8 @@
       "area_km2": 6.39,
       "population": 84076.0,
       "scores": {
-        "quiet": 48.0,
-        "refresh": 8.1,
+        "quiet": 47.7,
+        "refresh": 4.7,
         "workspace": null,
         "commute": null,
         "cost": 84.5,
@@ -6584,8 +6584,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.311,
-          "score": 42.0,
+          "value": 5.332,
+          "score": 41.3,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -6605,8 +6605,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 2.9938,
-          "score": 8.1,
+          "value": 2.0125,
+          "score": 4.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -6734,7 +6734,7 @@
       "population": 83173.0,
       "scores": {
         "quiet": 86.5,
-        "refresh": 53.6,
+        "refresh": 55.0,
         "workspace": 2.1,
         "commute": 4.6,
         "cost": 95.4,
@@ -6763,8 +6763,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.4307,
-          "score": 42.5,
+          "value": 5.6375,
+          "score": 45.1,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -6891,8 +6891,8 @@
       "area_km2": 10.23,
       "population": 75276.0,
       "scores": {
-        "quiet": 74.0,
-        "refresh": 41.5,
+        "quiet": 74.8,
+        "refresh": 16.1,
         "workspace": 29.2,
         "commute": null,
         "cost": 94.3,
@@ -6900,8 +6900,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.8051,
-          "score": 85.7,
+          "value": 4.8026,
+          "score": 87.1,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -6921,8 +6921,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.3299,
-          "score": 41.5,
+          "value": 3.0358,
+          "score": 16.1,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -7050,7 +7050,7 @@
       "population": 115888.0,
       "scores": {
         "quiet": 38.8,
-        "refresh": 21.9,
+        "refresh": 16.3,
         "workspace": 32.6,
         "commute": null,
         "cost": 92.4,
@@ -7058,7 +7058,7 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.7981,
+          "value": 5.8104,
           "score": 0.0,
           "source": "D1",
           "unit": "μg/m3",
@@ -7079,8 +7079,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 5.2109,
-          "score": 30.3,
+          "value": 3.2996,
+          "score": 19.1,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -7208,7 +7208,7 @@
       "population": 69158.0,
       "scores": {
         "quiet": 74.2,
-        "refresh": 53.2,
+        "refresh": 52.6,
         "workspace": null,
         "commute": 3.8,
         "cost": 98.4,
@@ -7237,8 +7237,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 9.597,
-          "score": 74.2,
+          "value": 8.1623,
+          "score": 73.2,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -7365,7 +7365,7 @@
       "area_km2": 21.01,
       "population": 141473.0,
       "scores": {
-        "quiet": 62.0,
+        "quiet": 62.8,
         "refresh": 51.4,
         "workspace": 13.6,
         "commute": null,
@@ -7374,8 +7374,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 5.1624,
-          "score": 54.8,
+          "value": 5.1572,
+          "score": 56.4,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -7395,7 +7395,7 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 12.2525,
+          "value": 11.0121,
           "score": 100.0,
           "source": "D4",
           "unit": "%",
@@ -7524,7 +7524,7 @@
       "population": 95861.0,
       "scores": {
         "quiet": 72.4,
-        "refresh": 62.4,
+        "refresh": 44.7,
         "workspace": null,
         "commute": null,
         "cost": 90.6,
@@ -7553,8 +7553,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 8.4231,
-          "score": 62.4,
+          "value": 5.6022,
+          "score": 44.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -7682,7 +7682,7 @@
       "population": 53452.0,
       "scores": {
         "quiet": 59.7,
-        "refresh": 38.5,
+        "refresh": 23.7,
         "workspace": 83.1,
         "commute": null,
         "cost": 97.4,
@@ -7711,8 +7711,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 6.0286,
-          "score": 38.5,
+          "value": 3.718,
+          "score": 23.7,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -7869,7 +7869,7 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 1.7641,
+          "value": 0.6318,
           "score": 0.0,
           "source": "D4",
           "unit": "%",
@@ -7997,8 +7997,8 @@
       "area_km2": 15.75,
       "population": 208529.0,
       "scores": {
-        "quiet": 70.4,
-        "refresh": 16.0,
+        "quiet": 70.6,
+        "refresh": 10.6,
         "workspace": 4.8,
         "commute": null,
         "cost": 87.3,
@@ -8006,8 +8006,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.9958,
-          "score": 69.2,
+          "value": 5.0061,
+          "score": 69.5,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -8027,8 +8027,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 4.5362,
-          "score": 23.6,
+          "value": 2.7226,
+          "score": 12.6,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -8155,8 +8155,8 @@
       "area_km2": 16.85,
       "population": 31107.0,
       "scores": {
-        "quiet": 71.9,
-        "refresh": 73.0,
+        "quiet": 73.4,
+        "refresh": 61.0,
         "workspace": 100.0,
         "commute": 2.0,
         "cost": 100.0,
@@ -8164,8 +8164,8 @@
       },
       "indicators": {
         "pm25_annual_avg": {
-          "value": 4.9221,
-          "score": 75.6,
+          "value": 4.9003,
+          "score": 78.7,
           "source": "D1",
           "unit": "μg/m3",
           "status": "ok"
@@ -8185,8 +8185,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 9.4745,
-          "score": 73.0,
+          "value": 7.0695,
+          "score": 61.0,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -8314,7 +8314,7 @@
       "population": 15855.0,
       "scores": {
         "quiet": 100.0,
-        "refresh": 18.0,
+        "refresh": 22.6,
         "workspace": null,
         "commute": null,
         "cost": 100.0,
@@ -8343,8 +8343,8 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 3.9758,
-          "score": 18.0,
+          "value": 3.6174,
+          "score": 22.6,
           "source": "D4",
           "unit": "%",
           "status": "ok"
@@ -8472,7 +8472,7 @@
       "population": 1747.0,
       "scores": {
         "quiet": 100.0,
-        "refresh": 0.0,
+        "refresh": null,
         "workspace": 100.0,
         "commute": null,
         "cost": null,
@@ -8501,11 +8501,11 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 0.0105,
-          "score": 0.0,
+          "value": null,
+          "score": null,
           "source": "D4",
           "unit": "%",
-          "status": "ok"
+          "status": "no_data"
         },
         "park_count": {
           "value": null,
@@ -8659,7 +8659,7 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 0.2039,
+          "value": 0.1999,
           "score": 0.0,
           "source": "D4",
           "unit": "%",
