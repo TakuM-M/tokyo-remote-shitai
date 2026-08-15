@@ -20,7 +20,7 @@ make score          # ウィンザライズ → min-max → 軸スコア → pro
 make all            # 上を順に実行
 
 make demo           # ダミーデータで processed/municipalities.sample.json を生成
-make datasets       # 全18データセットの定義と取得状況
+make datasets       # 全8データセットの定義と取得状況
 make test lint
 ```
 
@@ -37,12 +37,12 @@ export PYTHONPATH=src
 uv run python -m pipeline.01-ingest --only D-workspace-01 D-cost-01
 uv run python -m pipeline.01-ingest --heavy       # 大容量ファイルもあわせて取得
 uv run python -m pipeline.02-normalize --only D-cost-01   # 1データセットだけ正規化
-uv run python -m pipeline.spatial_join --boundaries
+uv run python -m pipeline.03-spatial_join --boundaries     # 行政区域ポリゴンの整備だけ
 uv run python -m pipeline.score --demo
 
 uv run python -m analysis.missing_report --open          # 欠損レポートを作ってブラウザで開く
 uv run python -m analysis.raw_inventory --verify         # SHA256 を再計算して照合
-uv run python -m analysis.indicator_stats --indicator park_count   # 1指標の内訳
+uv run python -m analysis.indicator_stats --indicator npo_count   # 1指標の内訳
 uv run python -m analysis.validate_output --demo         # ダミーデータの出力を検証
 ```
 
@@ -62,9 +62,9 @@ uv run python -m analysis.validate_output --demo         # ダミーデータの
         ] }
     ],
     "default_weights": { "quiet": 1.0, "…": 1.0 },
-    "presets": [                       // 仕様書4.4のワンタップ切替
+    "presets": [                       // 重みのワンタップ切替
       { "key": "full_remote", "label": "フルリモート集中型",
-        "weights": { "quiet": 2.0, "…": 0.2 } }
+        "weights": { "quiet": 2.0, "…": 0.5 } }
     ],
     "sources": [                       // 出典。画面から原典へ辿るためのリンク元
       { "id": "D-workspace-01", "name": "…", "org": "…", "url": "https://…",
@@ -78,12 +78,12 @@ uv run python -m analysis.validate_output --demo         # ダミーデータの
       "code": "13104", "name": "新宿区", "kind": "区", "region": "区部",
       "area_km2": 18.22, "population": 349000,
       "scores": { "quiet": 28.4, "refresh": 51.2, "workspace": 94.7,
-                  "commute": 98.1, "cost": 12.5, "community": 76.3 },
+                  "cost": 12.5, "community": 76.3 },
       "indicators": {
         "satellite_office_count": { "value": 55, "per_10k": 1.58, "unit": "件",
                                     "score": 96.2, "source": "D-workspace-01", "status": "ok" },
-        "park_count":             { "value": null, "score": null,
-                                    "source": "D-common-01", "status": "no_data" }
+        "park_area":              { "value": 1181952, "per_capita": 3.27, "unit": "m2",
+                                    "score": 22.6, "source": "D-refresh-01", "status": "ok" }
       }
     }
   ]

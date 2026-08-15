@@ -1,6 +1,9 @@
-"""6軸と指標の定義。
+"""5軸と指標の定義。
 
 スコア算出のルールはすべてこのファイルに集約
+
+軸あたりの出典データセットは原則1つに絞ってある。指標を増やすより、
+1本ずつ欠損とスケールの妥当性を確かめられる状態を優先する。
 """
 
 from __future__ import annotations
@@ -9,7 +12,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 Direction = Literal["higher_is_better", "lower_is_better"]
-Denominator = Literal["area_km2", "population_10k"] | None
+Denominator = Literal["area_km2", "population_10k", "population"] | None
 
 
 @dataclass(frozen=True)
@@ -21,10 +24,9 @@ class Axis:
 
 AXES: tuple[Axis, ...] = (
     Axis("quiet", "しずけさ", "道路交通騒音の小ささ・大気のきれいさ"),
-    Axis("refresh", "いきぬき", "緑・公園・散歩コースなど気分転換の場"),
+    Axis("refresh", "いきぬき", "緑の多さ"),
     Axis("workspace", "しごとば", "家以外で作業できる場所の多さ"),
-    Axis("commute", "しゅっしゃ", "主要拠点への出社のしやすさ"),
-    Axis("cost", "くらしのコスト", "住居費の負担の軽さ・広さの余地"),
+    Axis("cost", "くらしのコスト", "住居費の負担の軽さ"),
     Axis("community", "つながり", "地域活動やNPOなど人とつながる機会"),
 )
 
@@ -50,6 +52,8 @@ class Indicator:
         """出力JSONで正規化後の値を入れるキー名。"""
         if self.denominator == "population_10k":
             return "per_10k"
+        if self.denominator == "population":
+            return "per_capita"
         if self.denominator == "area_km2":
             return "per_km2"
         return None
@@ -76,42 +80,34 @@ INDICATORS: tuple[Indicator, ...] = (
         definition="幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を自治体内で平均。",
     ),
     # 軸2: いきぬき
+    #
+    # 分母を面積ではなく人口にしている。原データの樹林地に山林が含まれず、
+    # 面積比にすると緑が最も多い奥多摩町・檜原村が最下位に来てしまうため。
+    # 人口あたりなら都市公園法施行令の「住民1人当たり10m2以上」とも比べられる。
     Indicator(
-        key="green_coverage_ratio",
-        label="緑被率",
+        key="park_area",
+        label="公園面積",
+        axis="refresh",
+        direction="higher_is_better",
+        dataset_id="D-refresh-01",
+        unit="m2",
+        denominator="population",
+        definition=(
+            "公園緑地のポリゴン面積 ÷ 人口。海上公園は開園区域のみ、"
+            "計画決定区域・予定地・霊園・葬儀所は含めない。"
+        ),
+    ),
+    # 軸スコアには算入しない参考値。市街地に残る樹林の多さを示すが、
+    # 山林（西多摩の森林）は原データに収録されていない。
+    Indicator(
+        key="urban_woods_ratio",
+        label="市街地樹林地率",
         axis="refresh",
         direction="higher_is_better",
         dataset_id="D-refresh-01",
         unit="%",
-        definition="緑地面積 ÷ 総面積。",
-    ),
-    Indicator(
-        key="park_count",
-        label="公園密度",
-        axis="refresh",
-        direction="higher_is_better",
-        dataset_id="D-common-01",
-        unit="件",
-        denominator="area_km2",
-        definition="都立＋区市町村立公園の数 ÷ 面積。",
-    ),
-    Indicator(
-        key="walking_course_count",
-        label="散歩コース",
-        axis="refresh",
-        direction="higher_is_better",
-        dataset_id="D-refresh-02",
-        unit="件",
-        definition="TOKYO WALKING MAP の掲載コース数。",
-    ),
-    Indicator(
-        key="bicycle_lane_ratio",
-        label="自転車走行空間",
-        axis="refresh",
-        direction="higher_is_better",
-        dataset_id="D-refresh-03",
-        unit="%",
-        definition="自転車走行空間の整備延長 ÷ 道路総延長。都道分のみ。",
+        include_in_axis=False,
+        definition="樹林地のポリゴン面積 ÷ 総面積。山林は原データに含まれない。",
     ),
     # 軸3: しごとば
     Indicator(
@@ -124,65 +120,7 @@ INDICATORS: tuple[Indicator, ...] = (
         denominator="population_10k",
         definition="TOKYOテレワークアプリ掲載施設数 ÷ 人口1万人。",
     ),
-    Indicator(
-        key="library_count",
-        label="図書館",
-        axis="workspace",
-        direction="higher_is_better",
-        dataset_id="D-common-01",
-        unit="件",
-        denominator="population_10k",
-        definition="都立・区市町村立図書館数 ÷ 人口1万人。",
-    ),
-    Indicator(
-        key="culture_facility_count",
-        label="文化施設",
-        axis="workspace",
-        direction="higher_is_better",
-        dataset_id="D-workspace-02",
-        unit="件",
-        denominator="population_10k",
-        definition="生涯学習センター・文化施設数 ÷ 人口1万人。",
-    ),
-    # 軸4: しゅっしゃ
-    Indicator(
-        key="commute_time_avg",
-        label="主要拠点までの所要時間",
-        axis="commute",
-        direction="lower_is_better",
-        dataset_id="D-commute-01",
-        unit="分",
-        definition="自治体代表駅から東京/新宿/渋谷/品川への最短所要時間の平均。",
-    ),
-    Indicator(
-        key="transfer_count_avg",
-        label="乗換回数",
-        axis="commute",
-        direction="lower_is_better",
-        dataset_id="D-commute-01",
-        unit="回",
-        definition="同上の平均乗換回数。",
-    ),
-    Indicator(
-        key="station_density",
-        label="駅アクセス",
-        axis="commute",
-        direction="higher_is_better",
-        dataset_id="D-commute-01",
-        unit="件",
-        denominator="area_km2",
-        definition="都営の鉄道駅数とバス停数の合計 ÷ 面積。JR・私鉄・民間バスは含まない。",
-    ),
-    Indicator(
-        key="transit_options",
-        label="交通の選択肢",
-        axis="commute",
-        direction="higher_is_better",
-        dataset_id="D-commute-01",
-        unit="系統",
-        definition="自治体内に停留所がある都営バスの系統数。コミュニティバスは含まない。",
-    ),
-    # 軸5: くらしのコスト
+    # 軸4: くらしのコスト
     Indicator(
         key="land_price_residential",
         label="地価水準",
@@ -192,16 +130,7 @@ INDICATORS: tuple[Indicator, ...] = (
         unit="円/m2",
         definition="地価公示（用途:住宅地）の自治体内平均㎡単価。",
     ),
-    Indicator(
-        key="housing_area_per_building",
-        label="住宅の広さ余地",
-        axis="cost",
-        direction="higher_is_better",
-        dataset_id="D-cost-03",
-        unit="m2/棟",
-        definition="土地利用現況調査より、住宅系用途の1棟あたり面積。",
-    ),
-    # 軸6: つながり
+    # 軸5: つながり
     Indicator(
         key="npo_count",
         label="NPO密度",
@@ -211,26 +140,6 @@ INDICATORS: tuple[Indicator, ...] = (
         unit="件",
         denominator="population_10k",
         definition="認証NPO法人数 ÷ 人口1万人。",
-    ),
-    Indicator(
-        key="community_facility_count",
-        label="地域活動の場",
-        axis="community",
-        direction="higher_is_better",
-        dataset_id="D-common-01",
-        unit="件",
-        denominator="population_10k",
-        definition="集会所・コミュニティ施設数 ÷ 人口1万人。",
-    ),
-    Indicator(
-        key="day_night_population_ratio",
-        label="昼夜間人口比率",
-        axis="community",
-        direction="lower_is_better",
-        dataset_id="D-community-02",
-        unit="%",
-        include_in_axis=False,  # 参考指標。軸スコアには入れない
-        definition="昼間人口 ÷ 夜間人口。低いほど『昼も人がいる住宅地』の傾向。",
     ),
 )
 
@@ -244,12 +153,12 @@ def indicators_for_axis(axis_key: str, scored_only: bool = False) -> list[Indica
 
 
 # プリセット。フロントのワンタップ切替に使うため meta に埋め込む。
-# 重みの列順は AXES の定義順（しずけさ / いきぬき / しごとば / 出社 / コスト / つながり）。
+# 重みの列順は AXES の定義順（しずけさ / いきぬき / しごとば / コスト / つながり）。
+# 「ハイブリッド（週2出社）」は出社軸を落とした時点で既定の重みとほぼ同じになったため外した。
 _PRESET_TABLE: tuple[tuple, ...] = (
-    ("full_remote", "フルリモート集中型", 2.0, 1.5, 1.5, 0.2, 1.0, 0.5),
-    ("hybrid", "ハイブリッド（週2出社）", 1.0, 1.0, 1.0, 1.5, 1.0, 0.5),
-    ("nature", "移住検討・自然重視", 1.5, 2.0, 0.8, 0.5, 1.5, 1.0),
-    ("community", "コミュニティ重視", 1.0, 1.0, 1.5, 0.8, 1.0, 2.0),
+    ("full_remote", "フルリモート集中型", 2.0, 1.5, 1.5, 1.0, 0.5),
+    ("nature", "移住検討・自然重視", 1.5, 2.0, 0.8, 1.5, 1.0),
+    ("community", "コミュニティ重視", 1.0, 1.0, 1.5, 1.0, 2.0),
 )
 
 PRESETS: tuple[dict, ...] = tuple(

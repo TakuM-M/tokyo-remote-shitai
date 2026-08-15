@@ -18,9 +18,9 @@ ingest-heavy:
 normalize:
 	$(PY) -m pipeline.02-normalize
 
-## 点/線データを自治体ポリゴンに集約して interim/indicators/ に出力
+## 面/点/線データを自治体ポリゴンに集約して interim/indicators/ に出力
 spatial-join:
-	$(PY) -m pipeline.spatial_join
+	$(PY) -m pipeline.03-spatial_join
 
 ## interim/ → processed/municipalities.json（ウィンザライズ → min-max → 軸スコア）
 score:
@@ -41,10 +41,6 @@ missing:
 ## 上記の結果を1枚のHTMLにまとめて analysis/report.html に書き出す
 report:
 	$(PY) -m analysis.html
-
-lint:
-	uv run ruff check src tests
-	uv run ruff format --check src tests
 
 test:
 	uv run pytest

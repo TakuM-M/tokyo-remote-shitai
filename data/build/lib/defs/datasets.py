@@ -1,8 +1,8 @@
 """使用オープンデータの定義
 
 `D-{ジャンル}-{連番2桁}`
-ジャンル:（quiet / refresh / workspace / cost / community）
-(全指標共通の分母・描画基盤:common)
+ジャンル:（quiet / refresh /workspace / commute / cost / community）
+(複数にまたがる場合:common)
 """
 
 from __future__ import annotations
@@ -193,33 +193,70 @@ _DATASETS: tuple[Dataset, ...] = (
                 key="parks",
                 url="https://data.storage.data.metro.tokyo.lg.jp/toshiseibi/01_kouenryokuchi.zip",
                 filename="01_kouenryokuchi.zip",
-                notes=(
-                    "都立・区市町村立・国営・海上公園などのポリゴン14レイヤ（うち1つは点）。約3.6MB。"
-                    "属性の「面積m2」は調書ベースの数値でポリゴン面積と乖離し、欠損が -9999 で入る"
-                    "（210件）ため使わない。面積はポリゴンから測る。"
-                ),
+                notes="都立・区市町村立・国営・海上公園などのポリゴン。約3.6MB。",
             ),
             Resource(
                 key="woods",
                 url="https://data.storage.data.metro.tokyo.lg.jp/toshiseibi/03_jurinchi.zip",
                 filename="03_jurinchi.zip",
                 heavy=True,
-                notes=(
-                    "樹林地・崖線の樹林地・自治体管理の樹林地の3レイヤ。約474MB"
-                    "（展開後 1.7GB、樹林地.shp だけで 1.5GB あるので分割して読む）。"
-                ),
+                notes="樹林地ポリゴン。約474MB。緑被率に使う。",
             ),
         ),
         notes=(
             "本土部のみで島しょ部は欠損。注意事項PDFの制限は精度に関するもので二次利用は妨げないが、"
             "「宅地化農地」「市街化調整区域内農地」だけは東京都地形図（国土地理院承認）由来のため"
             "別途手続きが要る。この2レイヤは使わない。"
-            "樹林地は市街地の樹林だけで山林を含まない（檜原村0.01km2・奥多摩町0.01km2）ため、"
-            "緑の総量ではなく参考値として扱う。"
-            "公園側は海上公園の3レイヤが同じ公園を重複収録し水域も含むので開園区域のみを使い、"
-            "計画決定区域・予定地・霊園・葬儀所・点データは外す。"
-            "檜原村は都市計画区域外で公園調書に載らず、公園レイヤに1件も無い（値は0でなく欠損）。"
         ),
+    ),
+    Dataset(
+        id="D-refresh-02",
+        name="TOKYO WALKING MAP",
+        org="東京都保健医療局",
+        axes=("refresh",),
+        format="JSON",
+        catalog_id="t000055d0000000363",
+        license=LICENSE_CC_BY,
+        resources=(
+            Resource(
+                key="package",
+                url="https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_show?id=t000055d0000000363",
+                filename="package.json",
+            ),
+        ),
+        notes=(
+            "コースが1件1リソース（KMLのZIP）として登録されており、実体を落とさなくても"
+            "カタログAPIのリソース一覧だけでコース数を数えられる。"
+            "リソースURLのファイル名先頭6桁がチェックデジット付きの団体コードで、"
+            "その先頭5桁が自治体コードになる（例: 131148… → 13114 中野区）。"
+            "距離まで指標化するなら各KMLの取得が別途必要。"
+            "原著作者の承諾が得られたコースのみ収録で、2026-08時点は29自治体・264コース。"
+            "残り24自治体は no_data になる。"
+        ),
+    ),
+    Dataset(
+        id="D-refresh-03",
+        name="自転車走行空間について",
+        org="東京都建設局",
+        axes=("refresh",),
+        format="SHP",
+        catalog_id="t000014d0000000026",
+        license=LICENSE_CC_BY,
+        resources=(
+            Resource(
+                key="route",
+                url="https://www.kensetsu.metro.tokyo.lg.jp/documents/d/kensetsu/000035730",
+                filename="jitensha_suishou_route.zip",
+                notes="自転車推奨ルート。URLに拡張子がないため保存名を明示する。",
+            ),
+            Resource(
+                key="priority",
+                url="https://www.kensetsu.metro.tokyo.lg.jp/content/000035729.zip",
+                filename="yuusen_seibi_kukan.zip",
+                notes="優先整備区間。カタログ側のURLはホスト名が誤記（metro.tokyo.jg.jp）で開けない。",
+            ),
+        ),
+        notes="都道分のみで区市町村道は含まれない。その旨を画面に明記する。",
     ),
     # しごとば
     Dataset(
@@ -240,6 +277,58 @@ _DATASETS: tuple[Dataset, ...] = (
         notes=(
             "「区市町村コード」列に5桁コードが入っているので空間結合は不要。UTF-8 BOM付き。"
             "掲載許諾済みの施設のみ収録のため網羅性に限界がある。その旨を画面に明記する。"
+        ),
+    ),
+    Dataset(
+        id="D-workspace-02",
+        name="施設関連情報_生涯学習センター",
+        org="東京都教育庁",
+        axes=("workspace",),
+        format="CSV",
+        catalog_id="t000021d2000000023",
+        license=LICENSE_CC_BY,
+        resources=(
+            Resource(
+                key="centers",
+                url="https://www.opendata.metro.tokyo.lg.jp/kyouiku/R3/skshubetu_8.csv",
+                filename="shougai_gakushu_center.csv",
+            ),
+        ),
+        notes=(
+            "区市町村名・緯度経度つきだが全体で数KBしかなく収録件数が少ない。"
+            "文化施設の指標にするなら同じ教育庁の博物館・公民館データセットの併用を検討する。"
+            "文字コードは CP932。"
+        ),
+    ),
+    # しゅっしゃ
+    Dataset(
+        id="D-commute-01",
+        name="東京都交通局 都営バス・都営地下鉄オープンデータ",
+        org="東京都交通局",
+        axes=("commute",),
+        format="GTFS/JSON",
+        catalog_id="t000018d0000000052",
+        license=LICENSE_ODPT,
+        resources=(
+            Resource(
+                key="gtfs_bus",
+                url="https://api-public.odpt.org/api/v4/files/Toei/data/ToeiBus-GTFS.zip",
+                filename="toei_bus_gtfs.zip",
+                notes="GTFS-JP。stops.txt がバス停、routes.txt が系統。",
+            ),
+            Resource(
+                key="stations",
+                url="https://api-public.odpt.org/api/v4/odpt:Station?odpt:operator=odpt.Operator:Toei",
+                filename="toei_stations.json",
+                notes="都営地下鉄・都電荒川線・日暮里舎人ライナーの駅。URLに拡張子がないため保存名を明示する。",
+            ),
+        ),
+        notes=(
+            "カタログのリソースはすべて ckan.odpt.org へのリンク。静的データは"
+            "api-public.odpt.org から認証なしで取得できる。ユーザ登録が要るのは"
+            "トークン付きの api.odpt.org 経路とリアルタイム系（GTFS-RT・ロケーション情報）で、"
+            "今回の指標には要らない。GTFSの stops.txt は都営バスのバス停だけで鉄道駅を"
+            "含まないため、駅は odpt:Station を別に取る。都営のみでJR・私鉄は含まれない。"
         ),
     ),
     # くらしのコスト
@@ -265,6 +354,54 @@ _DATASETS: tuple[Dataset, ...] = (
             "用途は「標準地番号（用途）」で区分され、住宅地は 0。文字コードは CP932。"
         ),
     ),
+    Dataset(
+        id="D-cost-02",
+        name="東京都基準地価格（地価調査）",
+        org="東京都財務局",
+        axes=("cost",),
+        format="CSV",
+        catalog_id="t000004d0000000001",
+        license=LICENSE_CC_BY,
+        updated_at="令和7年地価調査",
+        resources=(
+            Resource(
+                key="points",
+                url="https://www.zaimu1.metro.tokyo.lg.jp/kijun/R7nen/05-02_r7data_kakaku.csv",
+                filename="r7_kijunchi_kakaku.csv",
+            ),
+        ),
+        notes="D-cost-01と同じ構造（表題行＋5桁コード、CP932）。D-cost-01で地点が不足する自治体の補完に使う。",
+    ),
+    Dataset(
+        id="D-cost-03",
+        name="土地利用現況調査GISデータ",
+        org="東京都都市整備局",
+        axes=("cost",),
+        format="SHP",
+        catalog_id="t000008d2000000019",
+        license=LICENSE_TOKYO_OTHER,
+        updated_at="区部:令和3年 / 多摩・島しょ:令和4年",
+        resources=(
+            Resource(
+                key="kubu",
+                url="https://data.storage.data.metro.tokyo.lg.jp/toshiseibi/R03.zip",
+                filename="R03_kubu.zip",
+                heavy=True,
+                notes="令和3年 区部。約363MB。",
+            ),
+            Resource(
+                key="tama",
+                url="https://data.storage.data.metro.tokyo.lg.jp/toshiseibi/R04.zip",
+                filename="R04_tama_tousho.zip",
+                heavy=True,
+                notes="令和4年 多摩・島しょ。約309MB。",
+            ),
+        ),
+        notes=(
+            "区部と多摩・島しょで調査年次が1年ずれる。2ファイル合計で約670MBあり、"
+            "展開後はさらに膨らむので既定の一括取得からは外してある。"
+        ),
+    ),
     # つながり
     Dataset(
         id="D-community-01",
@@ -288,9 +425,52 @@ _DATASETS: tuple[Dataset, ...] = (
             "表題行の日付表記は更新されていないので、鮮度の判断には使わない。"
         ),
     ),
-    # 共通（分母・描画基盤）
+    Dataset(
+        id="D-community-02",
+        name="令和２年国勢調査による東京都の昼間人口（従業地・通学地による人口）",
+        org="東京都総務局",
+        axes=("community",),
+        format="CSV",
+        catalog_id="t000003d0000000627",
+        license=LICENSE_CC_BY,
+        updated_at="令和2年国勢調査",
+        resources=(
+            Resource(
+                key="table1",
+                url="https://www.toukei.metro.tokyo.lg.jp/tyukanj/2020/tj20zv0100.csv",
+                filename="chukan_jinkou_hyou1.csv",
+            ),
+        ),
+        notes=(
+            "当初あてにしていた「東京の労働力 統計データ」は都全体の集計で区市町村別の"
+            "内訳がなく、昼夜間人口比率を作れないため、こちらに差し替えた。"
+            "第1表に地域コード・昼間人口・常住人口・昼夜間人口比率が揃っている。UTF-8 BOM付き。"
+        ),
+    ),
+    # 共通（分母・描画基盤・複数軸で使うもの）
     Dataset(
         id="D-common-01",
+        name="公共施設一覧",
+        org="東京都デジタルサービス局",
+        axes=("refresh", "workspace", "community"),
+        format="CSV",
+        catalog_id="t000029d0000000030",
+        license=LICENSE_CC_BY,
+        resources=(
+            Resource(
+                key="facilities",
+                url="https://www.opendata.metro.tokyo.lg.jp/suisyoudataset/130001_public_facility.csv",
+                filename="public_facility.csv",
+            ),
+        ),
+        notes=(
+            "収録は都立図書館・都立文化施設・都立公園／庭園のみ。市区町村名列は空で、"
+            "コード列にも都のコードしか入らないため、住所または緯度経度から自治体を判定する。"
+            "区市町村立施設は D-refresh-01（公園）などで補う。文字コードは CP932。"
+        ),
+    ),
+    Dataset(
+        id="D-common-02",
         name="東京都の人口（推計）",
         org="東京都総務局",
         axes=("common",),
@@ -314,7 +494,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D-common-02",
+        id="D-common-03",
         name="行政区域データ（国土数値情報 N03）",
         org="国土交通省 国土数値情報ダウンロードサイト",
         axes=("common",),
