@@ -24,8 +24,6 @@ make datasets       # 全18データセットの定義と取得状況
 make test lint
 ```
 
-データの状態を調べる（成果物には影響しない）。
-
 ```bash
 make inventory      # raw/ の棚卸し。manifest.json との突き合わせ
 make missing        # 指標×自治体の欠損レポート
@@ -33,16 +31,6 @@ make stats          # 指標ごとの分布・外れ値・ウィンザライズ�
 make validate       # 出力JSONの検証。エラーがあれば終了コード1
 make report         # 上記をまとめて可視化 → analysis/report.html
 ```
-
-`make report` が書き出す `analysis/report.html` はブラウザで開く1枚のページ。
-欠損マップ（自治体×指標）・充足率・指標の分布とウィンザライズの影響・軸スコアの散らばり・
-出力JSONの検証結果が入っている。外部ライブラリは使わず、図はHTML/CSSとインラインSVGで描いている。
-
-`make ingest` は 100MB を超えるファイル（土地利用現況調査GIS、緑のオープンデータの樹林地）を既定では取得しない。
-必要になったら `--heavy` を渡すか、`--only` でIDを指定する。
-
-各スクリプトは直接叩いてもよい（`--only` などの引数を渡すときはこちら）。
-`src/` を import パスに通し、モジュールとして実行する。
 
 ```bash
 export PYTHONPATH=src
@@ -56,56 +44,6 @@ uv run python -m analysis.raw_inventory --verify         # SHA256 を再計算�
 uv run python -m analysis.indicator_stats --indicator park_count   # 1指標の内訳
 uv run python -m analysis.validate_output --demo         # ダミーデータの出力を検証
 ```
-
-## ディレクトリ
-
-| パス | 中身 | Git |
-|---|---|---|
-| `src/` | パイプライン本体。役割ごとにサブパッケージに分割 | 追跡 |
-| `raw/<データセットID>/` | 取得した原データそのまま。zipは同名ディレクトリに展開済み | 除外 |
-| `raw/manifest.json` | ファイルごとの取得元URL・取得日時・SHA256 | 除外 |
-| `interim/` | 正規化済みの中間データ | 除外 |
-| `interim/indicators/<指標キー>.csv` | 指標ごとの `code,value` | 除外 |
-| `interim/municipal_base.csv` | 面積・人口（全指標の分母） | 除外 |
-| `processed/municipalities.json` | 最終成果物 | 追跡 |
-| `analysis/report.html` | 調査レポート（`make report` の出力） | 除外 |
-
-## モジュール
-
-```
-src/
-├── core/       共通基盤（設定・入出力・自治体マスタ）
-├── defs/       定義（データ出典・指標）
-├── pipeline/   加工パイプライン本体
-└── analysis/   データの状態を調べる補助スクリプト
-```
-
-依存の向きは `analysis`・`pipeline` → `defs` → `core` の一方向。`core` と `defs` は他を import しない。
-
-| ファイル | 役割 |
-|---|---|
-| `core/config.py` | パス・座標系・ログ設定 |
-| `core/io_utils.py` | 文字コード自動判定、数値パース、JSON/CSV入出力 |
-| `core/municipalities.py` | 53自治体マスタ。表記ゆれ・旧市名・住所文字列からコードを解決 |
-| `defs/datasets.py` | 全18データセットの出典定義とダウンロードURL。ここがそのまま JSON の `meta.sources` になる |
-| `defs/indicators.py` | 6軸と指標の定義（向き・分母・単位）、プリセット重み |
-| `pipeline/ingest.py` | ダウンロードと取得履歴の記録 |
-| `pipeline/normalize.py` | データセット別の読み取りハンドラ |
-| `pipeline/road_noise.py` | D-quiet-02 の年度別CSVを1指標にまとめる（欠測年は過去の年度で補完） |
-| `pipeline/spatial_join.py` | GeoPandas による点/線/面 → 自治体の集約 |
-| `pipeline/score.py` | 正規化とスコア算出、JSON出力 |
-
-`analysis/` は成果物の生成には関与しない調査用。結果は標準出力に出すだけで、ファイルは書かない。
-欠損の判定や換算・スコアの計算は `pipeline/score.py` の関数をそのまま呼ぶ（レポートと成果物で数字がずれないようにするため）。
-
-| ファイル | 役割 |
-|---|---|
-| `analysis/raw_inventory.py` | raw/ の棚卸し（ファイル一覧・サイズ・文字コード・行数、manifest との突き合わせ） |
-| `analysis/missing_report.py` | 指標×自治体の欠損率と、欠けている自治体の内訳 |
-| `analysis/indicator_stats.py` | 指標ごとの分布サマリ（min/max・分位点・外れ値候補・ウィンザライズの影響） |
-| `analysis/validate_output.py` | `processed/municipalities.json` のスキーマ・値域・欠損表現の検証 |
-| `analysis/report.py` | 上記の結果を1枚のHTMLにまとめて `analysis/report.html` に出力 |
-| `analysis/_report.py` | レポート表示の共通処理（日本語を含む表の桁揃え） |
 
 ## 出力スキーマ（`processed/municipalities.json`）
 
@@ -150,7 +88,3 @@ src/
   ]
 }
 ```
-
-- `scores` は各軸 0〜100。指標が全欠損の軸は `null`。
-- `reference_only: true` の指標（昼夜間人口比率）は軸スコアに算入していない。数値表示のみ。
-- `per_10k` / `per_km2` は「◯◯あたり」に換算した後の値。スコアはこの値から計算される。

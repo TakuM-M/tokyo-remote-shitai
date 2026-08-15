@@ -11,6 +11,9 @@ setup:
 ingest:
 	$(PY) -m pipeline.01-ingest
 
+ingest-heavy:
+	$(PY) -m pipeline.01-ingest --heavy
+
 ## raw/ → interim/（文字コード変換・自治体コード付与・単位統一）
 normalize:
 	$(PY) -m pipeline.normalize
