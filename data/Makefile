@@ -16,7 +16,7 @@ ingest-heavy:
 
 ## raw/ → interim/（文字コード変換・自治体コード付与・単位統一）
 normalize:
-	$(PY) -m pipeline.normalize
+	$(PY) -m pipeline.02-normalize
 
 ## 点/線データを自治体ポリゴンに集約して interim/indicators/ に出力
 spatial-join:
@@ -34,25 +34,13 @@ demo:
 
 ## ---- 調査用（成果物の生成には関与しない） ----
 
-## raw/ の棚卸し（ファイル一覧・文字コード・manifest との突き合わせ）
-inventory:
-	$(PY) -m analysis.raw_inventory
-
 ## 指標×自治体の欠損レポート
 missing:
 	$(PY) -m analysis.missing_report
 
-## 指標ごとの分布・外れ値・ウィンザライズの影響
-stats:
-	$(PY) -m analysis.indicator_stats
-
-## 出力JSONのスキーマ・値域・欠損表現を検証（エラーがあれば終了コード1）
-validate:
-	$(PY) -m analysis.validate_output
-
 ## 上記の結果を1枚のHTMLにまとめて analysis/report.html に書き出す
 report:
-	$(PY) -m analysis.report
+	$(PY) -m analysis.html
 
 lint:
 	uv run ruff check src tests

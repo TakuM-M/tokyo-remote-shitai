@@ -26,7 +26,7 @@ make test lint
 
 ```bash
 make inventory      # raw/ の棚卸し。manifest.json との突き合わせ
-make missing        # 指標×自治体の欠損レポート
+make missing        # 指標×自治体の欠損レポート → analysis/missing_report.html, missing_matrix.csv
 make stats          # 指標ごとの分布・外れ値・ウィンザライズの影響
 make validate       # 出力JSONの検証。エラーがあれば終了コード1
 make report         # 上記をまとめて可視化 → analysis/report.html
@@ -34,12 +34,13 @@ make report         # 上記をまとめて可視化 → analysis/report.html
 
 ```bash
 export PYTHONPATH=src
-uv run python -m pipeline.ingest --only D-workspace-01 D-cost-01
-uv run python -m pipeline.ingest --heavy          # 大容量ファイルもあわせて取得
-uv run python -m pipeline.normalize --status
+uv run python -m pipeline.01-ingest --only D-workspace-01 D-cost-01
+uv run python -m pipeline.01-ingest --heavy       # 大容量ファイルもあわせて取得
+uv run python -m pipeline.02-normalize --only D-cost-01   # 1データセットだけ正規化
 uv run python -m pipeline.spatial_join --boundaries
 uv run python -m pipeline.score --demo
 
+uv run python -m analysis.missing_report --open          # 欠損レポートを作ってブラウザで開く
 uv run python -m analysis.raw_inventory --verify         # SHA256 を再計算して照合
 uv run python -m analysis.indicator_stats --indicator park_count   # 1指標の内訳
 uv run python -m analysis.validate_output --demo         # ダミーデータの出力を検証

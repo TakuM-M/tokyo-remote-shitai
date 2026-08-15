@@ -40,6 +40,15 @@ CRS_PLANE = "EPSG:6677"
 SCHEMA_VERSION = "0.2"
 
 
+def indicator_csv(dataset_id: str, indicator_key: str) -> Path:
+    """指標CSVの出力先。ファイル名の接頭語に出典データセットIDを付ける。
+
+    どの原データから出た値かをファイル名だけで追えるようにするため
+    （例: interim/indicators/D-cost-01_land_price_residential.csv）。
+    """
+    return INDICATOR_DIR / f"{dataset_id}_{indicator_key}.csv"
+
+
 def ensure_dirs() -> None:
     """出力先ディレクトリを作る。"""
     for d in (RAW_DIR, INTERIM_DIR, PROCESSED_DIR, INDICATOR_DIR):

@@ -20,7 +20,7 @@ class Axis:
 
 
 AXES: tuple[Axis, ...] = (
-    Axis("quiet", "しずけさ", "交通量・大気・幹線道路の少なさ"),
+    Axis("quiet", "しずけさ", "道路交通騒音の小ささ・大気のきれいさ"),
     Axis("refresh", "いきぬき", "緑・公園・散歩コースなど気分転換の場"),
     Axis("workspace", "しごとば", "家以外で作業できる場所の多さ"),
     Axis("commute", "しゅっしゃ", "主要拠点への出社のしやすさ"),
@@ -65,15 +65,6 @@ INDICATORS: tuple[Indicator, ...] = (
         dataset_id="D-quiet-01",
         unit="μg/m3",
         definition="大気測定局の測定値（速報値）を自治体内で平均。",
-    ),
-    Indicator(
-        key="arterial_road_density",
-        label="幹線道路密度",
-        axis="quiet",
-        direction="lower_is_better",
-        dataset_id="D-quiet-04",
-        unit="km/km2",
-        definition="緊急輸送道路の総延長 ÷ 面積。",
     ),
     Indicator(
         key="road_noise_leq",

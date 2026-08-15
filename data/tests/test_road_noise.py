@@ -1,8 +1,11 @@
 """自動車交通騒音調査結果（D-quiet-02）の集計テスト。"""
 
+import importlib
+
 import pandas as pd
 
-from pipeline import road_noise
+# モジュール名が数字始まりで import 文に書けないため importlib で読む
+normalize = importlib.import_module("pipeline.02-normalize")
 
 # 実データの並び。列名は年度によって揺れる（ここでは平成25年度の表記）。
 HEADER = (
@@ -32,7 +35,7 @@ def test_read_year_resolves_municipality_and_value(tmp_path):
             "2,調布市小島町2-35,35.6,139.5,JGD2011,都道,b,2013-07-08,2013-07-10,4,2,3.0,1.2,65,60",
         ],
     )
-    out = road_noise.read_year(path, 2013)
+    out = normalize.read_noise_year(path, 2013)
     assert list(out["code"]) == ["13104", "13208"]
     assert list(out["leq_day"]) == [71.0, 65.0]
     assert set(out["year"]) == {2013}
@@ -48,7 +51,7 @@ def test_read_year_drops_missing_but_keeps_night_only_dash(tmp_path):
             "3,調布市小島町2-35,35.6,139.5,JGD2011,都道,b,2010-06-01,2010-06-03,4,2,3.0,1.5,-,-",
         ],
     )
-    out = road_noise.read_year(path, 2010)
+    out = normalize.read_noise_year(path, 2010)
     assert list(out["code"]) == ["13225"]
     assert list(out["leq_day"]) == [69.0]
 
@@ -63,7 +66,7 @@ def test_read_year_drops_rows_with_a_missing_column(tmp_path):
             "479,府中市宮西町1-1,35.6,139.4,JGD2011,都道,b,2013-12-12,2013-12-13,4,4,3.0,1.2,70,66",
         ],
     )
-    out = road_noise.read_year(path, 2013)
+    out = normalize.read_noise_year(path, 2013)
     assert list(out["leq_day"]) == [70.0]
 
 
@@ -77,13 +80,13 @@ def test_read_year_handles_older_column_labels(tmp_path):
         ["1,新宿区西新宿2-8,35.6,139.6,JGD2011,都道,c,2008-06-03,2008-06-10,4,5,8.8,1.5,72,69"],
         header=header,
     )
-    out = road_noise.read_year(path, 2008)
+    out = normalize.read_noise_year(path, 2008)
     assert list(out["leq_day"]) == [72.0]
 
 
 def test_aggregate_uses_newest_year_with_data():
     """複数年度に測定がある自治体は最も新しい年度だけを使う"""
-    out = road_noise.aggregate(
+    out = normalize.aggregate_noise(
         points([("13104", 2013, 70.0), ("13104", 2013, 72.0), ("13104", 2008, 50.0)])
     )
     assert out.loc[0, "value"] == 71.0
@@ -93,7 +96,7 @@ def test_aggregate_uses_newest_year_with_data():
 
 def test_aggregate_falls_back_to_older_year():
     """最新年度に測定が無い自治体は、値のある最も新しい年度まで遡る"""
-    out = road_noise.aggregate(
+    out = normalize.aggregate_noise(
         points(
             [
                 ("13104", 2013, 70.0),
@@ -110,5 +113,5 @@ def test_aggregate_falls_back_to_older_year():
 
 def test_aggregate_leaves_unmeasured_municipality_out():
     """どの年度にも測定が無い自治体は行ごと出さない（0では埋めない）"""
-    out = road_noise.aggregate(points([("13104", 2013, 70.0)]))
+    out = normalize.aggregate_noise(points([("13104", 2013, 70.0)]))
     assert list(out["code"]) == ["13104"]
