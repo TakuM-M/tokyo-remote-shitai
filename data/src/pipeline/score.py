@@ -1,4 +1,4 @@
-""" interim/ → processed/municipalities.json（スコア算出）
+"""interim/ → processed/municipalities.json（スコア算出）
 
 以下の手順を実装する:
     1. 面積あたり / 人口1万人あたりに換算して規模の差を除く

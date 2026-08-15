@@ -13,6 +13,9 @@ RAW_DIR = DATA_ROOT / "raw"
 INTERIM_DIR = DATA_ROOT / "interim"
 PROCESSED_DIR = DATA_ROOT / "processed"
 
+# 調査結果の書き出し先（成果物ではないので ensure_dirs では作らない）
+ANALYSIS_DIR = DATA_ROOT / "analysis"
+
 # 指標ごとに1ファイル（code,value の2列）。score.py がこれを集めて読む。
 INDICATOR_DIR = INTERIM_DIR / "indicators"
 

@@ -23,11 +23,11 @@ def test_code_from_name_handles_variations():
     assert muni.code_from_name(" 新宿区 ") == "13104"
     assert muni.code_from_name("あきる野市") == "13228"
     assert muni.code_from_name("東京都新宿区西新宿2-8-1") == "13104"
-    
+
     # 旧自治体名は合併先へ
     assert muni.code_from_name("田無市") == "13229"
     assert muni.code_from_name("桧原村") == "13307"  # 異体字
-    
+
     # 対象外
     assert muni.code_from_name("横浜市") is None
     assert muni.code_from_name("大島町") is None  # 島しょ部は対象外

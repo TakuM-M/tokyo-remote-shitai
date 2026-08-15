@@ -1,7 +1,4 @@
-""" raw/ → interim/（文字コード変換・自治体コード付与・単位統一）
-
-
-"""
+"""raw/ → interim/（文字コード変換・自治体コード付与・単位統一）"""
 
 from __future__ import annotations
 
@@ -170,35 +167,6 @@ def find_raw_file(dataset_id: str, pattern: str = "*.csv") -> Path:
 
 # ---------------------------------------------------------------- ハンドラ
 
-
-@handler("D16")
-def normalize_base() -> IndicatorFrames:
-    """人口推計から面積・人口（全指標の分母）を作り、municipal_base.csv に書く。
-
-    区部・市部・総数といった集計行が同じ表に混ざるが、地域コードが 13000/13100 など
-    自治体コードでないため `resolve_codes` の段階で落ちる。
-    面積は ha 表記のことがあるため km2 に統一する。
-    """
-    df = read_csv(find_raw_file("D16"))
-    df = resolve_codes(df)
-    area_col = pick_column(df, "area")
-    pop_col = pick_column(df, "population")
-
-    base = pd.DataFrame({"code": df["code"]})
-    area = df[area_col].map(parse_number)
-    # 東京都で最大の自治体（大田区）でも約61km2。1000超なら ha 表記とみなす。
-    base["area_km2"] = area.map(ha_to_km2) if area.median() > 1000 else area
-    base["population"] = df[pop_col].map(parse_number)
-
-    base = base.groupby("code", as_index=False).agg({"area_km2": "max", "population": "max"})
-    base["name"] = base["code"].map(lambda c: muni.BY_CODE[c].name)
-    base = base.loc[:, ["code", "name", "area_km2", "population"]]
-
-    muni.check_coverage(base["code"], "municipal_base")
-    write_interim_csv(base, BASE_CSV)
-    return {}
-
-
 # 大気測定局マスタ・1分値CSVはどちらもヘッダ行を持たないため列名を与える。
 # 局マスタが市区町村コードを持つので、緯度経度はあっても空間結合は要らない。
 # むしろ区境に建つ局は座標だけだと隣の自治体に落ちる（甲州街道大原局は
@@ -251,30 +219,6 @@ def normalize_pm25() -> IndicatorFrames:
     return {"pm25_annual_avg": mean_by_municipality(stations, "pm25")}
 
 
-@handler("D8")
-def normalize_satellite_offices() -> IndicatorFrames:
-    """TOKYOテレワークアプリ掲載サテライトオフィスを自治体ごとに数える。"""
-    df = read_csv(find_raw_file("D8"))
-    return {"satellite_office_count": count_by_municipality(df)}
-
-
-@handler("D9")
-def normalize_culture_facilities() -> IndicatorFrames:
-    """生涯学習センター・文化施設の件数。"""
-    df = read_csv(find_raw_file("D9"))
-    return {"culture_facility_count": count_by_municipality(df)}
-
-
-@handler("D14")
-def normalize_npo() -> IndicatorFrames:
-    """認証NPO法人を主たる事務所の所在地で数える。
-
-    1行目が表題で、ヘッダは2行目にある。自治体名の列は無く、住所文字列から解決する。
-    """
-    df = read_csv(find_raw_file("D14"), header=1)
-    return {"npo_count": count_by_municipality(df)}
-
-
 # 公共施設一覧（D7）は1ファイルに複数種別が混在する。推奨データセットの POIコードで
 # 分類できるため、こちらを主に使う。1512a=図書館 / 1002a=自然公園 / 1003a=都市公園 /
 # 1004a=庭園 / 0801a=博物館 / 0802a=美術館 / 1012a=文化会館。
@@ -320,6 +264,20 @@ def normalize_public_facilities() -> IndicatorFrames:
     return frames
 
 
+@handler("D8")
+def normalize_satellite_offices() -> IndicatorFrames:
+    """TOKYOテレワークアプリ掲載サテライトオフィスを自治体ごとに数える。"""
+    df = read_csv(find_raw_file("D8"))
+    return {"satellite_office_count": count_by_municipality(df)}
+
+
+@handler("D9")
+def normalize_culture_facilities() -> IndicatorFrames:
+    """生涯学習センター・文化施設の件数。"""
+    df = read_csv(find_raw_file("D9"))
+    return {"culture_facility_count": count_by_municipality(df)}
+
+
 # 地価公示の「標準地番号（用途）」の区分。住宅地だけを地価水準の指標に使う。
 LAND_USE_RESIDENTIAL = 0
 
@@ -341,6 +299,16 @@ def normalize_land_price() -> IndicatorFrames:
     return {"land_price_residential": mean_by_municipality(df, price_col)}
 
 
+@handler("D14")
+def normalize_npo() -> IndicatorFrames:
+    """認証NPO法人を主たる事務所の所在地で数える。
+
+    1行目が表題で、ヘッダは2行目にある。自治体名の列は無く、住所文字列から解決する。
+    """
+    df = read_csv(find_raw_file("D14"), header=1)
+    return {"npo_count": count_by_municipality(df)}
+
+
 @handler("D15")
 def normalize_day_night_ratio() -> IndicatorFrames:
     """昼夜間人口比率（参考指標）。
@@ -351,6 +319,34 @@ def normalize_day_night_ratio() -> IndicatorFrames:
     df = read_csv(find_raw_file("D15"))
     ratio_col = pick_from(df, ("昼夜間人口比率／総数", "昼夜間人口比率"), label="昼夜間人口比率")
     return {"day_night_population_ratio": mean_by_municipality(df, ratio_col)}
+
+
+@handler("D16")
+def normalize_base() -> IndicatorFrames:
+    """人口推計から面積・人口（全指標の分母）を作り、municipal_base.csv に書く。
+
+    区部・市部・総数といった集計行が同じ表に混ざるが、地域コードが 13000/13100 など
+    自治体コードでないため `resolve_codes` の段階で落ちる。
+    面積は ha 表記のことがあるため km2 に統一する。
+    """
+    df = read_csv(find_raw_file("D16"))
+    df = resolve_codes(df)
+    area_col = pick_column(df, "area")
+    pop_col = pick_column(df, "population")
+
+    base = pd.DataFrame({"code": df["code"]})
+    area = df[area_col].map(parse_number)
+    # 東京都で最大の自治体（大田区）でも約61km2。1000超なら ha 表記とみなす。
+    base["area_km2"] = area.map(ha_to_km2) if area.median() > 1000 else area
+    base["population"] = df[pop_col].map(parse_number)
+
+    base = base.groupby("code", as_index=False).agg({"area_km2": "max", "population": "max"})
+    base["name"] = base["code"].map(lambda c: muni.BY_CODE[c].name)
+    base = base.loc[:, ["code", "name", "area_km2", "population"]]
+
+    muni.check_coverage(base["code"], "municipal_base")
+    write_interim_csv(base, BASE_CSV)
+    return {}
 
 
 # ---------------------------------------------------------------- エントリポイント
@@ -364,37 +360,13 @@ def run(dataset_id: str) -> IndicatorFrames:
     return frames
 
 
-def print_status() -> None:
-    from defs import datasets
-    from pipeline.spatial_join import SPATIAL_HANDLERS
-
-    print(f"{'ID':<5} {'処理':<12} {'raw/':<6} データセット")
-    print("-" * 84)
-    for ds in datasets.DATASETS.values():
-        if ds.id in HANDLERS:
-            impl = "normalize"
-        elif ds.id in SPATIAL_HANDLERS:
-            impl = "空間結合"
-        else:
-            impl = "未実装"
-        fetched = "あり" if raw_dir_for(ds.id).exists() else "なし"
-        print(f"{ds.id:<5} {impl:<12} {fetched:<6} {ds.name}")
-    print()
-    print("※「空間結合」は spatial_join.py 側で処理する（座標を伴うデータ）。")
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="raw/ を interim/ に正規化する")
-    parser.add_argument("--status", action="store_true", help="実装状況を一覧表示して終了")
     parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args(argv)
 
     setup_logging(args.verbose)
     ensure_dirs()
-
-    if args.status:
-        print_status()
-        return 0
 
     targets = list(HANDLERS)
     ok, failed = 0, 0

@@ -24,6 +24,20 @@ make datasets       # D1〜D18 の定義と取得状況
 make test lint
 ```
 
+データの状態を調べる（成果物には影響しない）。
+
+```bash
+make inventory      # raw/ の棚卸し。manifest.json との突き合わせ
+make missing        # 指標×自治体の欠損レポート
+make stats          # 指標ごとの分布・外れ値・ウィンザライズの影響
+make validate       # 出力JSONの検証。エラーがあれば終了コード1
+make report         # 上記をまとめて可視化 → analysis/report.html
+```
+
+`make report` が書き出す `analysis/report.html` はブラウザで開く1枚のページ。
+欠損マップ（自治体×指標）・充足率・指標の分布とウィンザライズの影響・軸スコアの散らばり・
+出力JSONの検証結果が入っている。外部ライブラリは使わず、図はHTML/CSSとインラインSVGで描いている。
+
 `make ingest` は 100MB を超えるファイル（土地利用現況調査GIS、緑のオープンデータの樹林地）を既定では取得しない。
 必要になったら `--heavy` を渡すか、`--only` でIDを指定する。
 
@@ -37,6 +51,11 @@ uv run python -m pipeline.ingest --heavy          # 大容量ファイルもあ�
 uv run python -m pipeline.normalize --status
 uv run python -m pipeline.spatial_join --boundaries
 uv run python -m pipeline.score --demo
+
+uv run python -m analysis.raw_inventory --verify         # SHA256 を再計算して照合
+uv run python -m analysis.missing_report --full          # 自治体ごとの欠損を全件表示
+uv run python -m analysis.indicator_stats --indicator park_count   # 1指標の内訳
+uv run python -m analysis.validate_output --demo         # ダミーデータの出力を検証
 ```
 
 ## ディレクトリ
@@ -50,6 +69,7 @@ uv run python -m pipeline.score --demo
 | `interim/indicators/<指標キー>.csv` | 指標ごとの `code,value` | 除外 |
 | `interim/municipal_base.csv` | 面積・人口（全指標の分母） | 除外 |
 | `processed/municipalities.json` | 最終成果物 | 追跡 |
+| `analysis/report.html` | 調査レポート（`make report` の出力） | 除外 |
 
 ## モジュール
 
@@ -75,7 +95,8 @@ src/
 | `pipeline/spatial_join.py` | GeoPandas による点/線/面 → 自治体の集約 |
 | `pipeline/score.py` | 正規化とスコア算出、JSON出力 |
 
-`analysis/` は成果物の生成には関与しない調査用。現時点ではいずれも中身は未実装。
+`analysis/` は成果物の生成には関与しない調査用。結果は標準出力に出すだけで、ファイルは書かない。
+欠損の判定や換算・スコアの計算は `pipeline/score.py` の関数をそのまま呼ぶ（レポートと成果物で数字がずれないようにするため）。
 
 | ファイル | 役割 |
 |---|---|
@@ -83,6 +104,8 @@ src/
 | `analysis/missing_report.py` | 指標×自治体の欠損率と、欠けている自治体の内訳 |
 | `analysis/indicator_stats.py` | 指標ごとの分布サマリ（min/max・分位点・外れ値候補・ウィンザライズの影響） |
 | `analysis/validate_output.py` | `processed/municipalities.json` のスキーマ・値域・欠損表現の検証 |
+| `analysis/report.py` | 上記の結果を1枚のHTMLにまとめて `analysis/report.html` に出力 |
+| `analysis/_report.py` | レポート表示の共通処理（日本語を含む表の桁揃え） |
 
 ## 出力スキーマ（`processed/municipalities.json`）
 
