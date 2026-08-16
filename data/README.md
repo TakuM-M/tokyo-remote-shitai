@@ -38,7 +38,7 @@ uv run python -m pipeline.01-ingest --only D-workspace-01 D-cost-01
 uv run python -m pipeline.01-ingest --heavy       # 大容量ファイルもあわせて取得
 uv run python -m pipeline.02-normalize --only D-cost-01   # 1データセットだけ正規化
 uv run python -m pipeline.03-spatial_join --boundaries     # 行政区域ポリゴンの整備だけ
-uv run python -m pipeline.score --demo
+uv run python -m pipeline.04-score --demo
 
 uv run python -m analysis.missing_report --open          # 欠損レポートを作ってブラウザで開く
 uv run python -m analysis.raw_inventory --verify         # SHA256 を再計算して照合
