@@ -470,9 +470,14 @@ function renderDetail() {
       const src = sources[ind.source];
       const per = v.per_10k !== undefined ? `（${fmt(v.per_10k, 2)} /万人）`
                 : v.per_km2 !== undefined ? `（${fmt(v.per_km2, 2)} /km²）` : "";
+      // status: "imputed" は近隣自治体の値で補完した推定値。値はあるので数値を出し、
+      // 実測と取り違えないよう推定である旨を添える。
+      const imputed = v.status === "imputed"
+        ? `<span class='note' title="${esc((v.imputed_from || []).map((c) => (byCode(c) || {}).name || c).join("・"))}の値から推定">※推定</span>`
+        : "";
       return `<tr>
           <td>${esc(ind.label)}${ind.reference_only ? "<span class='note'>※参考</span>" : ""}</td>
-          <td class="num">${v.status === "ok" ? fmt(v.value, 2) + " " + esc(ind.unit || "") + per : '<span class="status-no_data">なし</span>'}</td>
+          <td class="num">${v.status !== "no_data" ? fmt(v.value, 2) + " " + esc(ind.unit || "") + per + imputed : '<span class="status-no_data">なし</span>'}</td>
           <td class="num">${v.score === null || v.score === undefined ? "—" : v.score.toFixed(1)}</td>
           <td>${src ? `<a href="${esc(src.url)}" target="_blank" rel="noopener" title="${esc(src.name)}">${esc(ind.source)}</a>` : esc(ind.source || "")}</td>
         </tr>`;

@@ -106,12 +106,15 @@ ALIASES: dict[str, str] = {
     "保谷市": "13229",
     "秋川市": "13228",  # → あきる野市（1995年合併）
     "五日市町": "13228",
-    "桧原村": "13307",  # 「檜」の異体字
     "西多摩郡瑞穂町": "13303",
     "西多摩郡日の出町": "13305",
     "西多摩郡檜原村": "13307",
     "西多摩郡奥多摩町": "13308",
 }
+
+# 自治体名に現れる異体字。NFKC では吸収されないので個別に正字へ寄せる。
+# 「桧原村」は自動車交通騒音調査（D-quiet-01）の平成22年度分で使われている表記。
+VARIANT_CHARS = str.maketrans({"桧": "檜"})
 
 
 def normalize_name(raw: object) -> str:
@@ -119,6 +122,7 @@ def normalize_name(raw: object) -> str:
 
     - 全角英数・記号を半角化（NFKC）
     - 「東京都」接頭辞、空白、括弧書きを除去
+    - 異体字を正字に寄せる（「桧原村」「西多摩郡桧原村」→ 檜原村）
     """
     if raw is None or (isinstance(raw, float) and pd.isna(raw)):
         return ""
@@ -126,7 +130,7 @@ def normalize_name(raw: object) -> str:
     s = re.sub(r"\s+", "", s)
     s = re.sub(r"^東京都", "", s)
     s = re.sub(r"[（(].*?[）)]", "", s)
-    return s
+    return s.translate(VARIANT_CHARS)
 
 
 def code_from_name(raw: object) -> str | None:
@@ -180,7 +184,7 @@ def attach_code(
 
     `code_col` を最優先し、埋まらなかった行だけ `name_col` で名前解決する。
     `name_col` に複数の列を渡すと、前から順に「まだ解決できていない行」だけを埋める。
-    自治体名列が空で住所にしか手がかりがないデータ（D7）向けの動作。
+    自治体名列が無く住所にしか手がかりがないデータ（D-community-01）向けの動作。
     対象外・解決不能な行は既定で落とし、件数を警告ログに出す（黙って消さない）。
     """
     out = df.copy()

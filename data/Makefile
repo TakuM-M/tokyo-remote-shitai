@@ -1,39 +1,51 @@
-RUN := uv run python src
+# src/ をimportパスに通し、サブパッケージをモジュールとして実行する
+PY := PYTHONPATH=src uv run python
 
-.PHONY: setup ingest normalize spatial-join score all demo datasets lint test clean clean-all
+.PHONY: setup ingest ingest-heavy normalize spatial-join impute score all demo \
+	missing lint test clean clean-all
 
 setup:
 	uv sync
 
 ## 生データを raw/ に取得
 ingest:
-	$(RUN)/ingest.py
+	$(PY) -m pipeline.01-ingest
+
+ingest-heavy:
+	$(PY) -m pipeline.01-ingest --heavy
 
 ## raw/ → interim/（文字コード変換・自治体コード付与・単位統一）
 normalize:
-	$(RUN)/normalize.py
+	$(PY) -m pipeline.02-normalize
 
-## 点/線データを自治体ポリゴンに集約して interim/indicators/ に出力
+## 面/点/線データを自治体ポリゴンに集約して interim/indicators/ に出力
 spatial-join:
-	$(RUN)/spatial_join.py
+	$(PY) -m pipeline.03-spatial_join
 
-## interim/ → processed/municipalities.json（ウィンザライズ → min-max → 軸スコア）
+## 規則にもとづく欠損補完 → interim/indicators_imputed/, interim/imputation_log.csv
+impute:
+	$(PY) -m pipeline.04-impute
+
+## interim/ → processed/municipalities.json（分母換算 → パーセンタイル順位 → 軸スコア）
 score:
-	$(RUN)/score.py
+	$(PY) -m pipeline.05-score
 
-all: ingest normalize spatial-join score
+all: ingest normalize spatial-join impute score
 
 ## スキーマ確認用のダミーデータを生成（フロント開発の先行用）
 demo:
-	$(RUN)/score.py --demo
+	$(PY) -m pipeline.05-score --demo
 
-## データセット定義の一覧と取得状況
-datasets:
-	$(RUN)/ingest.py --list
+## ---- 調査用（成果物の生成には関与しない） ----
 
+## 指標×自治体の欠損レポート → analysis/missing_report.html, missing_matrix.csv
+missing:
+	$(PY) -m analysis.missing_report
+
+## 静的チェック（lint ルールと整形崩れの両方）
 lint:
-	uv run ruff check src tests
-	uv run ruff format --check src tests
+	uv run ruff check src/
+	uv run ruff format --check src/
 
 test:
 	uv run pytest

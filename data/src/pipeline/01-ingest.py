@@ -1,4 +1,4 @@
-""" rawデータの取得
+"""rawデータの取得
 
 datasets.py の定義に従ってダウンロード、`raw/<データセットID>/` に配置
 
@@ -6,7 +6,7 @@ datasets.py の定義に従ってダウンロード、`raw/<データセットID
 再取得する場合は `raw/<データセットID>/` を消してから実行
 （全件再取得 `make clean-all`）
 --heavy オプションで大容量ファイルも取得する
-    
+
 取得結果は raw/manifest.json に記録（いつ・どのURLから・どのハッシュのものを取ったか）
 """
 
@@ -20,10 +20,10 @@ from pathlib import Path
 
 import requests
 
-import datasets
-from config import MANIFEST_JSON, RAW_DIR, ensure_dirs, setup_logging
-from datasets import Dataset, Resource
-from io_utils import read_json, sha256_of, write_json
+from core.config import MANIFEST_JSON, RAW_DIR, ensure_dirs, setup_logging
+from core.io_utils import read_json, sha256_of, write_json
+from defs import datasets
+from defs.datasets import Dataset, Resource
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ def fetch(ds: Dataset, res: Resource) -> Path:
     )
 
     # xlsx なども zip なので、拡張子で本当の配布形式を見分ける
-    if dest.suffix.lower() == ".zip" and zipfile.is_zipfile(dest):
+    if res.extract and dest.suffix.lower() == ".zip" and zipfile.is_zipfile(dest):
         _extract_zip(ds, dest)
     return dest
 
@@ -123,51 +123,16 @@ def _status_label(ds: Dataset) -> str:
     return {"ok": "URL未確定", "pending": "利用条件確認中"}[ds.status]
 
 
-def print_list() -> None:
-    """定義済みデータセットと取得状況を表示する。"""
-    manifest = _load_manifest()
-    print(f"{'ID':<5} {'状況':<14} {'軸':<22} データセット")
-    print("-" * 96)
-    for ds in datasets.DATASETS.values():
-        got = set(manifest.get(ds.id, {}).get("files", {}))
-        if not ds.is_resolved:
-            status = _status_label(ds)
-        elif got >= {r.key for r in ds.resources}:
-            status = "取得済み"
-        elif got:
-            status = f"一部取得 {len(got)}/{len(ds.resources)}"
-        else:
-            status = "未取得"
-        print(f"{ds.id:<5} {status:<14} {','.join(ds.axes):<22} {ds.name}")
-
-    if pending := datasets.pending():
-        print()
-        print(f"利用条件の確認待ちが {len(pending)} 件あります:")
-        for ds in pending:
-            print(f"  - {ds.id} {ds.name}")
-            print(f"      {ds.notes}")
-
-    heavy = [(d, r) for d in datasets.resolved() for r in d.resources if r.heavy]
-    if heavy:
-        print()
-        print(f"既定では取得しない大容量ファイルが {len(heavy)} 件あります（--heavy で取得）:")
-        for ds, res in heavy:
-            print(f"  - {ds.id}/{res.key} {res.notes or res.filename}")
-
-
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="原データを raw/ に取得する")
-    parser.add_argument("--only", nargs="+", metavar="ID", help="対象データセットID（例: D8 D11）")
+    parser.add_argument(
+        "--only", nargs="+", metavar="ID", help="対象データセットID（例: D-workspace-01 D-cost-01）"
+    )
     parser.add_argument("--heavy", action="store_true", help="大容量ファイルもあわせて取得する")
-    parser.add_argument("--list", action="store_true", help="定義と取得状況を一覧表示して終了")
     args = parser.parse_args(argv)
 
     setup_logging()
     ensure_dirs()
-
-    if args.list:
-        print_list()
-        return 0
 
     targets = (
         [datasets.get(i) for i in args.only] if args.only else list(datasets.DATASETS.values())

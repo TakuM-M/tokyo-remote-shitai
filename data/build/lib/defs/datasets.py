@@ -1,18 +1,23 @@
-"""使用オープンデータの定義"""
+"""使用オープンデータの定義
+
+`D-{ジャンル}-{連番2桁}`
+ジャンル:（quiet / refresh /workspace / commute / cost / community）
+(複数にまたがる場合:common)
+"""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Literal
 
+# url
 CATALOG_TOP = "https://portal.data.metro.tokyo.lg.jp/"
 CATALOG_DATASET = "https://catalog.data.metro.tokyo.lg.jp/dataset/"
 
+# license
 LICENSE_CC_BY = "CC BY 4.0（東京都オープンデータ利用規約）"
-# 都カタログには載るがライセンス欄が「その他」で、個別の注意事項PDFが優先されるもの
 LICENSE_TOKYO_OTHER = "東京都オープンデータ利用規約（個別の注意事項あり）"
 LICENSE_MLIT = "国土数値情報 利用約款（公共データ利用規約 PDL1.0）"
-# 都カタログには載るが実体は公共交通オープンデータセンター（odpt.org）にあるもの
 LICENSE_ODPT = "CC BY 4.0（公共交通オープンデータセンター）"
 
 # ok      … ダウンロードURLが確定していて、そのまま取得できる
@@ -29,6 +34,8 @@ class Resource:
     filename: str  # raw/<データセットID>/ 配下での保存名
     # 100MB超など、既定の一括取得から外すもの。`ingest --heavy` か `--only` で取る
     heavy: bool = False
+    # 年度別に分かれて配布されるデータで、そのファイルが表す年度（西暦）
+    year: int | None = None
     notes: str = ""
 
 
@@ -73,8 +80,9 @@ class Dataset:
 
 
 _DATASETS: tuple[Dataset, ...] = (
+    # しずけさ
     Dataset(
-        id="D1",
+        id="D-quiet-01",
         name="PM2.5(微小粒子状物質)モニタリングデータ(1分値)",
         org="東京都環境局",
         axes=("quiet",),
@@ -103,66 +111,70 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D2",
-        name="交通量統計表",
-        org="警視庁",
+        id="D-quiet-02",
+        name="自動車交通騒音調査結果",
+        org="東京都環境局",
         axes=("quiet",),
-        format="CSV/ZIP",
-        catalog_id="t000022d0000000035",
+        format="CSV",
+        catalog_id="t000009d1900000003",
         license=LICENSE_CC_BY,
-        updated_at="令和6年調査",
+        updated_at="平成20〜25年度（2008〜2013年度）",
         resources=(
             Resource(
-                key="results",
-                url="https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/tokei_jokyo/ryo.files/02_cyousakekka_csv.zip",
-                filename="cyousakekka.zip",
+                key="h25",
+                url="https://www.opendata.metro.tokyo.lg.jp/kankyo/vehicle/noise/H25/H25_kekka.csv",
+                filename="h25_kekka.csv",
+                year=2013,
+                notes="平成25年度分。カタログID t000009d1900000003",
             ),
             Resource(
-                key="kousaten_ku",
-                url="https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/tokei_jokyo/ryo.files/02_kousatenkubu_csv.zip",
-                filename="kousaten_kubu.zip",
+                key="h24",
+                url="https://www.opendata.metro.tokyo.lg.jp/kankyo/vehicle/noise/H24/H24_kekka.csv",
+                filename="h24_kekka.csv",
+                year=2012,
+                notes="平成24年度分。カタログID t000009d1900000004",
             ),
             Resource(
-                key="kousaten_tama",
-                url="https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/tokei_jokyo/ryo.files/02_kousatentamabu_csv.zip",
-                filename="kousaten_tamabu.zip",
+                key="h23",
+                url="https://www.opendata.metro.tokyo.lg.jp/kankyo/vehicle/noise/H23/H23_kekka.csv",
+                filename="h23_kekka.csv",
+                year=2011,
+                notes="平成23年度分。カタログID t000009d1900000005",
+            ),
+            Resource(
+                key="h22",
+                url="https://www.opendata.metro.tokyo.lg.jp/kankyo/vehicle/noise/H22/H22_kekka2.csv",
+                filename="h22_kekka.csv",
+                year=2010,
+                notes="平成22年度分。カタログID t000009d1900000006。この年度だけURLが kekka2。",
+            ),
+            Resource(
+                key="h21",
+                url="https://www.opendata.metro.tokyo.lg.jp/kankyo/vehicle/noise/H21/H21_kekka.csv",
+                filename="h21_kekka.csv",
+                year=2009,
+                notes="平成21年度分。カタログID t000009d1900000007",
+            ),
+            Resource(
+                key="h20",
+                url="https://www.opendata.metro.tokyo.lg.jp/kankyo/vehicle/noise/H20/H20_kekka.csv",
+                filename="h20_kekka.csv",
+                year=2008,
+                notes="平成20年度分。カタログID t000009d1900000008",
             ),
         ),
         notes=(
-            "01_ が奇数年調査、02_ が偶数年調査で、内容が新しいのは 02_（令和6年）。"
-            "集計単位は方面・スクリーンライン・交差点で、自治体コードを持つ列がない。"
-            "自治体別に落とすには交差点名からの住所推定が要るため、参考扱いにとどめる。"
+            "幹線道路沿いの測定地点ごとに昼間・夜間の等価騒音レベル(Leq)が入る。"
+            "住所列の先頭が自治体名なので空間結合は不要。"
+            "1年度あたり約600地点だが調査地点は年度ごとに入れ替わり、"
+            "単年では測定のない自治体が出る（平成25年度は檜原村が欠測）。"
+            "6年分を合わせると53自治体すべてが埋まるため、自治体ごとに"
+            "値のある最も新しい年度を採る。文字コードは CP932。"
         ),
     ),
+    # いきぬき
     Dataset(
-        id="D3",
-        name="平成27年度　全国道路交通情報調査道路交通センサス",
-        org="東京都建設局",
-        axes=("quiet",),
-        format="XLSX",
-        catalog_id="t000014d0000000009",
-        license=LICENSE_CC_BY,
-        updated_at="平成27年度（2015年）",
-        resources=(
-            Resource(
-                key="summary_shi",
-                url="https://www.opendata.metro.tokyo.lg.jp/kensetsu/t000014d0000000009/a-2_h27_shichoson_hei.xlsx",
-                filename="a2_h27_shichoson_heijitsu.xlsx",
-            ),
-            Resource(
-                key="summary_ku",
-                url="https://www.opendata.metro.tokyo.lg.jp/kensetsu/t000014d0000000009/a-4_h27_tokubetsuku_hei.xlsx",
-                filename="a4_h27_tokubetsuku_heijitsu.xlsx",
-            ),
-        ),
-        notes=(
-            "取得するのは平日の総括表（市部・区部）。1行1観測地点で、列は路線番号／路線名／"
-            "地点番号／地点名称と車種別交通量。自治体コード列はないため、"
-            "地点名称から自治体を推定する必要がある。平成27年度と古く、更新年を画面に明示する。"
-        ),
-    ),
-    Dataset(
-        id="D4",
+        id="D-refresh-01",
         name="緑のオープンデータ（GISデータ）",
         org="東京都都市整備局",
         axes=("refresh",),
@@ -198,7 +210,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D5",
+        id="D-refresh-02",
         name="TOKYO WALKING MAP",
         org="東京都保健医療局",
         axes=("refresh",),
@@ -223,7 +235,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D6",
+        id="D-refresh-03",
         name="自転車走行空間について",
         org="東京都建設局",
         axes=("refresh",),
@@ -246,29 +258,9 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
         notes="都道分のみで区市町村道は含まれない。その旨を画面に明記する。",
     ),
+    # しごとば
     Dataset(
-        id="D7",
-        name="公共施設一覧",
-        org="東京都デジタルサービス局",
-        axes=("refresh", "workspace", "community"),
-        format="CSV",
-        catalog_id="t000029d0000000030",
-        license=LICENSE_CC_BY,
-        resources=(
-            Resource(
-                key="facilities",
-                url="https://www.opendata.metro.tokyo.lg.jp/suisyoudataset/130001_public_facility.csv",
-                filename="public_facility.csv",
-            ),
-        ),
-        notes=(
-            "収録は都立図書館・都立文化施設・都立公園／庭園のみ。市区町村名列は空で、"
-            "コード列にも都のコードしか入らないため、住所または緯度経度から自治体を判定する。"
-            "区市町村立施設は D4（公園）などで補う。文字コードは CP932。"
-        ),
-    ),
-    Dataset(
-        id="D8",
+        id="D-workspace-01",
         name="「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ",
         org="東京都産業労働局",
         axes=("workspace",),
@@ -288,7 +280,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D9",
+        id="D-workspace-02",
         name="施設関連情報_生涯学習センター",
         org="東京都教育庁",
         axes=("workspace",),
@@ -308,8 +300,9 @@ _DATASETS: tuple[Dataset, ...] = (
             "文字コードは CP932。"
         ),
     ),
+    # しゅっしゃ
     Dataset(
-        id="D10",
+        id="D-commute-01",
         name="東京都交通局 都営バス・都営地下鉄オープンデータ",
         org="東京都交通局",
         axes=("commute",),
@@ -338,8 +331,9 @@ _DATASETS: tuple[Dataset, ...] = (
             "含まないため、駅は odpt:Station を別に取る。都営のみでJR・私鉄は含まれない。"
         ),
     ),
+    # くらしのコスト
     Dataset(
-        id="D11",
+        id="D-cost-01",
         name="地価公示（東京都分）",
         org="東京都財務局",
         axes=("cost",),
@@ -361,7 +355,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D12",
+        id="D-cost-02",
         name="東京都基準地価格（地価調査）",
         org="東京都財務局",
         axes=("cost",),
@@ -376,10 +370,10 @@ _DATASETS: tuple[Dataset, ...] = (
                 filename="r7_kijunchi_kakaku.csv",
             ),
         ),
-        notes="D11と同じ構造（表題行＋5桁コード、CP932）。D11で地点が不足する自治体の補完に使う。",
+        notes="D-cost-01と同じ構造（表題行＋5桁コード、CP932）。D-cost-01で地点が不足する自治体の補完に使う。",
     ),
     Dataset(
-        id="D13",
+        id="D-cost-03",
         name="土地利用現況調査GISデータ",
         org="東京都都市整備局",
         axes=("cost",),
@@ -408,8 +402,9 @@ _DATASETS: tuple[Dataset, ...] = (
             "展開後はさらに膨らむので既定の一括取得からは外してある。"
         ),
     ),
+    # つながり
     Dataset(
-        id="D14",
+        id="D-community-01",
         name="特定非営利活動法人（ＮＰＯ法人）情報",
         org="東京都生活文化スポーツ局",
         axes=("community",),
@@ -431,7 +426,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D15",
+        id="D-community-02",
         name="令和２年国勢調査による東京都の昼間人口（従業地・通学地による人口）",
         org="東京都総務局",
         axes=("community",),
@@ -452,8 +447,30 @@ _DATASETS: tuple[Dataset, ...] = (
             "第1表に地域コード・昼間人口・常住人口・昼夜間人口比率が揃っている。UTF-8 BOM付き。"
         ),
     ),
+    # 共通（分母・描画基盤・複数軸で使うもの）
     Dataset(
-        id="D16",
+        id="D-common-01",
+        name="公共施設一覧",
+        org="東京都デジタルサービス局",
+        axes=("refresh", "workspace", "community"),
+        format="CSV",
+        catalog_id="t000029d0000000030",
+        license=LICENSE_CC_BY,
+        resources=(
+            Resource(
+                key="facilities",
+                url="https://www.opendata.metro.tokyo.lg.jp/suisyoudataset/130001_public_facility.csv",
+                filename="public_facility.csv",
+            ),
+        ),
+        notes=(
+            "収録は都立図書館・都立文化施設・都立公園／庭園のみ。市区町村名列は空で、"
+            "コード列にも都のコードしか入らないため、住所または緯度経度から自治体を判定する。"
+            "区市町村立施設は D-refresh-01（公園）などで補う。文字コードは CP932。"
+        ),
+    ),
+    Dataset(
+        id="D-common-02",
         name="東京都の人口（推計）",
         org="東京都総務局",
         axes=("common",),
@@ -477,7 +494,7 @@ _DATASETS: tuple[Dataset, ...] = (
         ),
     ),
     Dataset(
-        id="D17",
+        id="D-common-03",
         name="行政区域データ（国土数値情報 N03）",
         org="国土交通省 国土数値情報ダウンロードサイト",
         axes=("common",),
@@ -495,27 +512,6 @@ _DATASETS: tuple[Dataset, ...] = (
         notes=(
             "コロプレス描画と空間結合の基準ポリゴン。ファイル名の 13 が東京都、"
             "20260101 が年次にあたる。年次を上げるときはこの数字だけを差し替える。"
-        ),
-    ),
-    Dataset(
-        id="D18",
-        name="緊急輸送道路",
-        org="東京都建設局",
-        axes=("quiet",),
-        format="SHP",
-        catalog_id="t000014d2000000030",
-        license=LICENSE_CC_BY,
-        resources=(
-            Resource(
-                key="network",
-                url="https://www.opendata.metro.tokyo.lg.jp/kensetsu/kinkyu_yusou.zip",
-                filename="kinkyu_yusou.zip",
-            ),
-        ),
-        notes=(
-            "幹線道路密度の代理データ。都のカタログには都道そのものの線データがなく、"
-            "国道・都道の主要路線で構成される緊急輸送道路ネットワークが最も近い。"
-            "総延長 ÷ 面積で密度を出す。"
         ),
     ),
 )

@@ -1,32 +1,23 @@
-# 使用データ一覧（D1〜D18）
-
-- 定義の実体 [`data/src/datasets.py`](../data/src/datasets.py)
-- 取得状況は `make datasets`, 取得は `make ingest`。
-- ライセンスの考え方とクレジット表記 [data_license_check.md](./data_license_check.md)
-- 採否や差替の経緯は [dev_note.md](./dev_note.md) 
-
+# 使用データ一覧（全11件）
 ## 1. 一覧
 
-| # | データセット名称 | 出所 | 用途 | 形式 | 状態 |
-|---|---|---|---|---|---|
-| D1 | PM2.5(微小粒子状物質)モニタリングデータ(1分値) | 環境局 | しずけさ | CSV/ZIP | 使用 |
-| D2 | 交通量統計表 | 警視庁 | しずけさ | CSV/ZIP | 参考 |
-| D3 | 平成27年度 全国道路交通情報調査道路交通センサス | 建設局 | しずけさ | XLSX | 使用 |
-| D4 | 緑のオープンデータ（GISデータ） | 都市整備局 | いきぬき | SHP | 使用 |
-| D5 | TOKYO WALKING MAP | 保健医療局 | いきぬき | JSON/KML | 使用 |
-| D6 | 自転車走行空間について | 建設局 | いきぬき | SHP | 使用 |
-| D7 | 公共施設一覧 | デジタルサービス局 | いきぬき/しごとば/つながり | CSV | 使用 |
-| D8 | 「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ | 産業労働局 | しごとば | CSV | 使用 |
-| D9 | 施設関連情報_生涯学習センター | 教育庁 | しごとば | CSV | 使用 |
-| D10 | 東京都交通局 都営バス・都営地下鉄オープンデータ | 交通局 | 出社 | GTFS/JSON | 使用（都営のみ） |
-| D11 | 地価公示（東京都分） | 財務局 | コスト | CSV | 使用 |
-| D12 | 東京都基準地価格（地価調査） | 財務局 | コスト | CSV | 使用 |
-| D13 | 土地利用現況調査GISデータ | 都市整備局 | コスト | SHP | 使用 |
-| D14 | 特定非営利活動法人（ＮＰＯ法人）情報 | 生活文化スポーツ局 | つながり | CSV | 使用 |
-| D15 | 令和２年国勢調査による東京都の昼間人口 | 総務局 | つながり | CSV | 使用 |
-| D16 | 東京都の人口（推計） | 総務局 | 共通 | CSV | 使用 |
-| D17 | 行政区域データ（国土数値情報 N03） | 国土交通省 | 共通/描画 | SHP | 使用 |
-| D18 | 緊急輸送道路 | 建設局 | しずけさ | SHP | 使用 |
+判定は利用可否。◎ カタログ掲載でそのまま使える ／ ○ カタログ掲載だが個別条件あり（D-refresh-01 は注意事項PDFの確認が要る）。
+判定の根拠は [data_license_check.md](./data_license_check.md) を参照。
+「用途」はその出典を使っている軸で、IDのジャンル部分と一致する。
+
+| # | データセット名称 | 出所 | 用途 | 形式 | 判定 | 状態 |
+|---|---|---|---|---|---|---|
+| D-quiet-01 | 自動車交通騒音調査結果 | 環境局 | しずけさ | CSV | ◎ | 使用（平成20〜25年度の6年分） |
+| D-refresh-01 | 緑のオープンデータ（GISデータ） | 都市整備局 | いきぬき | SHP | ○ | 使用 |
+| D-refresh-02 | 土地利用細分メッシュ（国土数値情報 L03-b） | 国土交通省 | いきぬき | SHP | ◎ | 使用（平成28年度版） |
+| D-refresh-03 | PM2.5(微小粒子状物質)モニタリングデータ(1分値) | 環境局 | いきぬき | CSV/ZIP | ◎ | 使用 |
+| D-workspace-01 | 「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ | 産業労働局 | しごとば | CSV | ◎ | 使用 |
+| D-workspace-02 | 施設関連情報_図書館 | 教育庁 | しごとば | CSV | ◎ | 使用 |
+| D-cost-01 | 地価公示（東京都分） | 財務局 | コスト | CSV | ◎ | 使用 | 
+| D-community-01 | 特定非営利活動法人（ＮＰＯ法人）情報 | 生活文化スポーツ局 | つながり | CSV | ◎ | 使用 |
+| D-community-02 | 東京都統計年鑑　令和5年　17　教育・文化・スポーツ | 総務局 | つながり | CSV | ◎ | 使用（表17-8のみ） |
+| D-common-01 | 東京都の人口（推計） | 総務局 | 共通（全指標の分母） | CSV | ◎ | 使用 |
+| D-common-02 | 行政区域データ（国土数値情報 N03） | 国土交通省 | 共通/描画 | SHP | ◎ | 使用 |
 
 ## 2. 取得先
 
@@ -34,60 +25,39 @@
 
 | # | key | カタログ | 実ファイル |
 |---|---|---|---|
-| D1 | stations | [t000009d2000000067](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d2000000067) | `.../taikikankyo5g/catalogdata/mast/130001_tokyo_airpollution_station_master.csv` |
-| D1 | pm25 | 〃 | `.../taikikankyo5g/catalogdata/data/130001_tokyo_airpollution_PM2.5.zip` |
-| D2 | results / kousaten_ku / kousaten_tama | [t000022d0000000035](https://catalog.data.metro.tokyo.lg.jp/dataset/t000022d0000000035) | `.../ryo.files/02_cyousakekka_csv.zip` ほか2件 |
-| D3 | summary_shi / summary_ku | [t000014d0000000009](https://catalog.data.metro.tokyo.lg.jp/dataset/t000014d0000000009) | `.../t000014d0000000009/a-2_h27_shichoson_hei.xlsx`、`a-4_h27_tokubetsuku_hei.xlsx` |
-| D4 | notice / parks / woods | [t000008d2000000024](https://catalog.data.metro.tokyo.lg.jp/dataset/t000008d2000000024) | `.../toshiseibi/green_chuui.pdf`、`01_kouenryokuchi.zip`、`03_jurinchi.zip` |
-| D5 | package | [t000055d0000000363](https://catalog.data.metro.tokyo.lg.jp/dataset/t000055d0000000363) | `.../api/3/action/package_show?id=t000055d0000000363` |
-| D6 | route / priority | [t000014d0000000026](https://catalog.data.metro.tokyo.lg.jp/dataset/t000014d0000000026) | `.../documents/d/kensetsu/000035730`、`.../content/000035729.zip` |
-| D7 | facilities | [t000029d0000000030](https://catalog.data.metro.tokyo.lg.jp/dataset/t000029d0000000030) | `.../suisyoudataset/130001_public_facility.csv` |
-| D8 | offices | [t000012d0000000019](https://catalog.data.metro.tokyo.lg.jp/dataset/t000012d0000000019) | `.../sangyouroudou/tokyo-telework2401.csv` |
-| D9 | centers | [t000021d2000000023](https://catalog.data.metro.tokyo.lg.jp/dataset/t000021d2000000023) | `.../kyouiku/R3/skshubetu_8.csv` |
-| D10 | gtfs_bus / stations | [t000018d0000000052](https://catalog.data.metro.tokyo.lg.jp/dataset/t000018d0000000052) | `api-public.odpt.org/api/v4/files/Toei/data/ToeiBus-GTFS.zip`、`api-public.odpt.org/api/v4/odpt:Station?odpt:operator=odpt.Operator:Toei` |
-| D11 | points | [t000004d0000000004](https://catalog.data.metro.tokyo.lg.jp/dataset/t000004d0000000004) | `.../documents/d/zaimu/12_R8kouji_chiten_opendata` |
-| D12 | points | [t000004d0000000001](https://catalog.data.metro.tokyo.lg.jp/dataset/t000004d0000000001) | `.../kijun/R7nen/05-02_r7data_kakaku.csv` |
-| D13 | kubu / tama | [t000008d2000000019](https://catalog.data.metro.tokyo.lg.jp/dataset/t000008d2000000019) | `.../toshiseibi/R03.zip`、`R04.zip` |
-| D14 | ninsyou | [t313360d0000000052](https://catalog.data.metro.tokyo.lg.jp/dataset/t313360d0000000052) | `.../npo_houjin/files/0000001246/ninsyou.csv` |
-| D15 | table1 | [t000003d0000000627](https://catalog.data.metro.tokyo.lg.jp/dataset/t000003d0000000627) | `.../tyukanj/2020/tj20zv0100.csv` |
-| D16 | population | [t000003d2000001136](https://catalog.data.metro.tokyo.lg.jp/dataset/t000003d2000001136) | `.../jsuikei/2026/js266v0000_1.csv` |
-| D17 | boundary | [国土数値情報 N03](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html) | `.../ksj/gml/data/N03/N03-2026/N03-20260101_13_GML.zip` |
-| D18 | network | [t000014d2000000030](https://catalog.data.metro.tokyo.lg.jp/dataset/t000014d2000000030) | `.../kensetsu/kinkyu_yusou.zip` |
+| D-quiet-01 | h25 | [t000009d1900000003](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000003) | `.../kankyo/vehicle/noise/H25/H25_kekka.csv` |
+| D-quiet-01 | h24 | [t000009d1900000004](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000004) | `.../kankyo/vehicle/noise/H24/H24_kekka.csv` |
+| D-quiet-01 | h23 | [t000009d1900000005](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000005) | `.../kankyo/vehicle/noise/H23/H23_kekka.csv` |
+| D-quiet-01 | h22 | [t000009d1900000006](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000006) | `.../kankyo/vehicle/noise/H22/H22_kekka2.csv`（この年度だけ `kekka2`） |
+| D-quiet-01 | h21 | [t000009d1900000007](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000007) | `.../kankyo/vehicle/noise/H21/H21_kekka.csv` |
+| D-quiet-01 | h20 | [t000009d1900000008](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000008) | `.../kankyo/vehicle/noise/H20/H20_kekka.csv` |
+| D-refresh-01 | notice / parks | [t000008d2000000024](https://catalog.data.metro.tokyo.lg.jp/dataset/t000008d2000000024) | `.../toshiseibi/green_chuui.pdf`、`01_kouenryokuchi.zip` |
+| D-refresh-02 | mesh_5339 / mesh_5338 | [国土数値情報 L03-b](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-L03-b.html) | `.../ksj/gml/data/L03-b/L03-b-16/L03-b-16_5339-jgd_GML.zip`、`…_5338-jgd_GML.zip` |
+| D-refresh-03 | stations | [t000009d2000000067](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d2000000067) | `.../taikikankyo5g/catalogdata/mast/130001_tokyo_airpollution_station_master.csv` |
+| D-refresh-03 | pm25_202506 … pm25_202605（12件） | 〃 | `.../taikikankyo5g/catalogdata/data/130001_tokyo_airpollution_PM2.5_YYYYMM.zip` |
+| D-workspace-01 | offices | [t000012d0000000019](https://catalog.data.metro.tokyo.lg.jp/dataset/t000012d0000000019) | `.../sangyouroudou/tokyo-telework2401.csv` |
+| D-workspace-02 | libraries | [t000021d2000000003](https://catalog.data.metro.tokyo.lg.jp/dataset/t000021d2000000003) | `.../kyouiku/R3/skshubetu_4.csv` |
+| D-cost-01 | points | [t000004d0000000004](https://catalog.data.metro.tokyo.lg.jp/dataset/t000004d0000000004) | `.../documents/d/zaimu/12_R8kouji_chiten_opendata` |
+| D-community-01 | ninsyou | [t313360d0000000052](https://catalog.data.metro.tokyo.lg.jp/dataset/t313360d0000000052) | `.../npo_houjin/files/0000001246/ninsyou.csv` |
+| D-community-02 | social_education | [t000003d2000001028](https://catalog.data.metro.tokyo.lg.jp/dataset/t000003d2000001028) | `.../tnenkan/2023/tn23qv170800.csv` |
+| D-common-01 | population | [t000003d2000001136](https://catalog.data.metro.tokyo.lg.jp/dataset/t000003d2000001136) | `.../jsuikei/2026/js266v0000_1.csv` |
+| D-common-02 | boundary | [国土数値情報 N03](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-v3_1.html) | `.../ksj/gml/data/N03/N03-2026/N03-20260101_13_GML.zip` |
 
 ## 3. データ構造
 
 「自治体の特定」は、5桁の全国地方公共団体コードに解決する手段。
-`コード列` はそのまま使える、`住所` / `自治体名` は `municipalities.py` で解決、`空間結合` は `spatial_join.py` で D17 のポリゴンに落とす。
+`コード列` はそのまま使える、`住所` / `自治体名` は `municipalities.py` で解決、`空間結合` は `spatial_join.py` で D-common-02 のポリゴンに落とす。
 
 | # | 自治体の特定 | 文字コード | 年次・時点 | 構造 |
 |---|---|---|---|---|
-| D1 | コード列（局マスタ） | CP932 | 直近50日・日次更新 | 局マスタCSV（ヘッダ行なし。局コード／局名／市区町村コード／緯度経度）と、1分値のZIP。月別ZIPは `…_PM2.5_YYYYMM.zip` で遡れる |
-| D2 | 不可（地点名から推定） | CP932 | 令和6年調査 | ZIP1本に140前後のCSV。集計単位は方面・スクリーンライン・交差点 |
-| D3 | 不可（地点名称から推定） | — | 平成27年度 | XLSX。市部・区部でファイルが分かれる。1行1観測地点で、列は路線番号／路線名／地点番号／地点名称と車種別交通量 |
-| D4 | 空間結合 | — | 令和8年2月2日時点 | シェープファイル。公園・緑地等／樹林地など全18レイヤ。ZIP内は日本語ディレクトリ |
-| D5 | リソースURLのファイル名先頭5桁 | UTF-8 | — | CKANの `package_show` JSON。`resources[].url` のファイル名先頭6桁が団体コード |
-| D6 | 空間結合 | — | — | シェープファイル2種（自転車推奨ルート／優先整備区間） |
-| D7 | 住所 / 緯度経度 | CP932 | — | 推奨データセット準拠のCSV。コード列は都のコードのみ、市区町村名列は空 |
-| D8 | コード列（区市町村コード） | UTF-8 BOM | — | CSV。5桁コードが入るので空間結合は不要 |
-| D9 | 自治体名 / 緯度経度 | CP932 | — | CSV。区市町村名・施設名・所在地・緯度経度 |
-| D10 | 空間結合 | UTF-8 | GTFS有効期間 2026-08-13〜2029-08-12 | GTFS-JPのZIP（9.1MB、展開後は stop_times.txt だけで95MB）と駅のJSON。stops.txt はポール3,692件と停留所1,674件が混在し、`parent_station` が空の行が停留所そのもの。駅JSONは路線ごとに1レコードで149件・実駅数141 |
-| D11 | コード列（都道府県市区町村コード） | CP932 | 令和8年地価公示 | CSV。1行目が表題でヘッダは2行目。用途は「標準地番号（用途）」で区分し、住宅地は 0 |
-| D12 | コード列（都道府県市区町村コード） | CP932 | 令和7年地価調査 | D11と同構造 |
-| D13 | 空間結合 | — | 区部:令和3年 / 多摩・島しょ:令和4年 | シェープファイル。区部と多摩・島しょで別ファイル・別年次。2ファイル計約670MB |
-| D14 | 住所（主たる事務所） | CP932 | 月次更新 | CSV。1行目が表題、2行目がヘッダでセル内に改行が入る。認証NPO法人 約9,300件 |
-| D15 | コード列（地域コード） | UTF-8 BOM | 令和2年国勢調査 | CSV第1表。地域コード／昼間人口／常住人口／昼夜間人口比率／面積 |
-| D16 | コード列（地域コード） | UTF-8 BOM | 令和8年6月1日現在 | CSV。地域階層／地域コード／人口／面積(km2)／人口密度。月次更新でURLの年月部分が変わる |
-| D17 | 基準ポリゴンそのもの | — | 令和8年1月1日 | シェープファイル＋GeoJSON。ファイル名の `13` が東京都、`20260101` が年次 |
-| D18 | 空間結合 | — | — | シェープファイル。ZIP内の格納名はCP932 |
-
-D10 のカバレッジには注意が要る。収録は都営分だけで、JR・私鉄・民間バス・コミュニティバスを含まない。
-実際に自治体へ落とすと **53自治体中27自治体にしか点がなく、目黒区と多摩25市町村は0件**（欠損として扱う）。
-値が出る自治体でも、東急・小田急バスが主体の世田谷区は 0.05件/km²、大田区は 0.29件/km² と実態からかけ離れる。
-`station_density` と `transit_options` を軸スコアに算入するかは要判断（[dev_note.md](./dev_note.md) の積み残し）。
-
-## 4. 検討したが不採用にしたデータ
-
-| データセット名称 | 出所 | 用途の候補 | ライセンス | 不採用の理由 |
-|---|---|---|---|---|
-| 自動車騒音の常時監視結果 | 区市町村（目黒区ほか） | しずけさ | — | カタログ経由で辿れるのは目黒区（BODIK）など個別自治体の公開分のみで、53自治体分が揃わない。区市町村データ（④）なので利用規約の個別確認も要る。しずけさは交通量（D2・D3）と幹線道路密度（D18）で代理する |
-| エコロジカル・ネットワークマップ | 環境局 | いきぬき | `CC-BY-4.0` | ライセンス上は問題ないが、配布物14件がすべてPDF地図。GISデータも数値表もなく指標化できない。カタログID `t000009d0000000028` |
+| D-quiet-01 | 住所（測定地点） | CP932 | 平成20〜25年度 | 1年度1CSV・1行1測定地点で約600地点。住所／緯度経度／道路名／道路種別／車線数／昼間・夜間の等価騒音レベル(Leq)。列名は年度で揺れる（「測定地点の住所」/「測定地点住所」など）。調査地点が年度ごとに入れ替わるため単年では欠測の自治体が出る。6年分で53自治体すべてが埋まる。1年度あたりの地点数は自治体によって1〜40件と偏るので、単年ではなく6年度分の地点をまとめて平均する |
+| D-refresh-01 | 空間結合 | — | 令和8年2月2日時点 | 公園・緑地等のシェープファイル14レイヤ（うち1つは点データ）。ZIP内は日本語ディレクトリ。座標系は EPSG:6677 で単位はメートル。属性の「面積m2」は調書ベースの数値でポリゴン面積と乖離し、欠損は -9999。同梱の樹林地3レイヤ（`03_jurinchi.zip`）は市街地の樹林のみで山林を含まないため使わない |
+| D-refresh-02 | 空間結合（メッシュ重心） | CP932（属性名） | 平成28年度 | シェープファイル2枚（1次メッシュ 5339 / 5338）で計約92万ポリゴン。1ポリゴン＝100mメッシュ（3次メッシュの1/10細分）で、属性は メッシュ／土地利用種／撮影年月日 の3列。座標系は EPSG:4612。属性名が CP932 のまま格納されており `encoding="cp932"` の指定が要る。土地利用種は12区分（田0100／その他の農用地0200／森林0500／荒地0600／建物用地0700／道路0901／鉄道0902／その他の用地1000／河川地及び湖沼1100／海浜1400／海水域1500／ゴルフ場1600）。最新は令和3年度版だが都市地域限定の `-u` 版しかなく、都市計画区域外の奥多摩町・檜原村が落ちるため通常版の最終年次を使う |
+| D-refresh-03 | コード列（局マスタ） | CP932 | 2025年6月〜2026年5月 | 局マスタCSV（ヘッダ行なし。局コード／局名／市区町村コード／緯度経度）と、1分値の月別ZIP12か月分。既定の配布ZIP `…_PM2.5.zip` は直近50日分しか入らず年平均値が作れないため、`…_PM2.5_YYYYMM.zip` を12か月ぶん取る。1分値CSVはヘッダ行なしの8列（局コード／項目コード／年／月／日／時／分／値）で欠測は「欠測」。1か月あたり8ファイル・約350万行。展開すると12か月で1GBを超えるので ZIP のまま読む（`Resource.extract=False`） |
+| D-workspace-01 | コード列（区市町村コード） | UTF-8 BOM | — | CSV。5桁コードが入るので空間結合は不要 |
+| D-workspace-02 | 自治体名（区市町村名） | CP932 | 令和3年3月（カタログ登録時点） | CSV・1行1施設で417件。区市町村名／施設区分／施設名／所在地／緯度経度／電話番号。島しょ部を含む58自治体が載り、本土53自治体はすべて1館以上ある。末尾に注記の行が1行入る |
+| D-cost-01 | コード列（都道府県市区町村コード） | CP932 | 令和8年地価公示 | CSV。1行目が表題でヘッダは2行目。用途は「標準地番号（用途）」で区分し、住宅地は 0 |
+| D-community-01 | 住所（主たる事務所） | CP932 | 月次更新 | CSV。1行目が表題、2行目がヘッダでセル内に改行が入る。認証NPO法人 約9,300件 |
+| D-community-02 | コード列（地域コード） | UTF-8 BOM | 令和5年度（施設数は令和5年5月1日現在） | CSV・1行1自治体。章まるごとが1データセットで、使うのは表17-8「社会教育施設数及び社会教育事業数」だけ。採るのは「学級・事業数（総数）」で、学級・講座（対象別）と分野別事業数の合計。総数・区部・市部・郡部・島部の集計行と末尾5行の注記が同じ表に混ざる |
+| D-common-01 | コード列（地域コード） | UTF-8 BOM | 令和8年6月1日現在 | CSV。地域階層／地域コード／人口／面積(km2)／人口密度。月次更新でURLの年月部分が変わる |
+| D-common-02 | 基準ポリゴンそのもの | — | 令和8年1月1日 | シェープファイル＋GeoJSON。ファイル名の `13` が東京都、`20260101` が年次 |
