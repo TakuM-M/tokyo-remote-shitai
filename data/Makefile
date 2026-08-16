@@ -22,7 +22,7 @@ normalize:
 spatial-join:
 	$(PY) -m pipeline.03-spatial_join
 
-## interim/ → processed/municipalities.json（ウィンザライズ → min-max → 軸スコア）
+## interim/ → processed/municipalities.json（分母換算 → パーセンタイル順位 → 軸スコア）
 score:
 	$(PY) -m pipeline.04-score
 

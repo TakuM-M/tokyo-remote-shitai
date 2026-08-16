@@ -197,8 +197,9 @@ LANDUSE_LABELS: dict[str, str] = {
     "1600": "ゴルフ場",
 }
 
-# 緑とみなす土地利用種。河川地及び湖沼(1100) は水面なので入れない。
-GREEN_CODES: tuple[str, ...] = ("0100", "0200", "0500", "0600", "1600")
+# 緑とみなす土地利用種。ゴルフ場(1600) は私有地で立ち入れず気分転換の場にならないので外す。
+# 河川地及び湖沼(1100) は水面だが、川辺・湖畔は息抜きに行ける場所なので入れる。
+GREEN_CODES: tuple[str, ...] = ("0100", "0200", "0500", "0600", "1100")
 
 # 陸地面積の分母から外す土地利用種。海水域メッシュは自治体ポリゴンの外にあり
 # 大半は sjoin で落ちるが、境界の丸めで拾ってしまう分をここで確実に外す。
@@ -292,14 +293,14 @@ def _log_landuse_breakdown(by_landuse: pd.DataFrame, denom: pd.Series) -> None:
 
 @spatial_handler("D-refresh-02")
 def join_land_use() -> IndicatorFrames:
-    """土地利用細分メッシュから緑被率（山林を含む緑の面積割合）を出す。
+    """土地利用細分メッシュから緑・水辺率（山林と川辺を含む面積割合）を出す。
 
     分子・分母をどちらもメッシュ由来にすることで、境界メッシュの帰属誤差が相殺される。
     分母は自治体に落ちたメッシュの合計から海水域を除いた陸地面積。
     """
     boundaries = load_boundaries(planar=True)
     by_landuse = mesh_area_by_landuse(boundaries)
-    muni.check_coverage(by_landuse.index, "緑被率")
+    muni.check_coverage(by_landuse.index, "緑・水辺率")
 
     denom = by_landuse.drop(columns=[SEA_CODE], errors="ignore").sum(axis=1)
     green = by_landuse.reindex(columns=list(GREEN_CODES), fill_value=0.0).sum(axis=1)

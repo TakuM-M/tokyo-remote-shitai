@@ -2,10 +2,9 @@
 
 以下の手順を実装する:
     1. 面積あたり / 人口1万人あたりに換算して規模の差を除く
-    2. 上下5パーセンタイルでウィンザライズ（都心の外れ値でスケールが潰れるのを防ぐ）
-    3. min-max で 0〜100 にスケーリング
-    4. 「低いほど良い」指標は 100 - score で反転
-    5. 軸スコア = 軸内の指標スコアの単純平均
+    2. 値のある自治体の中での順位を 0〜100 に直す（`percentile_rank`）
+    3. 「低いほど良い」指標は 100 - score で反転
+    4. 軸スコア = 軸内の指標スコアの加重平均（重みは指標ごとに定義）
 
 総合スコア:
 - 重みはユーザーが動かすため、ここでは計算しない。
@@ -20,7 +19,6 @@ from __future__ import annotations
 import argparse
 import logging
 from datetime import date
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -48,32 +46,28 @@ from defs.indicators import (
 
 logger = logging.getLogger(__name__)
 
-WINSOR_LOWER = 0.05
-WINSOR_UPPER = 0.95
-
 N_MUNI = len(muni.CODES)
 
 
 # ---------------------------------------------------------------- 正規化の基本操作
 
 
-def winsorize(s: pd.Series, lower: float = WINSOR_LOWER, upper: float = WINSOR_UPPER) -> pd.Series:
-    """上下パーセンタイルで値を切り詰める。欠損はそのまま欠損で残す。"""
-    valid = s.dropna()
-    if valid.empty:
-        return s
-    return s.clip(valid.quantile(lower), valid.quantile(upper))
+def percentile_rank(s: pd.Series) -> pd.Series:
+    """値のある自治体の中での順位を 0〜100 に直す。欠損はそのまま欠損で残す。
 
+    値の大きさではなく順位を採るのは、指標ごとに分布の形が違いすぎるため。
+    NPO密度やサテライトオフィス密度は上位数自治体だけが極端に大きい右裾の長い
+    分布で、値をそのまま min-max にかけると残りの自治体が1桁点に潰れる。
+    順位なら分布の形によらず中央値がほぼ50点に来るので、軸をまたいで比べられる。
 
-def minmax(s: pd.Series) -> pd.Series:
-    """0〜100 にスケーリングする。全自治体が同値なら差が無いので一律50とする。"""
-    valid = s.dropna()
-    if valid.empty:
+    同値は平均順位を分け合う。順位から0.5を引くのは、上端だけが100点になる
+    非対称を避けるため。値のある自治体が1つだけなら50点（比較相手がいない）、
+    全自治体が同値でも全員50点になる。
+    """
+    n = int(s.notna().sum())
+    if n == 0:
         return pd.Series(np.nan, index=s.index, dtype=float)
-    lo, hi = float(valid.min()), float(valid.max())
-    if hi == lo:
-        return s.notna().map({True: 50.0, False: np.nan}).astype(float)
-    return (s - lo) / (hi - lo) * 100.0
+    return (s.rank(method="average") - 0.5) / n * 100.0
 
 
 def apply_direction(scores: pd.Series, indicator: Indicator) -> pd.Series:
@@ -82,14 +76,14 @@ def apply_direction(scores: pd.Series, indicator: Indicator) -> pd.Series:
 
 
 def score_indicator(values: pd.Series, indicator: Indicator) -> pd.Series:
-    return apply_direction(minmax(winsorize(values)), indicator).round(1)
+    return apply_direction(percentile_rank(values), indicator).round(1)
 
 
 # ---------------------------------------------------------------- 入力の読み込み
 
 
 def load_base() -> pd.DataFrame:
-    """面積・人口（分母）を読む。無ければ空の枠を返す（『◯◯あたり』は欠損になる）。"""
+    """面積・人口（分母）を読む。無ければ空の枠を返す"""
     frame = pd.DataFrame(
         np.nan, index=pd.Index(muni.CODES, name="code"), columns=["area_km2", "population"]
     )
@@ -184,15 +178,27 @@ def compute(values: pd.DataFrame, base: pd.DataFrame) -> dict[str, pd.DataFrame]
 
 
 def axis_scores(scores: pd.DataFrame) -> pd.DataFrame:
-    """軸スコア = 軸内の指標スコアの単純平均。全指標が欠損なら NaN（0にはしない）。"""
+    """軸スコア = 軸内の指標スコアの加重平均。全指標が欠損なら NaN（0にはしない）。
+
+    欠損した指標は重みごと外し、残った指標の重みの合計で割る。指標が1本しか
+    埋まらない自治体では、その1本がそのまま軸スコアになる。
+    """
     out = {}
     for axis in AXES:
-        keys = [
-            i.key
+        used = [
+            i
             for i in INDICATORS
             if i.axis == axis.key and i.include_in_axis and i.key in scores.columns
         ]
-        out[axis.key] = scores[keys].mean(axis=1, skipna=True).round(1) if keys else np.nan
+        if not used:
+            out[axis.key] = np.nan
+            continue
+        sub = scores[[i.key for i in used]]
+        weights = pd.Series({i.key: i.weight for i in used})
+        # 欠損セルの重みを0にしてから、残った重みで正規化する
+        effective = sub.notna().mul(weights, axis=1)
+        total = effective.sum(axis=1).replace(0, np.nan)
+        out[axis.key] = (sub.mul(weights, axis=1).sum(axis=1, skipna=True) / total).round(1)
     return pd.DataFrame(out, index=scores.index)
 
 
@@ -226,6 +232,7 @@ def build_meta(demo: bool = False) -> dict:
                         "direction": i.direction,
                         "definition": i.definition,
                         "source": i.dataset_id,
+                        "weight": i.weight,
                         "reference_only": not i.include_in_axis,
                     }
                     for i in INDICATORS
@@ -379,11 +386,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--demo", action="store_true", help="ダミーデータで municipalities.sample.json を生成"
     )
-    parser.add_argument("--out", type=Path, help="出力先を明示する")
-    parser.add_argument("-v", "--verbose", action="store_true")
     args = parser.parse_args(argv)
 
-    setup_logging(args.verbose)
+    setup_logging()
     ensure_dirs()
 
     if args.demo:
@@ -397,7 +402,7 @@ def main(argv: list[str] | None = None) -> int:
     report_coverage(computed, axes)
 
     doc = build_document(computed, axes, base, demo=args.demo)
-    write_json(args.out or (DEMO_JSON if args.demo else OUTPUT_JSON), doc)
+    write_json((DEMO_JSON if args.demo else OUTPUT_JSON), doc)
 
     if not args.demo and axes.notna().to_numpy().sum() == 0:
         logger.warning(

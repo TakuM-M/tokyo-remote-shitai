@@ -6,17 +6,8 @@
       {
         "key": "quiet",
         "label": "しずけさ",
-        "description": "道路交通騒音の小ささ・大気のきれいさ",
+        "description": "道路交通騒音の小ささ",
         "indicators": [
-          {
-            "key": "pm25_annual_avg",
-            "label": "PM2.5",
-            "unit": "μg/m3",
-            "direction": "lower_is_better",
-            "definition": "大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、各月を等重みで平均した年平均値を自治体内で平均。",
-            "source": "D-quiet-01",
-            "reference_only": false
-          },
           {
             "key": "road_noise_leq",
             "label": "道路交通騒音",
@@ -24,6 +15,7 @@
             "direction": "lower_is_better",
             "definition": "幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を自治体内で平均。",
             "source": "D-quiet-02",
+            "weight": 1.0,
             "reference_only": false
           }
         ]
@@ -31,7 +23,7 @@
       {
         "key": "refresh",
         "label": "いきぬき",
-        "description": "緑の多さ",
+        "description": "緑と水辺の多さ・大気のきれいさ",
         "indicators": [
           {
             "key": "park_area",
@@ -40,15 +32,27 @@
             "direction": "higher_is_better",
             "definition": "公園緑地のポリゴン面積 ÷ 総面積。海上公園は開園区域のみ、計画決定区域・予定地・霊園・葬儀所は含めない。",
             "source": "D-refresh-01",
+            "weight": 0.2,
             "reference_only": false
           },
           {
             "key": "green_coverage_ratio",
-            "label": "緑被率",
+            "label": "緑・水辺率",
             "unit": "%",
             "direction": "higher_is_better",
-            "definition": "土地利用細分メッシュ（100m）のうち田・その他の農用地・森林・荒地・ゴルフ場の面積 ÷ 海水域を除く全メッシュ面積。",
+            "definition": "土地利用細分メッシュ（100m）のうち田・その他の農用地・森林・荒地・河川地及び湖沼の面積 ÷ 海水域を除く全メッシュ面積。",
             "source": "D-refresh-02",
+            "weight": 0.5,
+            "reference_only": false
+          },
+          {
+            "key": "pm25_annual_avg",
+            "label": "PM2.5",
+            "unit": "μg/m3",
+            "direction": "lower_is_better",
+            "definition": "大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、各月を等重みで平均した年平均値を自治体内で平均。",
+            "source": "D-quiet-01",
+            "weight": 0.3,
             "reference_only": false
           }
         ]
@@ -63,8 +67,9 @@
             "label": "サテライトオフィス",
             "unit": "件",
             "direction": "higher_is_better",
-            "definition": "TOKYOテレワークアプリ掲載施設数 ÷ 人口1万人。",
+            "definition": "TOKYOテレワークアプリ掲載施設数 ÷ 総面積(km2)。",
             "source": "D-workspace-01",
+            "weight": 1.0,
             "reference_only": false
           }
         ]
@@ -81,6 +86,7 @@
             "direction": "lower_is_better",
             "definition": "地価公示（用途:住宅地）の自治体内平均㎡単価。",
             "source": "D-cost-01",
+            "weight": 1.0,
             "reference_only": false
           }
         ]
@@ -97,6 +103,7 @@
             "direction": "higher_is_better",
             "definition": "認証NPO法人数 ÷ 人口1万人。",
             "source": "D-community-01",
+            "weight": 1.0,
             "reference_only": false
           }
         ]
@@ -170,7 +177,7 @@
         "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000008d2000000024",
         "license": "東京都オープンデータ利用規約（個別の注意事項あり）",
         "updated_at": "令和8年2月2日時点",
-        "notes": "本土部のみで島しょ部は欠損。注意事項PDFの制限は精度に関するもので二次利用は妨げないが、「宅地化農地」「市街化調整区域内農地」だけは東京都地形図（国土地理院承認）由来のため別途手続きが要る。この2レイヤは使わない。同梱の樹林地（03_jurinchi.zip・約474MB）も使わない。市街地の樹林だけで山林を含まず（檜原村0.01km2・奥多摩町0.01km2）、緑の総量は D-refresh-02 の緑被率で測るため。公園側は海上公園の3レイヤが同じ公園を重複収録し水域も含むので開園区域のみを使い、計画決定区域・予定地・霊園・葬儀所・点データは外す。檜原村は都市計画区域外で公園調書に載らず、公園レイヤに1件も無い（値は0でなく欠損）。"
+        "notes": "本土部のみで島しょ部は欠損。注意事項PDFの制限は精度に関するもので二次利用は妨げないが、「宅地化農地」「市街化調整区域内農地」だけは東京都地形図（国土地理院承認）由来のため別途手続きが要る。この2レイヤは使わない。同梱の樹林地（03_jurinchi.zip・約474MB）も使わない。市街地の樹林だけで山林を含まず（檜原村0.01km2・奥多摩町0.01km2）、緑の総量は D-refresh-02 の緑・水辺率で測るため。公園側は海上公園の3レイヤが同じ公園を重複収録し水域も含むので開園区域のみを使い、計画決定区域・予定地・霊園・葬儀所・点データは外す。檜原村は都市計画区域外で公園調書に載らず、公園レイヤに1件も無い（値は0でなく欠損）。"
       },
       {
         "id": "D-refresh-02",
@@ -179,7 +186,7 @@
         "url": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-L03-b.html",
         "license": "国土数値情報 利用約款（公共データ利用規約 PDL1.0）",
         "updated_at": "平成28年度（2016年度）",
-        "notes": "100mメッシュ（3次メッシュの1/10細分）1つが1ポリゴンで、土地利用種のコードを持つ。2次メッシュコードは 上2桁=緯度×1.5・下2桁=経度-100 で、都本土部（東経138.94〜139.92）に必要なのは 5339 と 5338 の2枚。1枚あたり約46万ポリゴン。CRSは EPSG:4612（JGD2000）。最新は令和3年度版だが、そちらは都市地域を対象にした -u 版しか無く、都市計画区域外の奥多摩町・檜原村が落ちる。山林を数えるのが目的なので、全国をカバーする通常版の最終年次である平成28年度版を使う。属性名が CP932 のまま格納されており、既定の読み方だと化ける（列順は メッシュ, 土地利用種, 撮影年月日）。緑とみなすのは 田(0100)・その他の農用地(0200)・森林(0500)・荒地(0600)・ゴルフ場(1600) の5種。河川地及び湖沼(1100) は水面なので含めない。【限界1】100mメッシュに分類を1つだけ割り当てる形式のため、市街地の街路樹・庭・社寺林・街区公園は建物用地メッシュに吸収されて消え、区部の緑が構造的に過小評価される。実測でも23区は0.12%（葛飾区）〜12.17%（千代田区）に潰れ、拾えているのは皇居・明治神宮のようなまとまった緑だけ。区部の解像度は公園面積比が担う。【限界2】面積加重した緑被率は区部2.0%・多摩部55.8%で、東京都公表の「みどり率」（区部24.0%・多摩部67.4%）とは定義も分解能も異なる。多摩部の差は定義差（みどり率は水面と公園区域を含む）で説明できるが、区部の差はメッシュの分解能によるもので、みどり率の代用にはならない。"
+        "notes": "100mメッシュ（3次メッシュの1/10細分）1つが1ポリゴンで、土地利用種のコードを持つ。2次メッシュコードは 上2桁=緯度×1.5・下2桁=経度-100 で、都本土部（東経138.94〜139.92）に必要なのは 5339 と 5338 の2枚。1枚あたり約46万ポリゴン。CRSは EPSG:4612（JGD2000）。最新は令和3年度版だが、そちらは都市地域を対象にした -u 版しか無く、都市計画区域外の奥多摩町・檜原村が落ちる。山林を数えるのが目的なので、全国をカバーする通常版の最終年次である平成28年度版を使う。属性名が CP932 のまま格納されており、既定の読み方だと化ける（列順は メッシュ, 土地利用種, 撮影年月日）。緑とみなすのは 田(0100)・その他の農用地(0200)・森林(0500)・荒地(0600)・河川地及び湖沼(1100) の5種。川辺・湖畔は息抜きに行ける場所なので水面も入れる。ゴルフ場(1600) は私有地で立ち入れず気分転換の場にならないので含めない。【限界1】100mメッシュに分類を1つだけ割り当てる形式のため、市街地の街路樹・庭・社寺林・街区公園は建物用地メッシュに吸収されて消え、区部の緑が構造的に過小評価される。実測でも23区は0.88%（豊島区）〜19.91%（千代田区）に収まり、拾えているのは皇居・明治神宮のようなまとまった緑と大きな河川だけ。区部の解像度は公園面積比が担う。【限界2】面積加重した値は区部8.1%・多摩部57.6%で、東京都公表の「みどり率」（区部24.0%・多摩部67.4%）とは定義も分解能も異なる。水面を含めたことで差は縮んだが、みどり率がさらに含む公園区域はこちらでは公園面積比が別に持つ。区部に残る差はメッシュの分解能によるもので、みどり率の代用にはならない。"
       },
       {
         "id": "D-workspace-01",
@@ -219,13 +226,35 @@
       "area_km2": 11.66,
       "population": 66670.0,
       "scores": {
-        "quiet": 44.6,
-        "refresh": 57.6,
-        "workspace": 100.0,
-        "cost": 0.0,
-        "community": 100.0
+        "quiet": 36.8,
+        "refresh": 81.5,
+        "workspace": 98.8,
+        "cost": 1.0,
+        "community": 99.1
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 67.8,
+          "score": 36.8,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1551728.7139,
+          "score": 99.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 133081.3648,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 19.9085,
+          "score": 74.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -233,46 +262,24 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 67.8,
-          "score": 44.6,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 1551728.7139,
-          "score": 100.0,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 133081.3648,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 12.1665,
-          "score": 15.3,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": 54.0,
-          "score": 100.0,
+          "score": 98.8,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 8.0996,
+          "per_km2": 4.6312,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 3631428.5714,
-          "score": 0.0,
+          "score": 1.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 698.0,
-          "score": 100.0,
+          "score": 99.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 104.6948,
@@ -288,60 +295,60 @@
       "area_km2": 10.21,
       "population": 183861.0,
       "scores": {
-        "quiet": 43.1,
-        "refresh": 28.1,
-        "workspace": 69.5,
-        "cost": 0.0,
-        "community": 100.0
+        "quiet": 82.1,
+        "refresh": 47.8,
+        "workspace": 93.9,
+        "cost": 4.9,
+        "community": 97.2
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.5091,
-          "score": 8.2,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.0,
-          "score": 77.9,
+          "score": 82.1,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 669847.6111,
-          "score": 55.5,
+          "score": 70.2,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 65607.0138,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.0473,
-          "score": 0.7,
+          "value": 12.8802,
+          "score": 61.3,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.5091,
+          "score": 10.5,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 35.0,
-          "score": 69.5,
+          "score": 93.9,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 1.9036,
+          "per_km2": 3.428,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 1930000.0,
-          "score": 0.0,
+          "score": 4.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 546.0,
-          "score": 100.0,
+          "score": 97.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 29.6963,
@@ -357,60 +364,60 @@
       "area_km2": 20.36,
       "population": 273125.0,
       "scores": {
-        "quiet": 67.7,
-        "refresh": 24.4,
-        "workspace": 100.0,
-        "cost": 0.0,
-        "community": 99.6
+        "quiet": 27.4,
+        "refresh": 51.3,
+        "workspace": 96.3,
+        "cost": 2.9,
+        "community": 93.4
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.197,
-          "score": 100.0,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 68.3,
-          "score": 35.4,
+          "score": 27.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1123928.3261,
-          "score": 44.2,
+          "score": 52.9,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 55202.7665,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 3.9754,
-          "score": 4.5,
+          "value": 5.888,
+          "score": 23.6,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.197,
+          "score": 96.5,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 74.0,
-          "score": 100.0,
+          "score": 96.3,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 2.7094,
+          "per_km2": 3.6346,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 3013666.6667,
-          "score": 0.0,
+          "score": 2.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 775.0,
-          "score": 99.6,
+          "score": 93.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 28.3753,
@@ -426,60 +433,60 @@
       "area_km2": 18.22,
       "population": 361787.0,
       "scores": {
-        "quiet": 17.2,
-        "refresh": 29.1,
-        "workspace": 29.9,
-        "cost": 42.7,
-        "community": 68.1
+        "quiet": 10.4,
+        "refresh": 25.3,
+        "workspace": 86.6,
+        "cost": 16.7,
+        "community": 89.6
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.4125,
-          "score": 15.6,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 69.2,
-          "score": 18.8,
+          "score": 10.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1181951.8081,
-          "score": 54.7,
+          "score": 68.3,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 64871.1201,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 3.1541,
-          "score": 3.5,
+          "value": 4.4155,
+          "score": 14.2,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.4125,
+          "score": 15.1,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 31.0,
-          "score": 29.9,
+          "score": 86.6,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.8569,
+          "per_km2": 1.7014,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 1131571.4286,
-          "score": 42.7,
+          "score": 16.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 731.0,
-          "score": 68.1,
+          "score": 89.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 20.2053,
@@ -495,60 +502,60 @@
       "area_km2": 11.29,
       "population": 250863.0,
       "scores": {
-        "quiet": 55.6,
-        "refresh": 21.4,
-        "workspace": 3.6,
-        "cost": 25.2,
-        "community": 43.8
+        "quiet": 74.5,
+        "refresh": 32.7,
+        "workspace": 52.4,
+        "cost": 8.8,
+        "community": 87.7
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.111,
-          "score": 38.8,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.3,
-          "score": 72.3,
+          "score": 74.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 545777.858,
-          "score": 36.7,
+          "score": 41.3,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 48341.7058,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 5.1353,
-          "score": 6.1,
+          "value": 5.8823,
+          "score": 21.7,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.111,
+          "score": 45.3,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 4.0,
-          "score": 3.6,
+          "score": 52.4,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1594,
+          "per_km2": 0.3543,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 1448086.9565,
-          "score": 25.2,
+          "score": 8.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 349.0,
-          "score": 43.8,
+          "score": 87.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 13.912,
@@ -564,60 +571,60 @@
       "area_km2": 10.11,
       "population": 228742.0,
       "scores": {
-        "quiet": 48.2,
-        "refresh": 32.8,
-        "workspace": 24.0,
-        "cost": 32.2,
-        "community": 33.6
+        "quiet": 93.4,
+        "refresh": 29.8,
+        "workspace": 84.1,
+        "cost": 12.7,
+        "community": 85.8
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.6529,
-          "score": 0.0,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 65.0,
-          "score": 96.3,
+          "score": 93.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 737749.6897,
-          "score": 63.5,
+          "score": 83.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 72972.274,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 2.0661,
-          "score": 2.0,
+          "value": 6.0952,
+          "score": 25.5,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.6529,
+          "score": 1.2,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 16.0,
-          "score": 24.0,
+          "score": 84.1,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.6995,
+          "per_km2": 1.5826,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 1320833.3333,
-          "score": 32.2,
+          "score": 12.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 258.0,
-          "score": 33.6,
+          "score": 85.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 11.2791,
@@ -633,60 +640,60 @@
       "area_km2": 13.77,
       "population": 285803.0,
       "scores": {
-        "quiet": 48.5,
-        "refresh": 23.4,
-        "workspace": 12.1,
-        "cost": 71.5,
-        "community": 7.2
+        "quiet": 24.5,
+        "refresh": 59.2,
+        "workspace": 74.4,
+        "cost": 36.3,
+        "community": 50.0
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.7433,
-          "score": 67.1,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 68.6,
-          "score": 29.9,
+          "score": 24.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 784517.3862,
-          "score": 46.1,
+          "score": 58.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 56972.9402,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.1364,
-          "score": 0.8,
+          "value": 12.1202,
+          "score": 53.8,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.7433,
+          "score": 68.6,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 11.0,
-          "score": 12.1,
+          "score": 74.4,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.3849,
+          "per_km2": 0.7988,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 613272.7273,
-          "score": 71.5,
+          "score": 36.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 127.0,
-          "score": 7.2,
+          "score": 50.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.4436,
@@ -702,60 +709,60 @@
       "area_km2": 42.99,
       "population": 554093.0,
       "scores": {
-        "quiet": 30.2,
-        "refresh": 50.7,
-        "workspace": 9.1,
-        "cost": 68.8,
-        "community": 2.5
+        "quiet": 29.2,
+        "refresh": 47.9,
+        "workspace": 59.8,
+        "cost": 32.4,
+        "community": 21.7
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.3148,
-          "score": 23.2,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 68.2,
-          "score": 37.3,
+          "score": 29.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 4485381.6385,
-          "score": 97.5,
+          "score": 93.3,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 104335.465,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 3.4733,
-          "score": 3.9,
+          "value": 10.1085,
+          "score": 42.5,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.3148,
+          "score": 26.7,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 17.0,
-          "score": 9.1,
+          "score": 59.8,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.3068,
+          "per_km2": 0.3954,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 661538.4615,
-          "score": 68.8,
+          "score": 32.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 179.0,
-          "score": 2.5,
+          "score": 21.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.2305,
@@ -771,60 +778,60 @@
       "area_km2": 22.85,
       "population": 429096.0,
       "scores": {
-        "quiet": 43.4,
-        "refresh": 24.5,
-        "workspace": 25.7,
-        "cost": 36.5,
-        "community": 12.1
+        "quiet": 74.5,
+        "refresh": 21.5,
+        "workspace": 81.7,
+        "cost": 14.7,
+        "community": 70.8
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.4277,
-          "score": 14.5,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.3,
-          "score": 72.3,
+          "score": 74.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1324249.8412,
-          "score": 47.2,
+          "score": 62.5,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 57954.0412,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.8325,
-          "score": 1.7,
+          "value": 3.2984,
+          "score": 10.4,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.4277,
+          "score": 12.8,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 32.0,
-          "score": 25.7,
+          "score": 81.7,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.7458,
+          "per_km2": 1.4004,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 1244066.6667,
-          "score": 36.5,
+          "score": 14.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 245.0,
-          "score": 12.1,
+          "score": 70.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.7097,
@@ -840,60 +847,60 @@
       "area_km2": 14.67,
       "population": 287556.0,
       "scores": {
-        "quiet": 26.6,
-        "refresh": 11.6,
-        "workspace": 12.0,
-        "cost": 27.6,
-        "community": 16.6
+        "quiet": 12.3,
+        "refresh": 18.0,
+        "workspace": 69.5,
+        "cost": 10.8,
+        "community": 80.2
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.1921,
-          "score": 32.6,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 69.1,
-          "score": 20.7,
+          "score": 12.3,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 507992.1583,
-          "score": 21.8,
+          "score": 24.0,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 34627.959,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.5712,
-          "score": 1.4,
+          "value": 2.1426,
+          "score": 4.7,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.1921,
+          "score": 36.0,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 11.0,
-          "score": 12.0,
+          "score": 69.5,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.3825,
+          "per_km2": 0.7498,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 1404531.25,
-          "score": 27.6,
+          "score": 10.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 198.0,
-          "score": 16.6,
+          "score": 80.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.8856,
@@ -909,60 +916,60 @@
       "area_km2": 61.86,
       "population": 762357.0,
       "scores": {
-        "quiet": 35.2,
-        "refresh": 19.2,
-        "workspace": 3.0,
-        "cost": 69.6,
-        "community": 2.8
+        "quiet": 2.8,
+        "refresh": 45.5,
+        "workspace": 28.0,
+        "cost": 34.3,
+        "community": 23.6
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.7014,
-          "score": 70.3,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 70.6,
-          "score": 0.0,
+          "score": 2.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 3083566.5,
-          "score": 38.3,
+          "score": 43.3,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 49847.5024,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 0.6976,
-          "score": 0.2,
+          "value": 7.2678,
+          "score": 31.1,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.7014,
+          "score": 70.9,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 11.0,
-          "score": 3.0,
+          "score": 28.0,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1443,
+          "per_km2": 0.1778,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 647581.8182,
-          "score": 69.6,
+          "score": 34.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 252.0,
-          "score": 2.8,
+          "score": 23.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.3055,
@@ -978,60 +985,60 @@
       "area_km2": 58.05,
       "population": 959397.0,
       "scores": {
-        "quiet": 15.4,
-        "refresh": 20.2,
-        "workspace": 10.5,
-        "cost": 62.2,
-        "community": 10.8
+        "quiet": 4.7,
+        "refresh": 26.5,
+        "workspace": 64.6,
+        "cost": 22.5,
+        "community": 63.2
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.2149,
-          "score": 30.8,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 70.4,
-          "score": 0.0,
+          "score": 4.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 2915778.5189,
-          "score": 38.8,
+          "score": 45.2,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 50228.7428,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.6764,
-          "score": 1.5,
+          "value": 4.489,
+          "score": 16.0,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.2149,
+          "score": 31.4,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 33.0,
-          "score": 10.5,
+          "score": 64.6,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.344,
+          "per_km2": 0.5685,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 779853.211,
-          "score": 62.2,
+          "score": 22.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 517.0,
-          "score": 10.8,
+          "score": 63.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.3888,
@@ -1047,60 +1054,60 @@
       "area_km2": 15.11,
       "population": 238786.0,
       "scores": {
-        "quiet": 33.0,
-        "refresh": 55.4,
-        "workspace": 65.6,
-        "cost": 1.6,
-        "community": 76.6
+        "quiet": 42.5,
+        "refresh": 41.7,
+        "workspace": 91.5,
+        "cost": 6.9,
+        "community": 91.5
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.3847,
-          "score": 17.8,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.6,
-          "score": 48.3,
+          "score": 42.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1652427.3669,
-          "score": 100.0,
+          "score": 95.2,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 109359.8522,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 8.7942,
-          "score": 10.9,
+          "value": 8.8635,
+          "score": 34.9,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.3847,
+          "score": 17.4,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 43.0,
-          "score": 65.6,
+          "score": 91.5,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 1.8008,
+          "per_km2": 2.8458,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 1874080.0,
-          "score": 1.6,
+          "score": 6.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 535.0,
-          "score": 76.6,
+          "score": 91.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 22.405,
@@ -1116,60 +1123,60 @@
       "area_km2": 15.59,
       "population": 356415.0,
       "scores": {
-        "quiet": 60.7,
-        "refresh": 8.5,
-        "workspace": 7.1,
-        "cost": 62.1,
-        "community": 13.2
+        "quiet": 36.8,
+        "refresh": 28.8,
+        "workspace": 67.1,
+        "cost": 20.6,
+        "community": 72.6
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.6177,
-          "score": 76.8,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.8,
-          "score": 44.6,
+          "score": 36.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 467671.2156,
-          "score": 16.8,
+          "score": 20.2,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 29998.1537,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 0.6052,
-          "score": 0.1,
+          "value": 1.9502,
+          "score": 2.8,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.6177,
+          "score": 77.9,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 9.0,
-          "score": 7.1,
+          "score": 67.1,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.2525,
+          "per_km2": 0.5773,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 782703.7037,
-          "score": 62.1,
+          "score": 20.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 214.0,
-          "score": 13.2,
+          "score": 72.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.0042,
@@ -1185,60 +1192,60 @@
       "area_km2": 34.06,
       "population": 600500.0,
       "scores": {
-        "quiet": 44.4,
-        "refresh": 15.3,
-        "workspace": 1.3,
-        "cost": 66.5,
-        "community": 10.9
+        "quiet": 53.8,
+        "refresh": 21.9,
+        "workspace": 23.2,
+        "cost": 28.4,
+        "community": 67.0
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.1616,
-          "score": 34.9,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.3,
-          "score": 53.9,
+          "score": 53.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1412417.0505,
-          "score": 29.2,
+          "score": 35.6,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 41468.4983,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.5966,
-          "score": 1.4,
+          "value": 2.4563,
+          "score": 6.6,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.1616,
+          "score": 38.4,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 6.0,
-          "score": 1.3,
+          "score": 23.2,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.0999,
+          "per_km2": 0.1762,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 703177.4194,
-          "score": 66.5,
+          "score": 28.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 325.0,
-          "score": 10.9,
+          "score": 67.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.4122,
@@ -1254,60 +1261,60 @@
       "area_km2": 13.01,
       "population": 307015.0,
       "scores": {
-        "quiet": 50.7,
-        "refresh": 1.9,
-        "workspace": 28.3,
-        "cost": 54.9,
-        "community": 32.5
+        "quiet": 15.1,
+        "refresh": 25.8,
+        "workspace": 89.0,
+        "cost": 18.6,
+        "community": 84.0
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.5905,
-          "score": 78.9,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 69.0,
-          "score": 22.5,
+          "score": 15.1,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 230481.8484,
-          "score": 3.4,
+          "score": 6.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 17715.7455,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 0.7969,
-          "score": 0.4,
+          "value": 0.8766,
+          "score": 0.9,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.5905,
+          "score": 80.2,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 25.0,
-          "score": 28.3,
+          "score": 89.0,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.8143,
+          "per_km2": 1.9216,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 912130.4348,
-          "score": 54.9,
+          "score": 18.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 338.0,
-          "score": 32.5,
+          "score": 84.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 11.0092,
@@ -1323,60 +1330,60 @@
       "area_km2": 20.61,
       "population": 370696.0,
       "scores": {
-        "quiet": 15.3,
-        "refresh": 20.8,
-        "workspace": 16.9,
-        "cost": 64.3,
-        "community": 5.9
+        "quiet": 6.6,
+        "refresh": 46.9,
+        "workspace": 76.8,
+        "cost": 24.5,
+        "community": 46.2
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.2461,
-          "score": 28.4,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 70.1,
-          "score": 2.2,
+          "score": 6.6,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1061526.5401,
-          "score": 40.1,
+          "score": 47.1,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 51505.4119,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.5753,
-          "score": 1.4,
+          "value": 12.701,
+          "score": 57.5,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.2461,
+          "score": 29.1,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 19.0,
-          "score": 16.9,
+          "score": 76.8,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.5125,
+          "per_km2": 0.9219,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 742000.0,
-          "score": 64.3,
+          "score": 24.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 152.0,
-          "score": 5.9,
+          "score": 46.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.1004,
@@ -1392,60 +1399,60 @@
       "area_km2": 10.16,
       "population": 228121.0,
       "scores": {
-        "quiet": 22.3,
-        "refresh": 17.0,
-        "workspace": 10.8,
-        "cost": 65.6,
-        "community": 2.4
+        "quiet": 36.8,
+        "refresh": 18.2,
+        "workspace": 72.0,
+        "cost": 26.5,
+        "community": 17.9
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.6275,
-          "score": 0.0,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.8,
-          "score": 44.6,
+          "score": 36.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 467001.7897,
-          "score": 34.1,
+          "score": 37.5,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 45964.7431,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 0.4107,
-          "score": 0.0,
+          "value": 5.4412,
+          "score": 17.9,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.6275,
+          "score": 5.8,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 8.0,
-          "score": 10.8,
+          "score": 72.0,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.3507,
+          "per_km2": 0.7874,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 718687.5,
-          "score": 65.6,
+          "score": 26.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 73.0,
-          "score": 2.4,
+          "score": 17.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.2001,
@@ -1461,13 +1468,35 @@
       "area_km2": 32.22,
       "population": 598863.0,
       "scores": {
-        "quiet": 4.0,
-        "refresh": 24.8,
-        "workspace": 5.1,
-        "cost": 74.8,
-        "community": 1.8
+        "quiet": 0.9,
+        "refresh": 31.8,
+        "workspace": 57.3,
+        "cost": 38.2,
+        "community": 14.2
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 70.7,
+          "score": 0.9,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1890341.338,
+          "score": 64.4,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 58669.8119,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 8.6233,
+          "score": 33.0,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": 5.5101,
           "score": 8.1,
@@ -1475,46 +1504,24 @@
           "unit": "μg/m3",
           "status": "ok"
         },
-        "road_noise_leq": {
-          "value": 70.7,
-          "score": 0.0,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 1890341.338,
-          "score": 47.9,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 58669.8119,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 1.7833,
-          "score": 1.7,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": 12.0,
-          "score": 5.1,
+          "score": 57.3,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.2004,
+          "per_km2": 0.3724,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 553553.1915,
-          "score": 74.8,
+          "score": 38.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 183.0,
-          "score": 1.8,
+          "score": 14.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.0558,
@@ -1530,60 +1537,60 @@
       "area_km2": 48.08,
       "population": 764094.0,
       "scores": {
-        "quiet": 63.6,
-        "refresh": 19.3,
-        "workspace": 0.0,
-        "cost": 78.8,
-        "community": 3.8
+        "quiet": 91.5,
+        "refresh": 26.2,
+        "workspace": 20.7,
+        "cost": 42.2,
+        "community": 31.1
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.1415,
-          "score": 36.5,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 65.3,
-          "score": 90.8,
+          "score": 91.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 2221074.7715,
-          "score": 34.4,
+          "score": 39.4,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 46195.3987,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 3.7822,
-          "score": 4.3,
+          "value": 4.2388,
+          "score": 12.3,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.1415,
+          "score": 40.7,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 5.0,
-          "score": 0.0,
+          "score": 20.7,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.0654,
+          "per_km2": 0.104,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 480544.4444,
-          "score": 78.8,
+          "score": 42.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 272.0,
-          "score": 3.8,
+          "score": 31.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.5598,
@@ -1599,60 +1606,60 @@
       "area_km2": 53.25,
       "population": 707720.0,
       "scores": {
-        "quiet": 12.2,
-        "refresh": 26.4,
-        "workspace": 2.9,
-        "cost": 82.7,
-        "community": 0.0
+        "quiet": 17.9,
+        "refresh": 32.7,
+        "workspace": 30.5,
+        "cost": 50.0,
+        "community": 4.7
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.6311,
-          "score": 0.0,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 68.9,
-          "score": 24.4,
+          "score": 17.9,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 3358404.607,
-          "score": 52.7,
+          "score": 66.3,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 63068.6311,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 0.1376,
-          "score": 0.0,
+          "value": 9.6143,
+          "score": 36.8,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.6311,
+          "score": 3.5,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 10.0,
-          "score": 2.9,
+          "score": 30.5,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1413,
+          "per_km2": 0.1878,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 410760.5634,
-          "score": 82.7,
+          "score": 50.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 179.0,
-          "score": 0.0,
+          "score": 4.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.5292,
@@ -1668,60 +1675,60 @@
       "area_km2": 34.8,
       "population": 469442.0,
       "scores": {
-        "quiet": 36.4,
-        "refresh": 30.4,
-        "workspace": 8.8,
-        "cost": 84.0,
-        "community": 0.1
+        "quiet": 53.8,
+        "refresh": 54.4,
+        "workspace": 62.2,
+        "cost": 53.9,
+        "community": 8.5
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.3708,
-          "score": 18.8,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.3,
-          "score": 53.9,
+          "score": 53.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 2458331.4392,
-          "score": 60.9,
+          "score": 79.8,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 70641.708,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 0.1197,
-          "score": 0.0,
+          "value": 15.8329,
+          "score": 65.1,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.3708,
+          "score": 19.8,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 14.0,
-          "score": 8.8,
+          "score": 62.2,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.2982,
+          "per_km2": 0.4023,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 387545.4545,
-          "score": 84.0,
+          "score": 53.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 123.0,
-          "score": 0.1,
+          "score": 8.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.6201,
@@ -1737,20 +1744,13 @@
       "area_km2": 49.9,
       "population": 709372.0,
       "scores": {
-        "quiet": 62.4,
-        "refresh": 36.4,
-        "workspace": 3.4,
-        "cost": 81.0,
-        "community": 0.0
+        "quiet": 59.4,
+        "refresh": 71.3,
+        "workspace": 32.9,
+        "cost": 44.1,
+        "community": 2.8
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.7638,
-          "score": 65.5,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.0,
           "score": 59.4,
@@ -1760,37 +1760,44 @@
         },
         "park_area": {
           "value": 4056963.1162,
-          "score": 72.5,
+          "score": 89.4,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 81301.8661,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 0.6429,
-          "score": 0.2,
+          "value": 16.0446,
+          "score": 67.0,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.7638,
+          "score": 66.3,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 11.0,
-          "score": 3.4,
+          "score": 32.9,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1551,
+          "per_km2": 0.2204,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 441115.942,
-          "score": 81.0,
+          "score": 44.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 164.0,
-          "score": 0.0,
+          "score": 2.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.3119,
@@ -1806,60 +1813,60 @@
       "area_km2": 186.38,
       "population": 574576.0,
       "scores": {
-        "quiet": 36.4,
-        "refresh": 49.4,
-        "workspace": 5.4,
-        "cost": 98.2,
-        "community": 7.9
+        "quiet": 45.3,
+        "refresh": 58.1,
+        "workspace": 11.0,
+        "cost": 89.2,
+        "community": 53.8
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.3235,
-          "score": 22.5,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.5,
-          "score": 50.2,
+          "score": 45.3,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 7133428.6831,
-          "score": 25.8,
+          "score": 29.8,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 38273.5738,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 55.891,
-          "score": 72.9,
+          "value": 56.5814,
+          "score": 89.6,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.3235,
+          "score": 24.4,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 12.0,
-          "score": 5.4,
+          "score": 11.0,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.2088,
+          "per_km2": 0.0644,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 131316.129,
-          "score": 98.2,
+          "score": 89.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 266.0,
-          "score": 7.9,
+          "score": 53.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.6295,
@@ -1875,60 +1882,60 @@
       "area_km2": 24.36,
       "population": 189836.0,
       "scores": {
-        "quiet": 53.7,
-        "refresh": 37.8,
-        "workspace": 15.5,
-        "cost": 88.4,
-        "community": 9.4
+        "quiet": 33.0,
+        "refresh": 68.9,
+        "workspace": 54.9,
+        "cost": 63.7,
+        "community": 61.3
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.7757,
-          "score": 64.6,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.9,
-          "score": 42.8,
+          "score": 33.0,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1630083.2554,
-          "score": 56.9,
+          "score": 76.0,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 66916.3898,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 14.7133,
-          "score": 18.7,
+          "value": 16.3009,
+          "score": 68.9,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.7757,
+          "score": 64.0,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 9.0,
-          "score": 15.5,
+          "score": 54.9,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.4741,
+          "per_km2": 0.3695,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 308433.3333,
-          "score": 88.4,
+          "score": 63.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 95.0,
-          "score": 9.4,
+          "score": 61.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.0043,
@@ -1944,30 +1951,23 @@
       "area_km2": 10.98,
       "population": 151083.0,
       "scores": {
-        "quiet": 98.5,
-        "refresh": 24.9,
-        "workspace": 27.6,
-        "cost": 67.1,
-        "community": 13.8
+        "quiet": 95.3,
+        "refresh": 42.5,
+        "workspace": 79.3,
+        "cost": 30.4,
+        "community": 76.4
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.3552,
-          "score": 97.0,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 64.5,
-          "score": 100.0,
+          "score": 95.3,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 633676.3094,
-          "score": 46.9,
+          "score": 60.6,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 57711.8679,
@@ -1975,29 +1975,36 @@
         },
         "green_coverage_ratio": {
           "value": 2.7567,
-          "score": 2.9,
+          "score": 8.5,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.3552,
+          "score": 87.2,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 12.0,
-          "score": 27.6,
+          "score": 79.3,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.7943,
+          "per_km2": 1.0929,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 692200.0,
-          "score": 67.1,
+          "score": 30.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 93.0,
-          "score": 13.8,
+          "score": 76.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.1556,
@@ -2013,20 +2020,13 @@
       "area_km2": 16.42,
       "population": 195553.0,
       "scores": {
-        "quiet": 51.3,
-        "refresh": 20.4,
-        "workspace": 7.2,
-        "cost": 78.2,
-        "community": 7.2
+        "quiet": 61.3,
+        "refresh": 42.0,
+        "workspace": 50.0,
+        "cost": 40.2,
+        "community": 51.9
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.0792,
-          "score": 41.3,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.9,
           "score": 61.3,
@@ -2036,37 +2036,44 @@
         },
         "park_area": {
           "value": 674281.789,
-          "score": 28.8,
+          "score": 33.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 41064.6644,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 9.5543,
-          "score": 11.9,
+          "value": 9.9364,
+          "score": 40.6,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.0792,
+          "score": 50.0,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 5.0,
-          "score": 7.2,
+          "score": 50.0,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.2557,
+          "per_km2": 0.3045,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 492433.3333,
-          "score": 78.2,
+          "score": 40.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 87.0,
-          "score": 7.2,
+          "score": 51.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.4489,
@@ -2082,40 +2089,40 @@
       "area_km2": 103.31,
       "population": 129221.0,
       "scores": {
-        "quiet": 76.0,
-        "refresh": 48.3,
+        "quiet": 48.1,
+        "refresh": 75.9,
         "workspace": null,
-        "cost": 100.0,
-        "community": 2.3
+        "cost": 95.1,
+        "community": 16.0
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.3144,
-          "score": 100.0,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.4,
-          "score": 52.0,
+          "score": 48.1,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1104501.277,
-          "score": 0.0,
+          "score": 4.8,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 10691.1362,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 73.8719,
-          "score": 96.6,
+          "value": 74.6107,
+          "score": 93.4,
           "source": "D-refresh-02",
           "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.3144,
+          "score": 94.2,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
           "status": "ok"
         },
         "satellite_office_count": {
@@ -2123,19 +2130,19 @@
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 98566.6667,
-          "score": 100.0,
+          "score": 95.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 41.0,
-          "score": 2.3,
+          "score": 16.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.1729,
@@ -2151,60 +2158,60 @@
       "area_km2": 29.43,
       "population": 264144.0,
       "scores": {
-        "quiet": 87.2,
-        "refresh": 30.9,
-        "workspace": 9.0,
-        "cost": 85.8,
-        "community": 3.6
+        "quiet": 80.2,
+        "refresh": 66.3,
+        "workspace": 45.1,
+        "cost": 57.8,
+        "community": 27.4
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.3382,
-          "score": 98.3,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.1,
-          "score": 76.0,
+          "score": 80.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1951392.5478,
-          "score": 56.2,
+          "score": 72.1,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 66306.2368,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 4.7601,
-          "score": 5.6,
+          "value": 11.9729,
+          "score": 50.0,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.3382,
+          "score": 89.5,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 8.0,
-          "score": 9.0,
+          "score": 45.1,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.3029,
+          "per_km2": 0.2718,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 355590.9091,
-          "score": 85.8,
+          "score": 57.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 93.0,
-          "score": 3.6,
+          "score": 27.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.5208,
@@ -2220,13 +2227,35 @@
       "area_km2": 17.34,
       "population": 117505.0,
       "scores": {
-        "quiet": 70.5,
-        "refresh": 33.9,
+        "quiet": 68.9,
+        "refresh": 73.0,
         "workspace": null,
-        "cost": 93.6,
-        "community": 0.0
+        "cost": 73.5,
+        "community": 0.9
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 66.4,
+          "score": 68.9,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1159925.4726,
+          "score": 74.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 66893.0492,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 19.4594,
+          "score": 72.6,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -2234,46 +2263,24 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 66.4,
-          "score": 70.5,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 1159925.4726,
-          "score": 56.9,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 66893.0492,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 8.7948,
-          "score": 10.9,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 214294.1176,
-          "score": 93.6,
+          "score": 73.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 22.0,
-          "score": 0.0,
+          "score": 0.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 1.8723,
@@ -2289,60 +2296,60 @@
       "area_km2": 21.58,
       "population": 247057.0,
       "scores": {
-        "quiet": 75.1,
-        "refresh": 34.3,
-        "workspace": 5.2,
-        "cost": 81.9,
-        "community": 5.7
+        "quiet": 45.3,
+        "refresh": 71.2,
+        "workspace": 35.4,
+        "cost": 46.1,
+        "community": 42.5
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.1761,
-          "score": 100.0,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.5,
-          "score": 50.2,
+          "score": 45.3,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1516707.1089,
-          "score": 60.5,
+          "score": 77.9,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 70282.9986,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 6.6856,
-          "score": 8.1,
+          "value": 12.0161,
+          "score": 51.9,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.1761,
+          "score": 98.8,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 5.0,
-          "score": 5.2,
+          "score": 35.4,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.2024,
+          "per_km2": 0.2317,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 425102.5641,
-          "score": 81.9,
+          "score": 46.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 100.0,
-          "score": 5.7,
+          "score": 42.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.0476,
@@ -2358,60 +2365,60 @@
       "area_km2": 71.55,
       "population": 421872.0,
       "scores": {
-        "quiet": 67.4,
-        "refresh": 53.3,
-        "workspace": 14.6,
-        "cost": 95.9,
-        "community": 7.1
+        "quiet": 40.6,
+        "refresh": 83.0,
+        "workspace": 42.7,
+        "cost": 85.3,
+        "community": 48.1
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.4693,
-          "score": 88.2,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.7,
-          "score": 46.5,
+          "score": 40.6,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 5726984.4047,
-          "score": 71.1,
+          "score": 85.6,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 80041.7108,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 27.5072,
-          "score": 35.5,
+          "value": 27.1712,
+          "score": 82.1,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.4693,
+          "score": 82.6,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 19.0,
-          "score": 14.6,
+          "score": 42.7,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.4504,
+          "per_km2": 0.2655,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 172625.3165,
-          "score": 95.9,
+          "score": 85.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 187.0,
-          "score": 7.1,
+          "score": 48.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.4326,
@@ -2427,30 +2434,23 @@
       "area_km2": 11.3,
       "population": 129790.0,
       "scores": {
-        "quiet": 73.3,
-        "refresh": 39.1,
-        "workspace": 3.4,
-        "cost": 83.9,
-        "community": 10.9
+        "quiet": 74.5,
+        "refresh": 50.1,
+        "workspace": 25.6,
+        "cost": 52.0,
+        "community": 65.1
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.6497,
-          "score": 74.3,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.3,
-          "score": 72.3,
+          "score": 74.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 905188.2169,
-          "score": 71.2,
+          "score": 87.5,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 80105.1519,
@@ -2458,29 +2458,36 @@
         },
         "green_coverage_ratio": {
           "value": 5.7349,
-          "score": 6.9,
+          "score": 19.8,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.6497,
+          "score": 75.6,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 2.0,
-          "score": 3.4,
+          "score": 25.6,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1541,
+          "per_km2": 0.177,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 388631.5789,
-          "score": 83.9,
+          "score": 52.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 70.0,
-          "score": 10.9,
+          "score": 65.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.3933,
@@ -2496,60 +2503,60 @@
       "area_km2": 20.51,
       "population": 199564.0,
       "scores": {
-        "quiet": 51.0,
-        "refresh": 14.2,
-        "workspace": 0.0,
-        "cost": 91.3,
-        "community": 4.0
+        "quiet": 63.2,
+        "refresh": 38.7,
+        "workspace": 6.1,
+        "cost": 67.6,
+        "community": 34.9
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.1339,
-          "score": 37.1,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.7,
-          "score": 64.9,
+          "score": 63.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 576439.4921,
-          "score": 14.7,
+          "score": 18.3,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 28105.2897,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 10.9981,
-          "score": 13.8,
+          "value": 10.1833,
+          "score": 44.3,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.1339,
+          "score": 43.0,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 1.0,
-          "score": 0.0,
+          "score": 6.1,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.0501,
+          "per_km2": 0.0488,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 255558.8235,
-          "score": 91.3,
+          "score": 67.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 72.0,
-          "score": 4.0,
+          "score": 34.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.6079,
@@ -2565,60 +2572,60 @@
       "area_km2": 27.55,
       "population": 190763.0,
       "scores": {
-        "quiet": 58.3,
-        "refresh": 30.6,
-        "workspace": 0.0,
-        "cost": 93.4,
-        "community": 5.8
+        "quiet": 53.8,
+        "refresh": 68.8,
+        "workspace": 3.7,
+        "cost": 71.6,
+        "community": 44.3
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.8009,
-          "score": 62.7,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.3,
-          "score": 53.9,
+          "score": 53.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1517568.2336,
-          "score": 44.0,
+          "score": 51.0,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 55084.1464,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 13.5274,
-          "score": 17.1,
+          "value": 26.1398,
+          "score": 80.2,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.8009,
+          "score": 61.6,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 1.0,
-          "score": 0.0,
+          "score": 3.7,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.0524,
+          "per_km2": 0.0363,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 218567.5676,
-          "score": 93.4,
+          "score": 71.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 78.0,
-          "score": 5.8,
+          "score": 44.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.0888,
@@ -2634,60 +2641,60 @@
       "area_km2": 17.14,
       "population": 152566.0,
       "scores": {
-        "quiet": 85.4,
-        "refresh": 29.7,
-        "workspace": 0.0,
-        "cost": 93.9,
-        "community": 3.7
+        "quiet": 97.2,
+        "refresh": 61.5,
+        "workspace": 8.5,
+        "cost": 75.5,
+        "community": 29.2
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.697,
-          "score": 70.7,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 63.7,
-          "score": 100.0,
+          "score": 97.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 941181.3969,
-          "score": 43.8,
+          "score": 49.0,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 54911.4001,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 12.3466,
-          "score": 15.6,
+          "value": 12.7134,
+          "score": 59.4,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.697,
+          "score": 73.3,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 1.0,
-          "score": 0.0,
+          "score": 8.5,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.0655,
+          "per_km2": 0.0583,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 208681.8182,
-          "score": 93.9,
+          "score": 75.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 54.0,
-          "score": 3.7,
+          "score": 29.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.5395,
@@ -2703,13 +2710,35 @@
       "area_km2": 11.46,
       "population": 129022.0,
       "scores": {
-        "quiet": 70.5,
-        "refresh": 17.2,
-        "workspace": 0.5,
-        "cost": 86.0,
-        "community": 8.6
+        "quiet": 68.9,
+        "refresh": 49.8,
+        "workspace": 15.9,
+        "cost": 59.8,
+        "community": 55.7
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 66.4,
+          "score": 68.9,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 318728.8849,
+          "score": 16.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 27812.2936,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 15.7844,
+          "score": 63.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -2717,46 +2746,24 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 66.4,
-          "score": 70.5,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 318728.8849,
-          "score": 14.4,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 27812.2936,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 15.6931,
-          "score": 20.0,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": 1.0,
-          "score": 0.5,
+          "score": 15.9,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.0775,
+          "per_km2": 0.0873,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 351000.0,
-          "score": 86.0,
+          "score": 59.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 62.0,
-          "score": 8.6,
+          "score": 55.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.8054,
@@ -2772,60 +2779,60 @@
       "area_km2": 8.15,
       "population": 77055.0,
       "scores": {
-        "quiet": 63.1,
-        "refresh": 11.6,
-        "workspace": 7.3,
-        "cost": 82.7,
-        "community": 16.6
+        "quiet": 87.7,
+        "refresh": 40.9,
+        "workspace": 37.8,
+        "cost": 48.0,
+        "community": 78.3
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.1069,
-          "score": 39.1,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 65.5,
-          "score": 87.1,
+          "score": 87.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 208973.2511,
-          "score": 12.0,
+          "score": 12.5,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 25640.8897,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 8.9291,
-          "score": 11.1,
+          "value": 10.8426,
+          "score": 48.1,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.1069,
+          "score": 47.7,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 2.0,
-          "score": 7.3,
+          "score": 37.8,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.2596,
+          "per_km2": 0.2454,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 411454.5455,
-          "score": 82.7,
+          "score": 48.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 53.0,
-          "score": 16.6,
+          "score": 78.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.8782,
@@ -2841,40 +2848,40 @@
       "area_km2": 10.16,
       "population": 57388.0,
       "scores": {
-        "quiet": 84.8,
-        "refresh": 14.2,
+        "quiet": 68.9,
+        "refresh": 47.6,
         "workspace": null,
-        "cost": 95.9,
-        "community": 4.2
+        "cost": 83.3,
+        "community": 36.8
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.3272,
-          "score": 99.1,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.4,
-          "score": 70.5,
+          "score": 68.9,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 394566.0949,
-          "score": 26.4,
+          "score": 31.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 38835.2456,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 2.0727,
-          "score": 2.0,
+          "value": 7.1506,
+          "score": 27.4,
           "source": "D-refresh-02",
           "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.3272,
+          "score": 91.9,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
           "status": "ok"
         },
         "satellite_office_count": {
@@ -2882,19 +2889,19 @@
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 173545.4545,
-          "score": 95.9,
+          "score": 83.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 21.0,
-          "score": 4.2,
+          "score": 36.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.6593,
@@ -2910,40 +2917,40 @@
       "area_km2": 6.39,
       "population": 84076.0,
       "scores": {
-        "quiet": 43.1,
-        "refresh": 3.8,
+        "quiet": 53.8,
+        "refresh": 31.2,
         "workspace": null,
-        "cost": 84.5,
-        "community": 9.3
+        "cost": 55.9,
+        "community": 59.4
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.1958,
-          "score": 32.3,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 67.3,
-          "score": 53.9,
+          "score": 53.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 128509.0268,
-          "score": 6.0,
+          "score": 8.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 20110.9588,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 1.6447,
-          "score": 1.5,
+          "value": 9.8692,
+          "score": 38.7,
           "source": "D-refresh-02",
           "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.1958,
+          "score": 33.7,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
           "status": "ok"
         },
         "satellite_office_count": {
@@ -2951,19 +2958,19 @@
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 377750.0,
-          "score": 84.5,
+          "score": 55.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 42.0,
-          "score": 9.3,
+          "score": 59.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.9955,
@@ -2979,60 +2986,60 @@
       "area_km2": 13.42,
       "population": 83173.0,
       "scores": {
-        "quiet": 34.4,
-        "refresh": 35.5,
-        "workspace": 2.1,
-        "cost": 95.4,
-        "community": 4.0
+        "quiet": 8.5,
+        "refresh": 71.3,
+        "workspace": 13.4,
+        "cost": 81.4,
+        "community": 33.0
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.8943,
-          "score": 55.5,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 69.5,
-          "score": 13.3,
+          "score": 8.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 756654.2876,
-          "score": 45.4,
+          "score": 56.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 56382.5848,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 19.9822,
-          "score": 25.6,
+          "value": 31.2556,
+          "score": 85.8,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.8943,
+          "score": 57.0,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 1.0,
-          "score": 2.1,
+          "score": 13.4,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1202,
+          "per_km2": 0.0745,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 181095.2381,
-          "score": 95.4,
+          "score": 81.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 30.0,
-          "score": 4.0,
+          "score": 33.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.6069,
@@ -3048,60 +3055,60 @@
       "area_km2": 10.23,
       "population": 75276.0,
       "scores": {
-        "quiet": 64.6,
-        "refresh": 23.0,
-        "workspace": 2.5,
-        "cost": 94.3,
-        "community": 4.4
+        "quiet": 84.0,
+        "refresh": 59.3,
+        "workspace": 18.3,
+        "cost": 79.4,
+        "community": 38.7
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.0453,
-          "score": 43.9,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 65.6,
-          "score": 85.2,
+          "score": 84.0,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 310518.8993,
-          "score": 17.2,
+          "score": 22.1,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 30353.7536,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 22.3798,
-          "score": 28.8,
+          "value": 24.4142,
+          "score": 78.3,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 5.0453,
+          "score": 52.3,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 1.0,
-          "score": 2.5,
+          "score": 18.3,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1328,
+          "per_km2": 0.0978,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 201533.3333,
-          "score": 94.3,
+          "score": 79.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 28.0,
-          "score": 4.4,
+          "score": 38.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.7196,
@@ -3117,13 +3124,35 @@
       "area_km2": 12.88,
       "population": 115888.0,
       "scores": {
-        "quiet": 26.0,
-        "refresh": 12.8,
+        "quiet": 24.5,
+        "refresh": 36.6,
         "workspace": null,
-        "cost": 92.4,
-        "community": 11.0
+        "cost": 69.6,
+        "community": 68.9
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 68.6,
+          "score": 24.5,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 314778.3205,
+          "score": 10.6,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 24439.3106,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 12.368,
+          "score": 55.7,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": 5.329,
           "score": 22.1,
@@ -3131,46 +3160,24 @@
           "unit": "μg/m3",
           "status": "ok"
         },
-        "road_noise_leq": {
-          "value": 68.6,
-          "score": 29.9,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 314778.3205,
-          "score": 10.7,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 24439.3106,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 11.7985,
-          "score": 14.8,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 236545.4545,
-          "score": 92.4,
+          "score": 69.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 63.0,
-          "score": 11.0,
+          "score": 68.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.4363,
@@ -3186,30 +3193,23 @@
       "area_km2": 15.32,
       "population": 69158.0,
       "scores": {
-        "quiet": 28.0,
-        "refresh": 51.8,
+        "quiet": 21.7,
+        "refresh": 80.7,
         "workspace": null,
-        "cost": 98.4,
-        "community": 1.2
+        "cost": 91.2,
+        "community": 12.3
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": null,
-          "score": null,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "no_data"
-        },
         "road_noise_leq": {
           "value": 68.7,
-          "score": 28.0,
+          "score": 21.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1250389.7863,
-          "score": 72.9,
+          "score": 91.3,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 81618.1323,
@@ -3217,29 +3217,36 @@
         },
         "green_coverage_ratio": {
           "value": 23.8074,
-          "score": 30.7,
+          "score": 76.4,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "no_data"
         },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 128486.6667,
-          "score": 98.4,
+          "score": 91.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 20.0,
-          "score": 1.2,
+          "score": 12.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.8919,
@@ -3255,60 +3262,60 @@
       "area_km2": 21.01,
       "population": 141473.0,
       "scores": {
-        "quiet": 64.4,
-        "refresh": 62.0,
-        "workspace": 13.6,
-        "cost": 94.2,
-        "community": 13.5
+        "quiet": 65.1,
+        "refresh": 72.6,
+        "workspace": 47.6,
+        "cost": 77.5,
+        "community": 74.5
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.8324,
-          "score": 60.3,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 66.5,
-          "score": 68.6,
+          "score": 65.1,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 2313252.7988,
-          "score": 100.0,
+          "score": 97.1,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 110102.4654,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 18.756,
-          "score": 24.0,
+          "value": 18.6557,
+          "score": 70.8,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.8324,
+          "score": 59.3,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 6.0,
-          "score": 13.6,
+          "score": 47.6,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.4241,
+          "per_km2": 0.2856,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 202838.7097,
-          "score": 94.2,
+          "score": 77.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 86.0,
-          "score": 13.5,
+          "score": 74.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.0789,
@@ -3324,13 +3331,35 @@
       "area_km2": 17.97,
       "population": 95861.0,
       "scores": {
-        "quiet": 41.0,
-        "refresh": 46.6,
+        "quiet": 31.1,
+        "refresh": 75.7,
         "workspace": null,
-        "cost": 90.6,
-        "community": 0.9
+        "cost": 65.7,
+        "community": 10.4
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 68.0,
+          "score": 31.1,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1006517.4819,
+          "score": 54.8,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 56010.9895,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 29.9883,
+          "score": 84.0,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -3338,46 +3367,24 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 68.0,
-          "score": 41.0,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 1006517.4819,
-          "score": 45.0,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 56010.9895,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 37.1071,
-          "score": 48.2,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 268346.1538,
-          "score": 90.6,
+          "score": 65.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 27.0,
-          "score": 0.9,
+          "score": 10.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.8166,
@@ -3393,13 +3400,35 @@
       "area_km2": 9.9,
       "population": 53452.0,
       "scores": {
-        "quiet": 53.9,
-        "refresh": 13.6,
+        "quiet": 53.8,
+        "refresh": 41.0,
         "workspace": null,
-        "cost": 97.4,
-        "community": 0.1
+        "cost": 87.3,
+        "community": 6.6
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 67.3,
+          "score": 53.8,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 368100.4455,
+          "score": 27.9,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 37181.8632,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 10.5826,
+          "score": 46.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -3407,46 +3436,24 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 67.3,
-          "score": 53.9,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 368100.4455,
-          "score": 24.6,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 37181.8632,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 2.5397,
-          "score": 2.6,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 146111.1111,
-          "score": 97.4,
+          "score": 87.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 14.0,
-          "score": 0.1,
+          "score": 6.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.6192,
@@ -3462,13 +3469,35 @@
       "area_km2": 73.47,
       "population": 77001.0,
       "scores": {
-        "quiet": 22.5,
-        "refresh": 47.2,
+        "quiet": 15.1,
+        "refresh": 66.2,
         "workspace": null,
-        "cost": 100.0,
-        "community": 3.1
+        "cost": 93.1,
+        "community": 25.5
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 69.0,
+          "score": 15.1,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 464099.6916,
+          "score": 2.9,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 6316.8598,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 74.498,
+          "score": 91.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -3476,46 +3505,24 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 69.0,
-          "score": 22.5,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 464099.6916,
-          "score": 0.0,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 6316.8598,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 72.2775,
-          "score": 94.5,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 99356.5217,
-          "score": 100.0,
+          "score": 93.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 26.0,
-          "score": 3.1,
+          "score": 25.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.3766,
@@ -3531,30 +3538,23 @@
       "area_km2": 15.75,
       "population": 208529.0,
       "scores": {
-        "quiet": 90.4,
-        "refresh": 11.3,
-        "workspace": 4.8,
-        "cost": 87.3,
-        "community": 4.7
+        "quiet": 87.7,
+        "refresh": 43.0,
+        "workspace": 40.2,
+        "cost": 61.8,
+        "community": 40.6
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 4.3976,
-          "score": 93.7,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 65.5,
-          "score": 87.1,
+          "score": 87.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 428808.0529,
-          "score": 13.8,
+          "score": 14.4,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 27225.9081,
@@ -3562,29 +3562,36 @@
         },
         "green_coverage_ratio": {
           "value": 7.1759,
-          "score": 8.8,
+          "score": 29.2,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": 4.3976,
+          "score": 84.9,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
         "satellite_office_count": {
           "value": 4.0,
-          "score": 4.8,
+          "score": 40.2,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 0.1918,
+          "per_km2": 0.254,
           "status": "ok"
         },
         "land_price_residential": {
           "value": 328517.2414,
-          "score": 87.3,
+          "score": 61.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 79.0,
-          "score": 4.7,
+          "score": 40.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.7884,
@@ -3600,40 +3607,40 @@
       "area_km2": 16.85,
       "population": 31107.0,
       "scores": {
-        "quiet": 65.6,
-        "refresh": 53.8,
+        "quiet": 87.7,
+        "refresh": 76.6,
         "workspace": null,
-        "cost": 100.0,
-        "community": 2.4
+        "cost": 97.1,
+        "community": 19.8
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": 5.0427,
-          "score": 44.1,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "ok"
-        },
         "road_noise_leq": {
           "value": 65.5,
-          "score": 87.1,
+          "score": 87.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
         },
         "park_area": {
           "value": 1190752.2596,
-          "score": 61.0,
+          "score": 81.7,
           "source": "D-refresh-01",
           "unit": "m2",
           "per_km2": 70667.7899,
           "status": "ok"
         },
         "green_coverage_ratio": {
-          "value": 35.9253,
-          "score": 46.6,
+          "value": 35.9876,
+          "score": 87.7,
           "source": "D-refresh-02",
           "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.0427,
+          "score": 54.7,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
           "status": "ok"
         },
         "satellite_office_count": {
@@ -3641,19 +3648,19 @@
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 96936.3636,
-          "score": 100.0,
+          "score": 97.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 10.0,
-          "score": 2.4,
+          "score": 19.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.2147,
@@ -3669,13 +3676,35 @@
       "area_km2": 28.07,
       "population": 15855.0,
       "scores": {
-        "quiet": 74.2,
-        "refresh": 61.8,
+        "quiet": 78.3,
+        "refresh": 75.5,
         "workspace": null,
-        "cost": 100.0,
-        "community": 19.3
+        "cost": 99.0,
+        "community": 82.1
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 66.2,
+          "score": 78.3,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1015402.9156,
+          "score": 26.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 36173.955,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 81.52,
+          "score": 95.3,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -3683,46 +3712,24 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 66.2,
-          "score": 74.2,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 1015402.9156,
-          "score": 23.5,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 36173.955,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 80.3627,
-          "score": 100.0,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
           "value": 88783.3333,
-          "score": 100.0,
+          "score": 99.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 12.0,
-          "score": 19.3,
+          "score": 82.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 7.5686,
@@ -3738,23 +3745,16 @@
       "area_km2": 105.41,
       "population": 1747.0,
       "scores": {
-        "quiet": 100.0,
-        "refresh": 100.0,
-        "workspace": 100.0,
+        "quiet": 99.1,
+        "refresh": 99.1,
+        "workspace": 1.2,
         "cost": null,
-        "community": 100.0
+        "community": 95.3
       },
       "indicators": {
-        "pm25_annual_avg": {
-          "value": null,
-          "score": null,
-          "source": "D-quiet-01",
-          "unit": "μg/m3",
-          "status": "no_data"
-        },
         "road_noise_leq": {
           "value": 59.5,
-          "score": 100.0,
+          "score": 99.1,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3768,18 +3768,25 @@
           "status": "no_data"
         },
         "green_coverage_ratio": {
-          "value": 98.8582,
-          "score": 100.0,
+          "value": 98.9972,
+          "score": 99.1,
           "source": "D-refresh-02",
           "unit": "%",
           "status": "ok"
         },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-quiet-01",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
         "satellite_office_count": {
           "value": 1.0,
-          "score": 100.0,
+          "score": 1.2,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": 5.7241,
+          "per_km2": 0.0095,
           "status": "ok"
         },
         "land_price_residential": {
@@ -3791,7 +3798,7 @@
         },
         "npo_count": {
           "value": 5.0,
-          "score": 100.0,
+          "score": 95.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 28.6205,
@@ -3807,13 +3814,35 @@
       "area_km2": 225.53,
       "population": 4083.0,
       "scores": {
-        "quiet": 26.2,
-        "refresh": 50.0,
+        "quiet": 19.8,
+        "refresh": 69.7,
         "workspace": null,
         "cost": null,
-        "community": 8.9
+        "community": 57.5
       },
       "indicators": {
+        "road_noise_leq": {
+          "value": 68.8,
+          "score": 19.8,
+          "source": "D-quiet-02",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 450806.4239,
+          "score": 1.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 1998.8756,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 98.7678,
+          "score": 97.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
         "pm25_annual_avg": {
           "value": null,
           "score": null,
@@ -3821,34 +3850,12 @@
           "unit": "μg/m3",
           "status": "no_data"
         },
-        "road_noise_leq": {
-          "value": 68.8,
-          "score": 26.2,
-          "source": "D-quiet-02",
-          "unit": "dB",
-          "status": "ok"
-        },
-        "park_area": {
-          "value": 450806.4239,
-          "score": 0.0,
-          "source": "D-refresh-01",
-          "unit": "m2",
-          "per_km2": 1998.8756,
-          "status": "ok"
-        },
-        "green_coverage_ratio": {
-          "value": 96.6966,
-          "score": 100.0,
-          "source": "D-refresh-02",
-          "unit": "%",
-          "status": "ok"
-        },
         "satellite_office_count": {
           "value": null,
           "score": null,
           "source": "D-workspace-01",
           "unit": "件",
-          "per_10k": null,
+          "per_km2": null,
           "status": "no_data"
         },
         "land_price_residential": {
@@ -3860,7 +3867,7 @@
         },
         "npo_count": {
           "value": 2.0,
-          "score": 8.9,
+          "score": 57.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.8984,

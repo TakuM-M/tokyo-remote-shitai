@@ -4,7 +4,7 @@
 
 軸あたりの出典データセットは原則1つに絞ってある。指標を増やすより、
 1本ずつ欠損とスケールの妥当性を確かめられる状態を優先する。
-例外はいきぬきで、1本では区部と多摩のどちらかが必ず潰れるため2本立てにしている。
+例外はいきぬきで、1本では区部と多摩のどちらかが必ず潰れるため3本立てにしている。
 """
 
 from __future__ import annotations
@@ -24,8 +24,8 @@ class Axis:
 
 
 AXES: tuple[Axis, ...] = (
-    Axis("quiet", "しずけさ", "道路交通騒音の小ささ・大気のきれいさ"),
-    Axis("refresh", "いきぬき", "緑の多さ"),
+    Axis("quiet", "しずけさ", "道路交通騒音の小ささ"),
+    Axis("refresh", "いきぬき", "緑と水辺の多さ・大気のきれいさ"),
     Axis("workspace", "しごとば", "家以外で作業できる場所の多さ"),
     Axis("cost", "くらしのコスト", "住居費の負担の軽さ"),
     Axis("community", "つながり", "地域活動やNPOなど人とつながる機会"),
@@ -44,6 +44,9 @@ class Indicator:
     dataset_id: str
     unit: str | None = None
     denominator: Denominator = None
+    # 軸スコアを平均するときの重み。効くのは軸内での相対値だけ。
+    # 欠損した指標は重みごと外し、残った指標の重みで正規化する。
+    weight: float = 1.0
     # 参考指標（軸スコアには算入せず、詳細パネルで数値だけ見せる）
     include_in_axis: bool = True
     definition: str = ""
@@ -63,18 +66,6 @@ class Indicator:
 INDICATORS: tuple[Indicator, ...] = (
     # 軸1: しずけさ
     Indicator(
-        key="pm25_annual_avg",
-        label="PM2.5",
-        axis="quiet",
-        direction="lower_is_better",
-        dataset_id="D-quiet-01",
-        unit="μg/m3",
-        definition=(
-            "大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、"
-            "各月を等重みで平均した年平均値を自治体内で平均。"
-        ),
-    ),
-    Indicator(
         key="road_noise_leq",
         label="道路交通騒音",
         axis="quiet",
@@ -85,9 +76,15 @@ INDICATORS: tuple[Indicator, ...] = (
     ),
     # 軸2: いきぬき
     #
-    # 緑被率と公園面積比の2本立てにしている。緑被率は100mメッシュ由来で
-    # 市街地の細かい緑を拾えず23区の値が0.1〜12%に潰れるため、区部の解像度は
-    # 公園面積比が担う。両者の順位相関はほぼ0で、補い合う関係にある。
+    # 緑・水辺率、公園面積比、PM2.5 の3本立て。外に出て過ごす場所の量（前2本）と、
+    # そこで吸う空気の質（PM2.5）の両方を見る。
+    #
+    # 緑・水辺率は100mメッシュ由来で市街地の細かい緑を拾えず23区の値が
+    # 0.9〜20%に収まるため、区部の解像度は公園面積比が担う。
+    # 両者の順位相関はほぼ0で、補い合う関係にある。
+    #
+    # 重みは緑・水辺率0.5・PM2.5 0.3・公園面積比0.2。緑と水辺の総量そのものを
+    # 測るのは緑・水辺率で、公園面積比は区部が潰れるのを補う補正の役回りだから。
     #
     # 公園面積の分母は人口ではなく面積。÷人口だと奥多摩町110m2/人に対し
     # 豊島区0.75m2/人と147倍に開き、人口の少ない自治体が上端に張り付く。
@@ -99,26 +96,48 @@ INDICATORS: tuple[Indicator, ...] = (
         dataset_id="D-refresh-01",
         unit="m2",
         denominator="area_km2",
+        weight=0.2,
         definition=(
             "公園緑地のポリゴン面積 ÷ 総面積。海上公園は開園区域のみ、"
             "計画決定区域・予定地・霊園・葬儀所は含めない。"
         ),
     ),
-    # 山林まで含めた緑の総量。D-refresh-01 が取りこぼす西多摩の森林が入る。
+    # 山林と川辺まで含めた息抜きの場の総量。D-refresh-01 が取りこぼす西多摩の森林と、
+    # 区部を流れる大きな河川が入る。
     # 分解能の限界（市街地の細かい緑を拾えない）は datasets.py の notes 側に書く。
     Indicator(
         key="green_coverage_ratio",
-        label="緑被率",
+        label="緑・水辺率",
         axis="refresh",
         direction="higher_is_better",
         dataset_id="D-refresh-02",
         unit="%",
+        weight=0.5,
         definition=(
             "土地利用細分メッシュ（100m）のうち田・その他の農用地・森林・荒地・"
-            "ゴルフ場の面積 ÷ 海水域を除く全メッシュ面積。"
+            "河川地及び湖沼の面積 ÷ 海水域を除く全メッシュ面積。"
+        ),
+    ),
+    # 測定局のある43自治体でしか出ない。欠損した10自治体は残り2本の重みで正規化される。
+    Indicator(
+        key="pm25_annual_avg",
+        label="PM2.5",
+        axis="refresh",
+        direction="lower_is_better",
+        dataset_id="D-quiet-01",
+        unit="μg/m3",
+        weight=0.3,
+        definition=(
+            "大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、"
+            "各月を等重みで平均した年平均値を自治体内で平均。"
         ),
     ),
     # 軸3: しごとば
+    #
+    # 分母は人口ではなく面積。住民が体感する選択肢の数は自宅周辺の施設密度に比例するため。
+    # 生件数だと自治体の広さが混ざり、八王子市と武蔵野市がどちらも12件で同点になる
+    # （面積は186km2と11km2で17倍違う）。÷人口だと公園面積比と同じく人口の少ない
+    # 自治体が上端に張り付き、1件しかない檜原村が全体2位に来る。
     Indicator(
         key="satellite_office_count",
         label="サテライトオフィス",
@@ -126,8 +145,8 @@ INDICATORS: tuple[Indicator, ...] = (
         direction="higher_is_better",
         dataset_id="D-workspace-01",
         unit="件",
-        denominator="population_10k",
-        definition="TOKYOテレワークアプリ掲載施設数 ÷ 人口1万人。",
+        denominator="area_km2",
+        definition="TOKYOテレワークアプリ掲載施設数 ÷ 総面積(km2)。",
     ),
     # 軸4: くらしのコスト
     Indicator(

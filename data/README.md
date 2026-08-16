@@ -16,7 +16,7 @@ uv sync
 make ingest         # 原データを raw/ に取得
 make normalize      # 文字コード変換・自治体コード付与・単位統一 → interim/
 make spatial-join   # 点/線/面を自治体ポリゴンに集約 → interim/indicators/
-make score          # ウィンザライズ → min-max → 軸スコア → processed/municipalities.json
+make score          # 分母換算 → パーセンタイル順位 → 軸スコア → processed/municipalities.json
 make all            # 上を順に実行
 
 make demo           # ダミーデータで processed/municipalities.sample.json を生成
@@ -54,11 +54,11 @@ uv run python -m analysis.validate_output --demo         # ダミーデータの
     "generated_at": "2026-08-12",
     "version": "0.2",
     "axes": [                          // 軸と指標の定義。画面の説明表示に使う
-      { "key": "quiet", "label": "しずけさ", "description": "…",
-        "indicators": [
-          { "key": "pm25_annual_avg", "label": "PM2.5", "unit": "μg/m3",
-            "direction": "lower_is_better", "definition": "…",
-            "source": "D-quiet-01", "reference_only": false }
+      { "key": "refresh", "label": "いきぬき", "description": "…",
+        "indicators": [                // weight は軸スコアを平均するときの重み
+          { "key": "green_coverage_ratio", "label": "緑・水辺率", "unit": "%",
+            "direction": "higher_is_better", "definition": "…",
+            "source": "D-refresh-02", "weight": 0.5, "reference_only": false }
         ] }
     ],
     "default_weights": { "quiet": 1.0, "…": 1.0 },
@@ -80,7 +80,7 @@ uv run python -m analysis.validate_output --demo         # ダミーデータの
       "scores": { "quiet": 28.4, "refresh": 51.2, "workspace": 94.7,
                   "cost": 12.5, "community": 76.3 },
       "indicators": {
-        "satellite_office_count": { "value": 55, "per_10k": 1.58, "unit": "件",
+        "satellite_office_count": { "value": 55, "per_km2": 4.7, "unit": "件",
                                     "score": 96.2, "source": "D-workspace-01", "status": "ok" },
         "park_area":              { "value": 1181952, "per_km2": 64871.1, "unit": "m2",
                                     "score": 22.6, "source": "D-refresh-01", "status": "ok" },
