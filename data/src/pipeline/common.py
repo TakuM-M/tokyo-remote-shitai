@@ -71,7 +71,7 @@ def iter_zip_members(dataset_id: str, key: str, suffix: str = ".csv") -> Iterato
 def write_indicators(dataset_id: str, frames: IndicatorFrames) -> None:
     """指標ごとに interim/indicators/<データセットID>_<指標キー>.csv を書く。
 
-    先頭2列は必ず code,value に揃える。road_noise_leq の参照年度のような補足列は
+    先頭2列は必ず code,value に揃える。road_noise_leq の測定地点数のような補足列は
     その後ろに残す（score 側は列名で読むので余分な列があっても困らない）。
     """
     INDICATOR_DIR.mkdir(parents=True, exist_ok=True)

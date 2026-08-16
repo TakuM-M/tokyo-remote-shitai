@@ -465,8 +465,10 @@ DEMO_PROFILE: dict[str, tuple[float, float, float]] = {
     "park_area": (1_660_000, 1_250_000, 900_000),
     "green_coverage_ratio": (2.5, 27.0, 10.0),
     "satellite_office_count": (21, 5, 12),
+    "library_count": (10, 6, 4),
     "land_price_residential": (1_120_000, 260_000, 400_000),
     "npo_count": (323, 61, 150),
+    "social_education_program_count": (175, 154, 125),
 }
 
 

@@ -13,7 +13,7 @@
             "label": "道路交通騒音",
             "unit": "dB",
             "direction": "lower_is_better",
-            "definition": "幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を自治体内で平均。",
+            "definition": "幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を、平成20〜25年度の全地点をまとめて自治体内で平均。",
             "source": "D-quiet-02",
             "weight": 1.0,
             "reference_only": false
@@ -69,7 +69,17 @@
             "direction": "higher_is_better",
             "definition": "TOKYOテレワークアプリ掲載施設数 ÷ 総面積(km2)。",
             "source": "D-workspace-01",
-            "weight": 1.0,
+            "weight": 0.6,
+            "reference_only": false
+          },
+          {
+            "key": "library_count",
+            "label": "図書館",
+            "unit": "件",
+            "direction": "higher_is_better",
+            "definition": "都内の公立図書館数 ÷ 総面積(km2)。",
+            "source": "D-workspace-02",
+            "weight": 0.4,
             "reference_only": false
           }
         ]
@@ -103,6 +113,16 @@
             "direction": "higher_is_better",
             "definition": "認証NPO法人数 ÷ 人口1万人。人口の少ない自治体は全体の中央値に寄せて補正。",
             "source": "D-community-01",
+            "weight": 1.0,
+            "reference_only": false
+          },
+          {
+            "key": "social_education_program_count",
+            "label": "社会教育事業",
+            "unit": "件",
+            "direction": "higher_is_better",
+            "definition": "社会教育の学級・講座・事業の年間開催数 ÷ 人口1万人。人口の少ない自治体は全体の中央値に寄せて補正。",
+            "source": "D-community-02",
             "weight": 1.0,
             "reference_only": false
           }
@@ -168,7 +188,7 @@
         "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000003",
         "license": "CC BY 4.0（東京都オープンデータ利用規約）",
         "updated_at": "平成20〜25年度（2008〜2013年度）",
-        "notes": "幹線道路沿いの測定地点ごとに昼間・夜間の等価騒音レベル(Leq)が入る。住所列の先頭が自治体名なので空間結合は不要。1年度あたり約600地点だが調査地点は年度ごとに入れ替わり、単年では測定のない自治体が出る（平成25年度は檜原村が欠測）。6年分を合わせると53自治体すべてが埋まるため、自治体ごとに値のある最も新しい年度を採る。文字コードは CP932。"
+        "notes": "幹線道路沿いの測定地点ごとに昼間・夜間の等価騒音レベル(Leq)が入る。住所列の先頭が自治体名なので空間結合は不要。1年度あたり約600地点だが調査地点は年度ごとに入れ替わり、単年では測定のない自治体が出る（平成25年度は檜原村が欠測）。6年分を合わせると53自治体すべてが埋まるため、自治体ごとに6年度分の地点をまとめて平均する。単年だと1自治体あたりの地点数が1〜40件と偏り、その年に測った道路がそのまま値になってしまうため（奥多摩町は平成25年度の4地点で68.8dB、6年度13地点では64.5dB）。文字コードは CP932。"
       },
       {
         "id": "D-refresh-01",
@@ -198,6 +218,15 @@
         "notes": "「区市町村コード」列に5桁コードが入っているので空間結合は不要。UTF-8 BOM付き。掲載許諾済みの施設のみ収録のため網羅性に限界がある。その旨を画面に明記する。"
       },
       {
+        "id": "D-workspace-02",
+        "name": "施設関連情報_図書館",
+        "org": "東京都教育庁",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000021d2000000003",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "令和3年3月（カタログ登録時点）",
+        "notes": "都内の公立図書館一覧。「区市町村名」列があるので空間結合は不要。文字コードは CP932。島しょ部を含む58自治体が載り、本土53自治体はすべて1館以上ある（最少は狛江市・檜原村の1館、最多は世田谷区の18館）。末尾に注記の行が1行あるが、自治体名が空なのでコード解決の段階で落ちる。同名のデータセットがカタログに2件あり、もう一方（t000021d2000000019）は無関係な特別支援教育の統計CSVが同じデータセットに混在している。図書館CSV1件だけを持つこちらを使う。更新頻度は「随時」だが、リソースの登録は令和3年3月から動いていない。"
+      },
+      {
         "id": "D-cost-01",
         "name": "地価公示（東京都分）",
         "org": "東京都財務局",
@@ -214,6 +243,15 @@
         "license": "CC BY 4.0（東京都オープンデータ利用規約）",
         "updated_at": "月次更新",
         "notes": "認証NPO法人 約9,300件。「主たる事務所」の住所から自治体を判定する。1行目が表題、2行目がヘッダで、ヘッダのセルに改行が入る。文字コードは CP932。表題行の日付表記は更新されていないので、鮮度の判断には使わない。"
+      },
+      {
+        "id": "D-community-02",
+        "name": "東京都統計年鑑　令和5年　17　教育・文化・スポーツ",
+        "org": "東京都総務局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000003d2000001028",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "令和5年度（施設数は令和5年5月1日現在）",
+        "notes": "章まるごとが1データセットで、使うのは表17-8のみ。「地域コード」に5桁コードが入るので空間結合は不要。UTF-8 BOM付き。1行1自治体で、総数・区部・市部・郡部・島部の集計行と島しょ部が同じ表に混ざるが、自治体コードに解決できないか対象外なので落ちる。末尾5行は注記。採るのは「学級・事業数（総数）」で、学級・講座（対象別）と分野別事業数の合計にあたる。同じ表にある「施設数」は使わない。図書館数との順位相関が0.80あり、しごとば軸の図書館密度と同じものを測ってしまうため。原資料は都教育庁生涯学習課「区市町村生涯学習・社会教育行政データブック」。自治体によって事業の数え方が揃っていない可能性があり（施設数が近い新宿区41件と品川区526件のような開きがある）、生の件数ではなく順位に直してから使う。年次を上げるときはURLの 2023 と tn23 を差し替える。"
       }
     ]
   },
@@ -226,16 +264,16 @@
       "area_km2": 11.66,
       "population": 66670.0,
       "scores": {
-        "quiet": 36.8,
+        "quiet": 43.4,
         "refresh": 81.5,
-        "workspace": 98.8,
+        "workspace": 85.3,
         "cost": 0.9,
-        "community": 99.1
+        "community": 83.0
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.8,
-          "score": 36.8,
+          "value": 68.3,
+          "score": 43.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -270,6 +308,14 @@
           "per_km2": 4.6312,
           "status": "ok"
         },
+        "library_count": {
+          "value": 5.0,
+          "score": 65.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4288,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 3631428.5714,
           "score": 0.9,
@@ -284,6 +330,14 @@
           "unit": "件",
           "per_10k": 104.6948,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 70.0,
+          "score": 67.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 10.4995,
+          "status": "ok"
         }
       }
     },
@@ -295,16 +349,16 @@
       "area_km2": 10.21,
       "population": 183861.0,
       "scores": {
-        "quiet": 82.1,
+        "quiet": 49.1,
         "refresh": 47.8,
-        "workspace": 93.9,
+        "workspace": 71.1,
         "cost": 4.7,
-        "community": 95.3
+        "community": 80.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.0,
-          "score": 82.1,
+          "value": 68.0,
+          "score": 49.1,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -339,6 +393,14 @@
           "per_km2": 3.428,
           "status": "ok"
         },
+        "library_count": {
+          "value": 3.0,
+          "score": 36.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2938,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 1930000.0,
           "score": 4.7,
@@ -353,6 +415,14 @@
           "unit": "件",
           "per_10k": 29.6963,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 181.0,
+          "score": 65.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.8444,
+          "status": "ok"
         }
       }
     },
@@ -364,16 +434,16 @@
       "area_km2": 20.36,
       "population": 273125.0,
       "scores": {
-        "quiet": 27.4,
+        "quiet": 17.9,
         "refresh": 51.3,
-        "workspace": 96.3,
+        "workspace": 82.3,
         "cost": 2.8,
-        "community": 97.2
+        "community": 56.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 68.3,
-          "score": 27.4,
+          "value": 69.0,
+          "score": 17.9,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -408,6 +478,14 @@
           "per_km2": 3.6346,
           "status": "ok"
         },
+        "library_count": {
+          "value": 8.0,
+          "score": 61.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3929,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 3013666.6667,
           "score": 2.8,
@@ -422,6 +500,14 @@
           "unit": "件",
           "per_10k": 28.3753,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 56.0,
+          "score": 16.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.0503,
+          "status": "ok"
         }
       }
     },
@@ -433,16 +519,16 @@
       "area_km2": 18.22,
       "population": 361787.0,
       "scores": {
-        "quiet": 10.4,
+        "quiet": 12.3,
         "refresh": 25.3,
-        "workspace": 86.6,
+        "workspace": 87.8,
         "cost": 16.0,
-        "community": 91.5
+        "community": 47.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 69.2,
-          "score": 10.4,
+          "value": 69.5,
+          "score": 12.3,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -477,6 +563,14 @@
           "per_km2": 1.7014,
           "status": "ok"
         },
+        "library_count": {
+          "value": 12.0,
+          "score": 89.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.6586,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 1131571.4286,
           "score": 16.0,
@@ -491,6 +585,14 @@
           "unit": "件",
           "per_10k": 20.2053,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 41.0,
+          "score": 2.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 1.1333,
+          "status": "ok"
         }
       }
     },
@@ -502,16 +604,16 @@
       "area_km2": 11.29,
       "population": 250863.0,
       "scores": {
-        "quiet": 74.5,
+        "quiet": 75.5,
         "refresh": 32.7,
-        "workspace": 52.4,
+        "workspace": 71.1,
         "cost": 8.5,
-        "community": 89.6
+        "community": 70.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.3,
-          "score": 74.5,
+          "value": 66.9,
+          "score": 75.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -546,6 +648,14 @@
           "per_km2": 0.3543,
           "status": "ok"
         },
+        "library_count": {
+          "value": 10.0,
+          "score": 99.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.8857,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 1448086.9565,
           "score": 8.5,
@@ -560,6 +670,14 @@
           "unit": "件",
           "per_10k": 13.912,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 210.0,
+          "score": 51.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 8.3711,
+          "status": "ok"
         }
       }
     },
@@ -571,16 +689,16 @@
       "area_km2": 10.11,
       "population": 228742.0,
       "scores": {
-        "quiet": 93.4,
+        "quiet": 51.9,
         "refresh": 29.8,
-        "workspace": 84.1,
+        "workspace": 66.7,
         "cost": 12.3,
-        "community": 85.8
+        "community": 67.0
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 65.0,
-          "score": 93.4,
+          "value": 67.9,
+          "score": 51.9,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -615,6 +733,14 @@
           "per_km2": 1.5826,
           "status": "ok"
         },
+        "library_count": {
+          "value": 3.0,
+          "score": 40.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2967,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 1320833.3333,
           "score": 12.3,
@@ -629,6 +755,14 @@
           "unit": "件",
           "per_10k": 11.2791,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 170.0,
+          "score": 48.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 7.432,
+          "status": "ok"
         }
       }
     },
@@ -640,16 +774,16 @@
       "area_km2": 13.77,
       "population": 285803.0,
       "scores": {
-        "quiet": 24.5,
+        "quiet": 17.9,
         "refresh": 59.2,
-        "workspace": 74.4,
+        "workspace": 57.8,
         "cost": 34.9,
-        "community": 50.0
+        "community": 29.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 68.6,
-          "score": 24.5,
+          "value": 69.0,
+          "score": 17.9,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -684,6 +818,14 @@
           "per_km2": 0.7988,
           "status": "ok"
         },
+        "library_count": {
+          "value": 4.0,
+          "score": 33.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2905,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 613272.7273,
           "score": 34.9,
@@ -698,6 +840,14 @@
           "unit": "件",
           "per_10k": 4.4436,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 49.0,
+          "score": 8.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 1.7145,
+          "status": "ok"
         }
       }
     },
@@ -709,16 +859,16 @@
       "area_km2": 42.99,
       "population": 554093.0,
       "scores": {
-        "quiet": 29.2,
+        "quiet": 24.5,
         "refresh": 47.9,
-        "workspace": 59.8,
+        "workspace": 44.6,
         "cost": 31.1,
-        "community": 10.4
+        "community": 7.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 68.2,
-          "score": 29.2,
+          "value": 68.8,
+          "score": 24.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -753,6 +903,14 @@
           "per_km2": 0.3954,
           "status": "ok"
         },
+        "library_count": {
+          "value": 11.0,
+          "score": 21.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2559,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 661538.4615,
           "score": 31.1,
@@ -767,6 +925,14 @@
           "unit": "件",
           "per_10k": 3.2305,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 88.0,
+          "score": 4.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 1.5882,
+          "status": "ok"
         }
       }
     },
@@ -778,16 +944,16 @@
       "area_km2": 22.85,
       "population": 429096.0,
       "scores": {
-        "quiet": 74.5,
+        "quiet": 35.8,
         "refresh": 21.5,
-        "workspace": 81.7,
+        "workspace": 75.8,
         "cost": 14.2,
-        "community": 74.5
+        "community": 76.4
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.3,
-          "score": 74.5,
+          "value": 68.6,
+          "score": 35.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -822,6 +988,14 @@
           "per_km2": 1.4004,
           "status": "ok"
         },
+        "library_count": {
+          "value": 10.0,
+          "score": 67.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4376,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 1244066.6667,
           "score": 14.2,
@@ -836,6 +1010,14 @@
           "unit": "件",
           "per_10k": 5.7097,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 526.0,
+          "score": 78.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 12.2583,
+          "status": "ok"
         }
       }
     },
@@ -847,16 +1029,16 @@
       "area_km2": 14.67,
       "population": 287556.0,
       "scores": {
-        "quiet": 12.3,
+        "quiet": 10.4,
         "refresh": 18.0,
-        "workspace": 69.5,
+        "workspace": 75.3,
         "cost": 10.4,
-        "community": 84.0
+        "community": 51.0
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 69.1,
-          "score": 12.3,
+          "value": 69.9,
+          "score": 10.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -891,6 +1073,14 @@
           "per_km2": 0.7498,
           "status": "ok"
         },
+        "library_count": {
+          "value": 8.0,
+          "score": 84.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5453,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 1404531.25,
           "score": 10.4,
@@ -905,6 +1095,14 @@
           "unit": "件",
           "per_10k": 6.8856,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 65.0,
+          "score": 17.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.2604,
+          "status": "ok"
         }
       }
     },
@@ -916,16 +1114,16 @@
       "area_km2": 61.86,
       "population": 762357.0,
       "scores": {
-        "quiet": 2.8,
+        "quiet": 7.5,
         "refresh": 45.5,
-        "workspace": 28.0,
+        "workspace": 26.2,
         "cost": 33.0,
-        "community": 14.2
+        "community": 12.3
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 70.6,
-          "score": 2.8,
+          "value": 70.2,
+          "score": 7.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -960,6 +1158,14 @@
           "per_km2": 0.1778,
           "status": "ok"
         },
+        "library_count": {
+          "value": 16.0,
+          "score": 23.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2586,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 647581.8182,
           "score": 33.0,
@@ -974,6 +1180,14 @@
           "unit": "件",
           "per_10k": 3.3055,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 180.0,
+          "score": 10.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3611,
+          "status": "ok"
         }
       }
     },
@@ -985,16 +1199,16 @@
       "area_km2": 58.05,
       "population": 959397.0,
       "scores": {
-        "quiet": 4.7,
+        "quiet": 7.5,
         "refresh": 26.5,
-        "workspace": 64.6,
+        "workspace": 55.8,
         "cost": 21.7,
-        "community": 72.6
+        "community": 49.0
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 70.4,
-          "score": 4.7,
+          "value": 70.2,
+          "score": 7.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1029,6 +1243,14 @@
           "per_km2": 0.5685,
           "status": "ok"
         },
+        "library_count": {
+          "value": 18.0,
+          "score": 42.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3101,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 779853.211,
           "score": 21.7,
@@ -1043,6 +1265,14 @@
           "unit": "件",
           "per_10k": 5.3888,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 435.0,
+          "score": 25.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 4.5341,
+          "status": "ok"
         }
       }
     },
@@ -1054,16 +1284,16 @@
       "area_km2": 15.11,
       "population": 238786.0,
       "scores": {
-        "quiet": 42.5,
+        "quiet": 35.8,
         "refresh": 41.7,
         "workspace": 91.5,
         "cost": 6.6,
-        "community": 93.4
+        "community": 56.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.6,
-          "score": 42.5,
+          "value": 68.6,
+          "score": 35.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1098,6 +1328,14 @@
           "per_km2": 2.8458,
           "status": "ok"
         },
+        "library_count": {
+          "value": 10.0,
+          "score": 91.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.6618,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 1874080.0,
           "score": 6.6,
@@ -1112,6 +1350,14 @@
           "unit": "件",
           "per_10k": 22.405,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 65.0,
+          "score": 19.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.7221,
+          "status": "ok"
         }
       }
     },
@@ -1123,16 +1369,16 @@
       "area_km2": 15.59,
       "population": 356415.0,
       "scores": {
-        "quiet": 36.8,
+        "quiet": 17.9,
         "refresh": 28.8,
-        "workspace": 67.1,
+        "workspace": 71.6,
         "cost": 19.8,
-        "community": 80.2
+        "community": 58.5
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.8,
-          "score": 36.8,
+          "value": 69.0,
+          "score": 17.9,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1167,6 +1413,14 @@
           "per_km2": 0.5773,
           "status": "ok"
         },
+        "library_count": {
+          "value": 8.0,
+          "score": 78.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5131,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 782703.7037,
           "score": 19.8,
@@ -1181,6 +1435,14 @@
           "unit": "件",
           "per_10k": 6.0042,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 202.0,
+          "score": 36.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.6676,
+          "status": "ok"
         }
       }
     },
@@ -1192,16 +1454,16 @@
       "area_km2": 34.06,
       "population": 600500.0,
       "scores": {
-        "quiet": 53.8,
+        "quiet": 30.2,
         "refresh": 21.9,
-        "workspace": 23.2,
+        "workspace": 36.9,
         "cost": 27.4,
-        "community": 70.8
+        "community": 42.5
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.3,
-          "score": 53.8,
+          "value": 68.7,
+          "score": 30.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1236,6 +1498,14 @@
           "per_km2": 0.1762,
           "status": "ok"
         },
+        "library_count": {
+          "value": 13.0,
+          "score": 57.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3817,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 703177.4194,
           "score": 27.4,
@@ -1250,6 +1520,14 @@
           "unit": "件",
           "per_10k": 5.4122,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 139.0,
+          "score": 14.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3147,
+          "status": "ok"
         }
       }
     },
@@ -1261,16 +1539,16 @@
       "area_km2": 13.01,
       "population": 307015.0,
       "scores": {
-        "quiet": 15.1,
+        "quiet": 35.8,
         "refresh": 25.8,
-        "workspace": 89.0,
+        "workspace": 88.5,
         "cost": 17.9,
-        "community": 87.7
+        "community": 63.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 69.0,
-          "score": 15.1,
+          "value": 68.6,
+          "score": 35.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1305,6 +1583,14 @@
           "per_km2": 1.9216,
           "status": "ok"
         },
+        "library_count": {
+          "value": 8.0,
+          "score": 87.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.6149,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 912130.4348,
           "score": 17.9,
@@ -1319,6 +1605,14 @@
           "unit": "件",
           "per_10k": 11.0092,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 180.0,
+          "score": 38.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.8629,
+          "status": "ok"
         }
       }
     },
@@ -1330,16 +1624,16 @@
       "area_km2": 20.61,
       "population": 370696.0,
       "scores": {
-        "quiet": 6.6,
+        "quiet": 4.7,
         "refresh": 46.9,
-        "workspace": 76.8,
+        "workspace": 84.2,
         "cost": 23.6,
-        "community": 44.3
+        "community": 38.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 70.1,
-          "score": 6.6,
+          "value": 70.3,
+          "score": 4.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1374,6 +1668,14 @@
           "per_km2": 0.9219,
           "status": "ok"
         },
+        "library_count": {
+          "value": 15.0,
+          "score": 95.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.7278,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 742000.0,
           "score": 23.6,
@@ -1388,6 +1690,14 @@
           "unit": "件",
           "per_10k": 4.1004,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 201.0,
+          "score": 33.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.4222,
+          "status": "ok"
         }
       }
     },
@@ -1399,16 +1709,16 @@
       "area_km2": 10.16,
       "population": 228121.0,
       "scores": {
-        "quiet": 36.8,
+        "quiet": 40.6,
         "refresh": 18.2,
-        "workspace": 72.0,
+        "workspace": 80.6,
         "cost": 25.5,
-        "community": 16.0
+        "community": 51.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.8,
-          "score": 36.8,
+          "value": 68.4,
+          "score": 40.6,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1443,6 +1753,14 @@
           "per_km2": 0.7874,
           "status": "ok"
         },
+        "library_count": {
+          "value": 7.0,
+          "score": 93.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.689,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 718687.5,
           "score": 25.5,
@@ -1457,6 +1775,14 @@
           "unit": "件",
           "per_10k": 3.2001,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 343.0,
+          "score": 87.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 15.0359,
+          "status": "ok"
         }
       }
     },
@@ -1470,13 +1796,13 @@
       "scores": {
         "quiet": 0.9,
         "refresh": 31.8,
-        "workspace": 57.3,
+        "workspace": 55.1,
         "cost": 36.8,
-        "community": 8.5
+        "community": 15.1
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 70.7,
+          "value": 70.9,
           "score": 0.9,
           "source": "D-quiet-02",
           "unit": "dB",
@@ -1512,6 +1838,14 @@
           "per_km2": 0.3724,
           "status": "ok"
         },
+        "library_count": {
+          "value": 12.0,
+          "score": 51.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3724,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 553553.1915,
           "score": 36.8,
@@ -1526,6 +1860,14 @@
           "unit": "件",
           "per_10k": 3.0558,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 232.0,
+          "score": 21.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 3.874,
+          "status": "ok"
         }
       }
     },
@@ -1537,16 +1879,16 @@
       "area_km2": 48.08,
       "population": 764094.0,
       "scores": {
-        "quiet": 91.5,
+        "quiet": 89.6,
         "refresh": 26.2,
-        "workspace": 20.7,
+        "workspace": 22.6,
         "cost": 40.6,
-        "community": 23.6
+        "community": 15.1
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 65.3,
-          "score": 91.5,
+          "value": 65.9,
+          "score": 89.6,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1581,6 +1923,14 @@
           "per_km2": 0.104,
           "status": "ok"
         },
+        "library_count": {
+          "value": 13.0,
+          "score": 25.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2704,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 480544.4444,
           "score": 40.6,
@@ -1595,6 +1945,14 @@
           "unit": "件",
           "per_10k": 3.5598,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 176.0,
+          "score": 6.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3034,
+          "status": "ok"
         }
       }
     },
@@ -1606,16 +1964,16 @@
       "area_km2": 53.25,
       "population": 707720.0,
       "scores": {
-        "quiet": 17.9,
+        "quiet": 24.5,
         "refresh": 32.7,
-        "workspace": 30.5,
+        "workspace": 30.0,
         "cost": 48.1,
-        "community": 4.7
+        "community": 8.5
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 68.9,
-          "score": 17.9,
+          "value": 68.8,
+          "score": 24.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1650,6 +2008,14 @@
           "per_km2": 0.1878,
           "status": "ok"
         },
+        "library_count": {
+          "value": 15.0,
+          "score": 29.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2817,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 410760.5634,
           "score": 48.1,
@@ -1664,6 +2030,14 @@
           "unit": "件",
           "per_10k": 2.5292,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 168.0,
+          "score": 12.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3738,
+          "status": "ok"
         }
       }
     },
@@ -1675,16 +2049,16 @@
       "area_km2": 34.8,
       "population": 469442.0,
       "scores": {
-        "quiet": 53.8,
+        "quiet": 83.0,
         "refresh": 54.4,
-        "workspace": 62.2,
+        "workspace": 58.8,
         "cost": 51.9,
-        "community": 6.6
+        "community": 15.1
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.3,
-          "score": 53.8,
+          "value": 66.7,
+          "score": 83.0,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1719,6 +2093,14 @@
           "per_km2": 0.4023,
           "status": "ok"
         },
+        "library_count": {
+          "value": 13.0,
+          "score": 53.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3736,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 387545.4545,
           "score": 51.9,
@@ -1733,6 +2115,14 @@
           "unit": "件",
           "per_10k": 2.6201,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 193.0,
+          "score": 23.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 4.1113,
+          "status": "ok"
         }
       }
     },
@@ -1744,16 +2134,16 @@
       "area_km2": 49.9,
       "population": 709372.0,
       "scores": {
-        "quiet": 59.4,
+        "quiet": 46.2,
         "refresh": 71.3,
-        "workspace": 32.9,
+        "workspace": 26.9,
         "cost": 42.5,
         "community": 0.9
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.0,
-          "score": 59.4,
+          "value": 68.2,
+          "score": 46.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1788,6 +2178,14 @@
           "per_km2": 0.2204,
           "status": "ok"
         },
+        "library_count": {
+          "value": 12.0,
+          "score": 17.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2405,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 441115.942,
           "score": 42.5,
@@ -1802,6 +2200,14 @@
           "unit": "件",
           "per_10k": 2.3119,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 54.0,
+          "score": 0.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 0.7612,
+          "status": "ok"
         }
       }
     },
@@ -1813,16 +2219,16 @@
       "area_km2": 186.38,
       "population": 574576.0,
       "scores": {
-        "quiet": 45.3,
+        "quiet": 24.5,
         "refresh": 58.1,
-        "workspace": 11.0,
+        "workspace": 8.5,
         "cost": 85.8,
-        "community": 55.7
+        "community": 65.1
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.5,
-          "score": 45.3,
+          "value": 68.8,
+          "score": 24.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1857,6 +2263,14 @@
           "per_km2": 0.0644,
           "status": "ok"
         },
+        "library_count": {
+          "value": 6.0,
+          "score": 4.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0322,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 131316.129,
           "score": 85.8,
@@ -1871,6 +2285,14 @@
           "unit": "件",
           "per_10k": 4.6295,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 659.0,
+          "score": 74.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 11.4693,
+          "status": "ok"
         }
       }
     },
@@ -1882,16 +2304,16 @@
       "area_km2": 24.36,
       "population": 189836.0,
       "scores": {
-        "quiet": 33.0,
+        "quiet": 24.5,
         "refresh": 68.9,
-        "workspace": 54.9,
+        "workspace": 52.9,
         "cost": 61.3,
-        "community": 61.3
+        "community": 70.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.9,
-          "score": 33.0,
+          "value": 68.8,
+          "score": 24.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1926,6 +2348,14 @@
           "per_km2": 0.3695,
           "status": "ok"
         },
+        "library_count": {
+          "value": 9.0,
+          "score": 50.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3695,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 308433.3333,
           "score": 61.3,
@@ -1940,6 +2370,14 @@
           "unit": "件",
           "per_10k": 5.0043,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 247.0,
+          "score": 80.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 13.0112,
+          "status": "ok"
         }
       }
     },
@@ -1951,16 +2389,16 @@
       "area_km2": 10.98,
       "population": 151083.0,
       "scores": {
-        "quiet": 95.3,
+        "quiet": 71.7,
         "refresh": 42.5,
-        "workspace": 79.3,
+        "workspace": 58.5,
         "cost": 29.2,
-        "community": 78.3
+        "community": 74.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 64.5,
-          "score": 95.3,
+          "value": 67.1,
+          "score": 71.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -1995,6 +2433,14 @@
           "per_km2": 1.0929,
           "status": "ok"
         },
+        "library_count": {
+          "value": 3.0,
+          "score": 27.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2732,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 692200.0,
           "score": 29.2,
@@ -2009,6 +2455,14 @@
           "unit": "件",
           "per_10k": 6.1556,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 172.0,
+          "score": 70.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 11.3845,
+          "status": "ok"
         }
       }
     },
@@ -2020,16 +2474,16 @@
       "area_km2": 16.42,
       "population": 195553.0,
       "scores": {
-        "quiet": 61.3,
+        "quiet": 49.1,
         "refresh": 42.0,
-        "workspace": 50.0,
+        "workspace": 49.2,
         "cost": 38.7,
-        "community": 51.9
+        "community": 60.4
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.9,
-          "score": 61.3,
+          "value": 68.0,
+          "score": 49.1,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2064,6 +2518,14 @@
           "per_km2": 0.3045,
           "status": "ok"
         },
+        "library_count": {
+          "value": 6.0,
+          "score": 48.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3654,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 492433.3333,
           "score": 38.7,
@@ -2078,6 +2540,14 @@
           "unit": "件",
           "per_10k": 4.4489,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 208.0,
+          "score": 68.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 10.6365,
+          "status": "ok"
         }
       }
     },
@@ -2089,16 +2559,16 @@
       "area_km2": 103.31,
       "population": 129221.0,
       "scores": {
-        "quiet": 48.1,
+        "quiet": 54.7,
         "refresh": 75.9,
-        "workspace": null,
+        "workspace": 12.3,
         "cost": 91.5,
-        "community": 19.8
+        "community": 56.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.4,
-          "score": 48.1,
+          "value": 67.8,
+          "score": 54.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2133,6 +2603,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 12.0,
+          "score": 12.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.1162,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 98566.6667,
           "score": 91.5,
@@ -2147,6 +2625,14 @@
           "unit": "件",
           "per_10k": 3.1729,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 233.0,
+          "score": 93.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 18.0311,
+          "status": "ok"
         }
       }
     },
@@ -2158,16 +2644,16 @@
       "area_km2": 29.43,
       "population": 264144.0,
       "scores": {
-        "quiet": 80.2,
+        "quiet": 64.2,
         "refresh": 66.3,
-        "workspace": 45.1,
+        "workspace": 54.6,
         "cost": 55.7,
-        "community": 25.5
+        "community": 34.0
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.1,
-          "score": 80.2,
+          "value": 67.4,
+          "score": 64.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2202,6 +2688,14 @@
           "per_km2": 0.2718,
           "status": "ok"
         },
+        "library_count": {
+          "value": 13.0,
+          "score": 68.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4417,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 355590.9091,
           "score": 55.7,
@@ -2216,6 +2710,14 @@
           "unit": "件",
           "per_10k": 3.5208,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 174.0,
+          "score": 42.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 6.5873,
+          "status": "ok"
         }
       }
     },
@@ -2227,16 +2729,16 @@
       "area_km2": 17.34,
       "population": 117505.0,
       "scores": {
-        "quiet": 68.9,
+        "quiet": 43.4,
         "refresh": 73.0,
-        "workspace": null,
+        "workspace": 31.1,
         "cost": 70.8,
-        "community": 2.8
+        "community": 23.5
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.4,
-          "score": 68.9,
+          "value": 68.3,
+          "score": 43.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2271,6 +2773,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 5.0,
+          "score": 31.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2884,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 214294.1176,
           "score": 70.8,
@@ -2285,6 +2795,14 @@
           "unit": "件",
           "per_10k": 1.8723,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 77.0,
+          "score": 44.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 6.5529,
+          "status": "ok"
         }
       }
     },
@@ -2296,16 +2814,16 @@
       "area_km2": 21.58,
       "population": 247057.0,
       "scores": {
-        "quiet": 45.3,
+        "quiet": 83.0,
         "refresh": 71.2,
-        "workspace": 35.4,
+        "workspace": 51.8,
         "cost": 44.3,
-        "community": 42.5
+        "community": 64.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.5,
-          "score": 45.3,
+          "value": 66.7,
+          "score": 83.0,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2340,6 +2858,14 @@
           "per_km2": 0.2317,
           "status": "ok"
         },
+        "library_count": {
+          "value": 11.0,
+          "score": 76.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5097,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 425102.5641,
           "score": 44.3,
@@ -2354,6 +2880,14 @@
           "unit": "件",
           "per_10k": 4.0476,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 345.0,
+          "score": 85.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 13.9644,
+          "status": "ok"
         }
       }
     },
@@ -2365,16 +2899,16 @@
       "area_km2": 71.55,
       "population": 421872.0,
       "scores": {
-        "quiet": 40.6,
+        "quiet": 14.2,
         "refresh": 83.0,
-        "workspace": 42.7,
+        "workspace": 29.8,
         "cost": 82.1,
-        "community": 48.1
+        "community": 37.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.7,
-          "score": 40.6,
+          "value": 69.1,
+          "score": 14.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2409,6 +2943,14 @@
           "per_km2": 0.2655,
           "status": "ok"
         },
+        "library_count": {
+          "value": 8.0,
+          "score": 10.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.1118,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 172625.3165,
           "score": 82.1,
@@ -2423,6 +2965,14 @@
           "unit": "件",
           "per_10k": 4.4326,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 227.0,
+          "score": 27.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.3808,
+          "status": "ok"
         }
       }
     },
@@ -2434,16 +2984,16 @@
       "area_km2": 11.3,
       "population": 129790.0,
       "scores": {
-        "quiet": 74.5,
+        "quiet": 86.8,
         "refresh": 50.1,
-        "workspace": 25.6,
+        "workspace": 43.7,
         "cost": 50.0,
-        "community": 63.2
+        "community": 80.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.3,
-          "score": 74.5,
+          "value": 66.6,
+          "score": 86.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2478,6 +3028,14 @@
           "per_km2": 0.177,
           "status": "ok"
         },
+        "library_count": {
+          "value": 5.0,
+          "score": 70.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4425,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 388631.5789,
           "score": 50.0,
@@ -2492,6 +3050,14 @@
           "unit": "件",
           "per_10k": 5.3933,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 238.0,
+          "score": 97.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 18.3373,
+          "status": "ok"
         }
       }
     },
@@ -2503,16 +3069,16 @@
       "area_km2": 20.51,
       "population": 199564.0,
       "scores": {
-        "quiet": 63.2,
+        "quiet": 64.2,
         "refresh": 38.7,
-        "workspace": 6.1,
+        "workspace": 36.5,
         "cost": 65.1,
-        "community": 29.2
+        "community": 56.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.7,
-          "score": 63.2,
+          "value": 67.4,
+          "score": 64.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2547,6 +3113,14 @@
           "per_km2": 0.0488,
           "status": "ok"
         },
+        "library_count": {
+          "value": 11.0,
+          "score": 82.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5363,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 255558.8235,
           "score": 65.1,
@@ -2561,6 +3135,14 @@
           "unit": "件",
           "per_10k": 3.6079,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 275.0,
+          "score": 84.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 13.78,
+          "status": "ok"
         }
       }
     },
@@ -2572,16 +3154,16 @@
       "area_km2": 27.55,
       "population": 190763.0,
       "scores": {
-        "quiet": 53.8,
+        "quiet": 79.2,
         "refresh": 68.8,
-        "workspace": 3.7,
+        "workspace": 10.1,
         "cost": 68.9,
         "community": 46.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.3,
-          "score": 53.8,
+          "value": 66.8,
+          "score": 79.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2616,6 +3198,14 @@
           "per_km2": 0.0363,
           "status": "ok"
         },
+        "library_count": {
+          "value": 7.0,
+          "score": 19.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2541,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 218567.5676,
           "score": 68.9,
@@ -2630,6 +3220,14 @@
           "unit": "件",
           "per_10k": 4.0888,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 129.0,
+          "score": 46.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 6.7623,
+          "status": "ok"
         }
       }
     },
@@ -2641,16 +3239,16 @@
       "area_km2": 17.14,
       "population": 152566.0,
       "scores": {
-        "quiet": 97.2,
+        "quiet": 91.5,
         "refresh": 61.5,
-        "workspace": 8.5,
+        "workspace": 19.1,
         "cost": 72.6,
-        "community": 27.4
+        "community": 41.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 63.7,
-          "score": 97.2,
+          "value": 65.5,
+          "score": 91.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2685,6 +3283,14 @@
           "per_km2": 0.0583,
           "status": "ok"
         },
+        "library_count": {
+          "value": 5.0,
+          "score": 34.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2917,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 208681.8182,
           "score": 72.6,
@@ -2699,6 +3305,14 @@
           "unit": "件",
           "per_10k": 3.5395,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 136.0,
+          "score": 55.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 8.9142,
+          "status": "ok"
         }
       }
     },
@@ -2712,13 +3326,13 @@
       "scores": {
         "quiet": 68.9,
         "refresh": 49.8,
-        "workspace": 15.9,
+        "workspace": 41.6,
         "cost": 57.5,
-        "community": 57.5
+        "community": 76.4
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.4,
+          "value": 67.3,
           "score": 68.9,
           "source": "D-quiet-02",
           "unit": "dB",
@@ -2754,6 +3368,14 @@
           "per_km2": 0.0873,
           "status": "ok"
         },
+        "library_count": {
+          "value": 6.0,
+          "score": 80.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5236,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 351000.0,
           "score": 57.5,
@@ -2768,6 +3390,14 @@
           "unit": "件",
           "per_10k": 4.8054,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 234.0,
+          "score": 95.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 18.1364,
+          "status": "ok"
         }
       }
     },
@@ -2779,16 +3409,16 @@
       "area_km2": 8.15,
       "population": 77055.0,
       "scores": {
-        "quiet": 87.7,
+        "quiet": 57.5,
         "refresh": 40.9,
-        "workspace": 37.8,
+        "workspace": 61.6,
         "cost": 46.2,
-        "community": 82.1
+        "community": 86.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 65.5,
-          "score": 87.7,
+          "value": 67.7,
+          "score": 57.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2823,6 +3453,14 @@
           "per_km2": 0.2454,
           "status": "ok"
         },
+        "library_count": {
+          "value": 7.0,
+          "score": 97.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.8589,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 411454.5455,
           "score": 46.2,
@@ -2837,6 +3475,14 @@
           "unit": "件",
           "per_10k": 6.8782,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 149.0,
+          "score": 91.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 19.3368,
+          "status": "ok"
         }
       }
     },
@@ -2848,16 +3494,16 @@
       "area_km2": 10.16,
       "population": 57388.0,
       "scores": {
-        "quiet": 68.9,
+        "quiet": 59.4,
         "refresh": 47.6,
-        "workspace": null,
+        "workspace": 63.2,
         "cost": 80.2,
-        "community": 40.6
+        "community": 69.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.4,
-          "score": 68.9,
+          "value": 67.6,
+          "score": 59.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2892,6 +3538,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 4.0,
+          "score": 63.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3937,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 173545.4545,
           "score": 80.2,
@@ -2906,6 +3560,14 @@
           "unit": "件",
           "per_10k": 3.6593,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 192.0,
+          "score": 99.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 33.4565,
+          "status": "ok"
         }
       }
     },
@@ -2917,16 +3579,16 @@
       "area_km2": 6.39,
       "population": 84076.0,
       "scores": {
-        "quiet": 53.8,
+        "quiet": 64.2,
         "refresh": 31.2,
-        "workspace": null,
+        "workspace": 14.2,
         "cost": 53.8,
-        "community": 59.4
+        "community": 47.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.3,
-          "score": 53.8,
+          "value": 67.4,
+          "score": 64.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -2961,6 +3623,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 1.0,
+          "score": 14.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.1565,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 377750.0,
           "score": 53.8,
@@ -2975,6 +3645,14 @@
           "unit": "件",
           "per_10k": 4.9955,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 39.0,
+          "score": 34.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 4.6387,
+          "status": "ok"
         }
       }
     },
@@ -2986,16 +3664,16 @@
       "area_km2": 13.42,
       "population": 83173.0,
       "scores": {
-        "quiet": 8.5,
+        "quiet": 2.8,
         "refresh": 71.3,
-        "workspace": 13.4,
+        "workspace": 14.4,
         "cost": 78.3,
-        "community": 34.9
+        "community": 53.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 69.5,
-          "score": 8.5,
+          "value": 70.4,
+          "score": 2.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3030,6 +3708,14 @@
           "per_km2": 0.0745,
           "status": "ok"
         },
+        "library_count": {
+          "value": 3.0,
+          "score": 16.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2235,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 181095.2381,
           "score": 78.3,
@@ -3044,6 +3730,14 @@
           "unit": "件",
           "per_10k": 3.6069,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 107.0,
+          "score": 72.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 12.8648,
+          "status": "ok"
         }
       }
     },
@@ -3055,16 +3749,16 @@
       "area_km2": 10.23,
       "population": 75276.0,
       "scores": {
-        "quiet": 84.0,
+        "quiet": 93.4,
         "refresh": 59.3,
-        "workspace": 18.3,
+        "workspace": 45.3,
         "cost": 76.4,
-        "community": 38.7
+        "community": 49.0
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 65.6,
-          "score": 84.0,
+          "value": 65.3,
+          "score": 93.4,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3099,6 +3793,14 @@
           "per_km2": 0.0978,
           "status": "ok"
         },
+        "library_count": {
+          "value": 6.0,
+          "score": 85.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5865,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 201533.3333,
           "score": 76.4,
@@ -3113,6 +3815,14 @@
           "unit": "件",
           "per_10k": 3.7196,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 72.0,
+          "score": 59.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.5648,
+          "status": "ok"
         }
       }
     },
@@ -3124,16 +3834,16 @@
       "area_km2": 12.88,
       "population": 115888.0,
       "scores": {
-        "quiet": 24.5,
+        "quiet": 35.8,
         "refresh": 36.6,
-        "workspace": null,
+        "workspace": 44.3,
         "cost": 67.0,
-        "community": 65.1
+        "community": 63.2
       },
       "indicators": {
         "road_noise_leq": {
           "value": 68.6,
-          "score": 24.5,
+          "score": 35.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3168,6 +3878,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 4.0,
+          "score": 44.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3106,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 236545.4545,
           "score": 67.0,
@@ -3182,6 +3900,14 @@
           "unit": "件",
           "per_10k": 5.4363,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 111.0,
+          "score": 61.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.5782,
+          "status": "ok"
         }
       }
     },
@@ -3193,16 +3919,16 @@
       "area_km2": 15.32,
       "population": 69158.0,
       "scores": {
-        "quiet": 21.7,
+        "quiet": 30.2,
         "refresh": 80.7,
-        "workspace": null,
+        "workspace": 59.4,
         "cost": 87.7,
-        "community": 21.7
+        "community": 25.4
       },
       "indicators": {
         "road_noise_leq": {
           "value": 68.7,
-          "score": 21.7,
+          "score": 30.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3237,6 +3963,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 6.0,
+          "score": 59.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3916,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 128486.6667,
           "score": 87.7,
@@ -3251,6 +3985,14 @@
           "unit": "件",
           "per_10k": 2.8919,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 27.0,
+          "score": 29.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 3.9041,
+          "status": "ok"
         }
       }
     },
@@ -3262,16 +4004,16 @@
       "area_km2": 21.01,
       "population": 141473.0,
       "scores": {
-        "quiet": 65.1,
+        "quiet": 54.7,
         "refresh": 72.6,
-        "workspace": 47.6,
+        "workspace": 50.8,
         "cost": 74.5,
-        "community": 76.4
+        "community": 69.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.5,
-          "score": 65.1,
+          "value": 67.8,
+          "score": 54.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3306,6 +4048,14 @@
           "per_km2": 0.2856,
           "status": "ok"
         },
+        "library_count": {
+          "value": 8.0,
+          "score": 55.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3808,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 202838.7097,
           "score": 74.5,
@@ -3320,6 +4070,14 @@
           "unit": "件",
           "per_10k": 6.0789,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 138.0,
+          "score": 63.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.7545,
+          "status": "ok"
         }
       }
     },
@@ -3331,16 +4089,16 @@
       "area_km2": 17.97,
       "population": 95861.0,
       "scores": {
-        "quiet": 31.1,
+        "quiet": 75.5,
         "refresh": 75.7,
-        "workspace": null,
+        "workspace": 46.2,
         "cost": 63.2,
-        "community": 12.3
+        "community": 26.4
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 68.0,
-          "score": 31.1,
+          "value": 66.9,
+          "score": 75.5,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3375,6 +4133,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 6.0,
+          "score": 46.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3339,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 268346.1538,
           "score": 63.2,
@@ -3389,6 +4155,14 @@
           "unit": "件",
           "per_10k": 2.8166,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 53.0,
+          "score": 40.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.5288,
+          "status": "ok"
         }
       }
     },
@@ -3400,16 +4174,16 @@
       "area_km2": 9.9,
       "population": 53452.0,
       "scores": {
-        "quiet": 53.8,
+        "quiet": 71.7,
         "refresh": 41.0,
-        "workspace": null,
+        "workspace": 74.5,
         "cost": 84.0,
-        "community": 17.9
+        "community": 47.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 67.3,
-          "score": 53.8,
+          "value": 67.1,
+          "score": 71.7,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3444,6 +4218,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 5.0,
+          "score": 74.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5051,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 146111.1111,
           "score": 84.0,
@@ -3458,6 +4240,14 @@
           "unit": "件",
           "per_10k": 2.6192,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 75.0,
+          "score": 76.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 14.0313,
+          "status": "ok"
         }
       }
     },
@@ -3469,16 +4259,16 @@
       "area_km2": 73.47,
       "population": 77001.0,
       "scores": {
-        "quiet": 15.1,
+        "quiet": 64.2,
         "refresh": 66.2,
-        "workspace": null,
+        "workspace": 6.6,
         "cost": 89.6,
-        "community": 31.1
+        "community": 56.6
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 69.0,
-          "score": 15.1,
+          "value": 67.4,
+          "score": 64.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3513,6 +4303,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 4.0,
+          "score": 6.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0544,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 99356.5217,
           "score": 89.6,
@@ -3527,6 +4325,14 @@
           "unit": "件",
           "per_10k": 3.3766,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 114.0,
+          "score": 82.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 14.805,
+          "status": "ok"
         }
       }
     },
@@ -3538,16 +4344,16 @@
       "area_km2": 15.75,
       "population": 208529.0,
       "scores": {
-        "quiet": 87.7,
+        "quiet": 79.2,
         "refresh": 43.0,
-        "workspace": 40.2,
+        "workspace": 53.2,
         "cost": 59.4,
-        "community": 33.0
+        "community": 32.0
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 65.5,
-          "score": 87.7,
+          "value": 66.8,
+          "score": 79.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3582,6 +4388,14 @@
           "per_km2": 0.254,
           "status": "ok"
         },
+        "library_count": {
+          "value": 7.0,
+          "score": 72.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4444,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 328517.2414,
           "score": 59.4,
@@ -3596,6 +4410,14 @@
           "unit": "件",
           "per_10k": 3.7884,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 107.0,
+          "score": 31.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.1312,
+          "status": "ok"
         }
       }
     },
@@ -3607,16 +4429,16 @@
       "area_km2": 16.85,
       "population": 31107.0,
       "scores": {
-        "quiet": 87.7,
+        "quiet": 86.8,
         "refresh": 76.6,
-        "workspace": null,
+        "workspace": 38.7,
         "cost": 93.4,
-        "community": 36.8
+        "community": 63.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 65.5,
-          "score": 87.7,
+          "value": 66.6,
+          "score": 86.8,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3651,6 +4473,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 5.0,
+          "score": 38.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2967,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 96936.3636,
           "score": 93.4,
@@ -3665,6 +4495,14 @@
           "unit": "件",
           "per_10k": 3.2147,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 72.0,
+          "score": 89.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 23.1459,
+          "status": "ok"
         }
       }
     },
@@ -3676,16 +4514,16 @@
       "area_km2": 28.07,
       "population": 15855.0,
       "scores": {
-        "quiet": 78.3,
+        "quiet": 95.3,
         "refresh": 75.5,
-        "workspace": null,
+        "workspace": 8.5,
         "cost": 99.1,
-        "community": 67.0
+        "community": 58.5
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 66.2,
-          "score": 78.3,
+          "value": 65.2,
+          "score": 95.3,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3720,6 +4558,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 2.0,
+          "score": 8.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0713,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 88783.3333,
           "score": 99.1,
@@ -3734,6 +4580,14 @@
           "unit": "件",
           "per_10k": 7.5686,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 13.0,
+          "score": 50.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 8.1993,
+          "status": "ok"
         }
       }
     },
@@ -3747,13 +4601,13 @@
       "scores": {
         "quiet": 99.1,
         "refresh": 99.1,
-        "workspace": 1.2,
+        "workspace": 1.8,
         "cost": 96.2,
-        "community": 68.9
+        "community": 63.2
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 59.5,
+          "value": 63.0,
           "score": 99.1,
           "source": "D-quiet-02",
           "unit": "dB",
@@ -3789,6 +4643,14 @@
           "per_km2": 0.0095,
           "status": "ok"
         },
+        "library_count": {
+          "value": 1.0,
+          "score": 2.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0095,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 93675.0,
           "score": 96.2,
@@ -3807,6 +4669,14 @@
           "unit": "件",
           "per_10k": 28.6205,
           "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 5.0,
+          "score": 57.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 28.6205,
+          "status": "ok"
         }
       }
     },
@@ -3818,16 +4688,16 @@
       "area_km2": 225.53,
       "population": 4083.0,
       "scores": {
-        "quiet": 19.8,
+        "quiet": 97.2,
         "refresh": 69.7,
-        "workspace": null,
+        "workspace": 0.9,
         "cost": 96.2,
         "community": 53.8
       },
       "indicators": {
         "road_noise_leq": {
-          "value": 68.8,
-          "score": 19.8,
+          "value": 64.5,
+          "score": 97.2,
           "source": "D-quiet-02",
           "unit": "dB",
           "status": "ok"
@@ -3862,6 +4732,14 @@
           "per_km2": null,
           "status": "no_data"
         },
+        "library_count": {
+          "value": 2.0,
+          "score": 0.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0089,
+          "status": "ok"
+        },
         "land_price_residential": {
           "value": 93675.0,
           "score": 96.2,
@@ -3879,6 +4757,14 @@
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.8984,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 5.0,
+          "score": 53.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 12.2459,
           "status": "ok"
         }
       }

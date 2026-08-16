@@ -114,13 +114,17 @@ def count_by_municipality(df: pd.DataFrame) -> pd.DataFrame:
     return counts
 
 
-def mean_by_municipality(df: pd.DataFrame, value_col: str) -> pd.DataFrame:
-    """1行1地点のデータを自治体ごとの平均にする（欠損は平均から除外する）。"""
+def mean_by_municipality(df: pd.DataFrame, value_col: str, label: str = "") -> pd.DataFrame:
+    """1行1地点のデータを自治体ごとの平均にする（欠損は平均から除外する）。
+
+    1自治体1行の統計表に使えば、値をそのまま採るのと同じ結果になる。
+    `label` はカバレッジのログに出す名前で、列名が長い統計表向けに差し替える。
+    """
     resolved = resolve_codes(df)
     resolved["_v"] = resolved[value_col].map(parse_number)
     agg = resolved.groupby("code")["_v"].mean().rename("value").reset_index()
     agg = agg.dropna(subset=["value"])
-    muni.check_coverage(agg["code"], f"{value_col} 平均")
+    muni.check_coverage(agg["code"], label or f"{value_col} 平均")
     return agg
 
 
@@ -287,36 +291,51 @@ def load_noise_points() -> pd.DataFrame:
 
 
 def aggregate_noise(points: pd.DataFrame) -> pd.DataFrame:
-    """自治体ごとに、値のある最も新しい年度の平均を採る。
+    """自治体ごとに、全年度の測定地点をまとめて平均する。
+
+    年度をまたいで1つに混ぜるのは、この調査が毎年ちがう地点を測るため。1年度あたりの
+    地点数は自治体によって1〜40件と幅があり、少ない自治体では「その年にどの道路を
+    測ったか」がそのまま値になる。奥多摩町は平成25年度に測った4地点のうち2つが
+    都道奥多摩青梅線の70〜71dB区間で平均68.8dBだが、6年度13地点では64.5dBまで下がる
+    （台東区は逆に、平成24年度は20地点あるのに平成25年度は6地点で、その6地点が
+    たまたま静かだった）。6年度分を合わせれば1自治体あたり平均71地点になり、
+    道路の選ばれ方の偏りが薄まる。
+
+    値は6年間（平成20〜25年度）の平均であって特定年度の状態ではない。年度ごとの
+    変化を追う用途には使えないが、ここで欲しいのは自治体間の相対的な静けさなので
+    それでよい。
 
     dB は対数量なので、音響的には地点をエネルギー合成するのが正しい。ただしそれだと
     自治体内で最も大きい1地点にほぼ支配される。ここで見たいのは「幹線道路沿いの地点は
     平均してどのくらいうるさいか」なので、地点を等しく扱う算術平均にする。
     """
-    per_year = (
-        points.groupby(["code", "year"])["leq_day"].agg(value="mean", points="size").reset_index()
+    result = (
+        points.groupby("code")
+        .agg(value=("leq_day", "mean"), points=("leq_day", "size"), years=("year", "nunique"))
+        .reset_index()
     )
-    latest = (
-        per_year.sort_values(["code", "year"], ascending=[True, False])
-        .drop_duplicates("code", keep="first")
-        .reset_index(drop=True)
-    )
-    latest["value"] = latest["value"].round(1)
-    return latest.loc[:, ["code", "value", "year", "points"]]
+    result["value"] = result["value"].round(1)
+    return result.loc[:, ["code", "value", "points", "years"]]
 
 
-def log_noise_fallbacks(points: pd.DataFrame, result: pd.DataFrame) -> None:
-    """古い年度で埋めた自治体をログに残す（黙って混ぜない）。"""
-    newest = int(points["year"].max())
-    older = result[result["year"] != newest]
+def log_noise_coverage(points: pd.DataFrame, result: pd.DataFrame) -> None:
+    """何年度分の何地点を使ったかを残す。地点の少ない自治体は値が振れやすい。"""
+    years = sorted(int(y) for y in points["year"].unique())
     logger.info(
-        "[D-quiet-02] %d/53 自治体。うち %d 自治体は %d年度に測定が無く過去の年度で補完",
+        "[D-quiet-02] %d〜%d年度の %d地点を %d/53 自治体に集約（1自治体あたり平均 %.0f地点）",
+        years[0],
+        years[-1],
+        len(points),
         len(result),
-        len(older),
-        newest,
+        result["points"].mean(),
     )
-    for row in older.itertuples():
-        logger.info("  %s ← %d年度（%d地点）", muni.BY_CODE[row.code].name, row.year, row.points)
+    for row in result.nsmallest(5, "points").itertuples():
+        logger.info(
+            "  地点が少ない: %s %d地点（%d年度分）",
+            muni.BY_CODE[row.code].name,
+            row.points,
+            row.years,
+        )
     muni.check_coverage(result["code"], "road_noise_leq")
 
 
@@ -324,19 +343,20 @@ def log_noise_fallbacks(points: pd.DataFrame, result: pd.DataFrame) -> None:
 def normalize_road_noise() -> IndicatorFrames:
     """自動車交通騒音調査の昼間等価騒音レベルを自治体ごとに平均する。
 
-    調査地点は年度ごとに入れ替わるため、単年では測定のない自治体が出る
+    調査地点は年度ごとに入れ替わり、単年では測定のない自治体が出る
     （平成25年度は檜原村が欠測）。平成20〜25年度の6年分を合わせると53自治体
     すべてが埋まるので、以下の手順で埋める:
 
-        1. 年度ごとに、測定地点を住所から自治体に割り当てて昼間Leqを平均する
-        2. 自治体ごとに、値のある最も新しい年度の平均値を採る
+        1. 年度ごとに、測定地点を住所から自治体に割り当てて昼間Leqを拾う
+        2. 自治体ごとに、6年度分の地点をまとめて平均する
         3. どの年度にも値が無い自治体は欠損のまま残す（0では埋めない）
 
-    参照した年度と地点数も値に並べて書き、古い年度で埋めた自治体を後から追えるようにする。
+    使った地点数と年度数も値に並べて書き、値が何本の測定に支えられているかを
+    後から追えるようにする。
     """
     points = load_noise_points()
     result = aggregate_noise(points)
-    log_noise_fallbacks(points, result)
+    log_noise_coverage(points, result)
     return {"road_noise_leq": result}
 
 
@@ -352,6 +372,16 @@ def normalize_satellite_offices() -> IndicatorFrames:
     """
     df = read_csv(raw_path("D-workspace-01", "offices"))
     return {"satellite_office_count": count_by_municipality(df)}
+
+
+@handler("D-workspace-02")
+def normalize_libraries() -> IndicatorFrames:
+    """都内の公立図書館を「区市町村名」で数える。
+
+    末尾の注記行と島しょ部の館は、自治体コードに解決できない／対象外として落ちる。
+    """
+    df = read_csv(raw_path("D-workspace-02", "libraries"))
+    return {"library_count": count_by_municipality(df)}
 
 
 # ---------------------------------------------------------------- くらしのコスト
@@ -387,6 +417,25 @@ def normalize_npo() -> IndicatorFrames:
     """
     df = read_csv(raw_path("D-community-01", "ninsyou"), header=1)
     return {"npo_count": count_by_municipality(df)}
+
+
+# 統計年鑑17-8で採る「学級・事業数」の総数列。列名に英語併記と全角スラッシュが入るので、
+# 完全一致を先に試し、外れたときだけ部分一致に落とす。「総数」を含む列はこの1本だけで、
+# 学級・講座の内訳（計）や分野別事業数の各列には引っかからない。
+SOCIAL_EDUCATION_TOTAL = ("学級・事業数 Classes and Programs／総数 Total", "総数")
+
+
+@handler("D-community-02")
+def normalize_social_education() -> IndicatorFrames:
+    """統計年鑑17-8から社会教育の学級・事業数（総数）を自治体ごとに採る。
+
+    1自治体1行なので集計は要らない。同じ表に混ざる集計行（総数・区部・市部など）と
+    島しょ部は、自治体コードに解決できない／対象外として落ちる。
+    """
+    df = read_csv(raw_path("D-community-02", "social_education"))
+    total = pick_from(df, SOCIAL_EDUCATION_TOTAL, label="学級・事業数（総数）")
+    frame = mean_by_municipality(df, total, label="social_education_program_count")
+    return {"social_education_program_count": frame}
 
 
 # ---------------------------------------------------------------- 共通
