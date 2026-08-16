@@ -1,8 +1,4 @@
-"""面/点/線データを自治体ポリゴンに集約して interim/indicators/ に出す。
-
-自治体名を持たない（あるいは持っていても信用できない）GISデータを、
-行政区域ポリゴンと重ね合わせて自治体単位の値に落とす。
-"""
+"""面/点/線データを自治体ポリゴンに集約して interim/indicators/ に出す"""
 
 from __future__ import annotations
 
@@ -218,22 +214,10 @@ def join_green() -> IndicatorFrames:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="面/点/線データを自治体ポリゴンに集約する")
-    parser.add_argument("--only", nargs="+", metavar="ID", help="対象データセットID")
-    parser.add_argument(
-        "--boundaries", action="store_true", help="行政区域ポリゴンの整備だけ行って終了"
-    )
-    parser.add_argument("-v", "--verbose", action="store_true")
-    args = parser.parse_args(argv)
-
-    setup_logging(args.verbose)
+    setup_logging()
     ensure_dirs()
 
-    if args.boundaries:
-        build_boundaries()
-        return 0
-
-    targets = args.only or list(SPATIAL_HANDLERS)
+    targets = list(SPATIAL_HANDLERS)
     ok, failed = 0, 0
     for dataset_id in targets:
         fn = SPATIAL_HANDLERS.get(dataset_id)

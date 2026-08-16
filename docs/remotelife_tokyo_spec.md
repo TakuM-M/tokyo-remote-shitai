@@ -198,7 +198,7 @@
       },
       "indicators": {
         "satellite_office_count":   { "value": 55,   "per_10k": 1.58, "score": 96.2, "source": "D-workspace-01" },
-        "pm25_annual_avg":          { "value": 9.8,  "unit": "μg/m3", "score": 31.0, "source": "D-quiet-01" },
+        "pm25_recent_avg":          { "value": 9.8,  "unit": "μg/m3", "score": 31.0, "source": "D-quiet-01" },
         "land_price_residential":   { "value": 812000, "unit": "円/m2", "score": 8.4, "source": "D-cost-01" },
         "park_area":                { "value": 1181952, "unit": "m2", "per_capita": 3.27, "score": 22.6, "source": "D-refresh-01" },
         "urban_woods_ratio":        { "value": 0.65, "unit": "%", "score": null, "source": "D-refresh-01" }

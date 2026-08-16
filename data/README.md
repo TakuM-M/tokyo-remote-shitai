@@ -56,7 +56,7 @@ uv run python -m analysis.validate_output --demo         # ダミーデータの
     "axes": [                          // 軸と指標の定義。画面の説明表示に使う
       { "key": "quiet", "label": "しずけさ", "description": "…",
         "indicators": [
-          { "key": "pm25_annual_avg", "label": "PM2.5", "unit": "μg/m3",
+          { "key": "pm25_recent_avg", "label": "PM2.5", "unit": "μg/m3",
             "direction": "lower_is_better", "definition": "…",
             "source": "D-quiet-01", "reference_only": false }
         ] }

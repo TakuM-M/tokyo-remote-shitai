@@ -174,7 +174,7 @@ def normalize_pm25() -> IndicatorFrames:
     master = read_csv(raw_path("D-quiet-01", "stations"), header=None, names=STATION_COLUMNS)
     stations = master.merge(pm25_station_means(), on="局コード", how="inner")
     logger.info("[D-quiet-01] 測定局 %d局のうち PM2.5 の値がある局: %d", len(master), len(stations))
-    return {"pm25_annual_avg": mean_by_municipality(stations, "pm25")}
+    return {"pm25_recent_avg": mean_by_municipality(stations, "pm25")}
 
 
 # 自動車交通騒音調査（D-quiet-02）は1年度1CSV。年度によって列名が揺れる
