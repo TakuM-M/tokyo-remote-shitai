@@ -125,7 +125,9 @@ def _status_label(ds: Dataset) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="原データを raw/ に取得する")
-    parser.add_argument("--only", nargs="+", metavar="ID", help="対象データセットID（例: D-workspace-01 D-cost-01）")
+    parser.add_argument(
+        "--only", nargs="+", metavar="ID", help="対象データセットID（例: D-workspace-01 D-cost-01）"
+    )
     parser.add_argument("--heavy", action="store_true", help="大容量ファイルもあわせて取得する")
     args = parser.parse_args(argv)
 

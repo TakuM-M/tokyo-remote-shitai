@@ -24,7 +24,7 @@ spatial-join:
 
 ## interim/ → processed/municipalities.json（ウィンザライズ → min-max → 軸スコア）
 score:
-	$(PY) -m pipeline.score
+	$(PY) -m pipeline.04-score
 
 all: ingest normalize spatial-join score
 
@@ -41,6 +41,11 @@ missing:
 ## 上記の結果を1枚のHTMLにまとめて analysis/report.html に書き出す
 report:
 	$(PY) -m analysis.html
+
+## 静的チェック（lint ルールと整形崩れの両方）
+lint:
+	uv run ruff check src/
+	uv run ruff format --check src/
 
 test:
 	uv run pytest

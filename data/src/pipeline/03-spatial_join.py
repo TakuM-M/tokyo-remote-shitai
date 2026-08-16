@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-import argparse
 import logging
-from collections.abc import Callable, Iterator
+from collections.abc import Callable
 from pathlib import Path
 
 import pandas as pd
@@ -143,20 +142,6 @@ def read_layer(path: Path, crs: str = CRS_PLANE):
     return gdf
 
 
-def iter_layer_chunks(path: Path, step: int = 500) -> Iterator[object]:
-    """巨大なシェープファイルを分割して読む（樹林地.shp は 1.5GB ある）。"""
-    gpd = _gpd()
-    from pyogrio import read_info
-
-    total = read_info(path)["features"]
-    for offset in range(0, total, step):
-        gdf = gpd.read_file(path, rows=slice(offset, offset + step)).to_crs(CRS_PLANE)
-        gdf = gdf[gdf.geom_type.isin(("Polygon", "MultiPolygon"))].loc[:, ["geometry"]]
-        gdf["geometry"] = gdf.geometry.make_valid()
-        logger.debug("%s: %d/%d", path.stem, min(offset + step, total), total)
-        yield gdf
-
-
 # ---------------------------------------------------------------- いきぬき
 
 # 緑のオープンデータ（D-refresh-01）から公園面積に含めないレイヤ。
@@ -176,11 +161,10 @@ def _park_layers() -> list[Path]:
 
 @spatial_handler("D-refresh-01")
 def join_green() -> IndicatorFrames:
-    """公園緑地の面積と、市街地の樹林地が自治体面積に占める割合を出す。
+    """公園緑地の面積を自治体ごとに出す。
 
-    公園はレイヤが用途別に多数のSHPに分かれ、レイヤ間で重なりがあるので
+    レイヤが用途別に多数のSHPに分かれ、レイヤ間で重なりがあるので
     全部まとめて溶かしてから自治体ポリゴンで切る。
-    樹林地は 1.5GB あって一度に読めないため、分割して読みながら足していく。
     """
     gpd = _gpd()
     boundaries = load_boundaries(planar=True)
@@ -194,20 +178,148 @@ def join_green() -> IndicatorFrames:
     park_area = dissolved_area(parks, boundaries)
     logger.info("公園面積 合計 %.2f km2", park_area["value"].sum() / 1e6)
 
-    # 崖線の樹林地・自治体管理の樹林地は樹林地と重複しうるので使わない
-    woods_path = extracted_dir("D-refresh-01", "woods") / "03_樹林地" / "樹林地.shp"
-    totals: dict[str, float] = {}
-    for chunk in iter_layer_chunks(woods_path):
-        for code, area in clip_area(chunk, boundaries).items():
-            totals[code] = totals.get(code, 0.0) + float(area)
-    woods = pd.Series(totals, name="value").rename_axis("code").reset_index()
-    muni.check_coverage(woods["code"], "樹林地")
-    logger.info("樹林地面積 合計 %.2f km2", woods["value"].sum() / 1e6)
+    return {"park_area": park_area}
 
-    return {
-        "park_area": park_area,
-        "urban_woods_ratio": area_ratio(woods, boundaries),
-    }
+
+# 土地利用細分メッシュ（D-refresh-02）の土地利用種コード。ログの内訳表示に使う。
+LANDUSE_LABELS: dict[str, str] = {
+    "0100": "田",
+    "0200": "その他の農用地",
+    "0500": "森林",
+    "0600": "荒地",
+    "0700": "建物用地",
+    "0901": "道路",
+    "0902": "鉄道",
+    "1000": "その他の用地",
+    "1100": "河川地及び湖沼",
+    "1400": "海浜",
+    "1500": "海水域",
+    "1600": "ゴルフ場",
+}
+
+# 緑とみなす土地利用種。河川地及び湖沼(1100) は水面なので入れない。
+GREEN_CODES: tuple[str, ...] = ("0100", "0200", "0500", "0600", "1600")
+
+# 陸地面積の分母から外す土地利用種。海水域メッシュは自治体ポリゴンの外にあり
+# 大半は sjoin で落ちるが、境界の丸めで拾ってしまう分をここで確実に外す。
+SEA_CODE = "1500"
+
+# メッシュSHPの属性名は CP932 のまま格納されている
+MESH_ENCODING = "cp932"
+MESH_LANDUSE_COL = "土地利用種"
+
+
+def _mesh_files() -> list[Path]:
+    paths = []
+    for key in ("mesh_5339", "mesh_5338"):
+        src = next(iter(sorted(extracted_dir("D-refresh-02", key).glob("*.shp"))), None)
+        if src is None:
+            raise FileNotFoundError(f"D-refresh-02/{key} の展開先に shp がありません")
+        paths.append(src)
+    return paths
+
+
+def _read_mesh(path: Path, bbox: tuple[float, float, float, float]):
+    """土地利用細分メッシュを1枚読み、[landuse, area, 重心] の GeoDataFrame にする。
+
+    1枚46万ポリゴンあるので、読み込みの時点で東京都の外接矩形に絞る。
+    属性名が CP932 なので encoding を明示するが、化けた場合に備えて
+    列順（メッシュ, 土地利用種, 撮影年月日）でも土地利用種を拾えるようにする。
+    """
+    gpd = _gpd()
+    gdf = gpd.read_file(path, encoding=MESH_ENCODING, bbox=bbox).to_crs(CRS_PLANE)
+    col = MESH_LANDUSE_COL if MESH_LANDUSE_COL in gdf.columns else gdf.columns[1]
+    # 土地利用種は "0100" のような4桁。数値型で読まれても "100" にならないよう桁を戻す
+    landuse = gdf[col].astype(str).str.zfill(4)
+    attrs = pd.DataFrame({"landuse": landuse.values, "area": gdf.geometry.area.values})
+    return gpd.GeoDataFrame(attrs, geometry=gdf.geometry.centroid, crs=gdf.crs)
+
+
+def mesh_area_by_landuse(boundaries) -> pd.DataFrame:
+    """自治体×土地利用種のメッシュ面積(m2)の表を作る。
+
+    100万ポリゴン規模に overlay をかけるのは現実的でないので、メッシュの重心を
+    自治体ポリゴンに sjoin して帰属を決め、メッシュ自身の面積を足し上げる。
+    1メッシュが100m角なのに対し自治体は10〜225km2あるため、境界をまたぐメッシュを
+    片方に寄せる誤差は無視できる。海水域は自治体ポリゴンの外なので自然に落ちる。
+    """
+    gpd = _gpd()
+    bbox = tuple(boundaries.to_crs(CRS_WGS84).total_bounds)
+    frames = []
+    for path in _mesh_files():
+        mesh = _read_mesh(path, bbox)
+        joined = gpd.sjoin(
+            mesh, boundaries.loc[:, ["code", "geometry"]], how="inner", predicate="within"
+        )
+        logger.info("[mesh] %s: %dメッシュ → 都内 %d", path.stem, len(mesh), len(joined))
+        frames.append(joined.loc[:, ["code", "landuse", "area"]])
+
+    joined = pd.concat(frames, ignore_index=True)
+    pivot = joined.pivot_table(index="code", columns="landuse", values="area", aggfunc="sum")
+    return pivot.fillna(0.0)
+
+
+def _log_landuse_breakdown(by_landuse: pd.DataFrame, denom: pd.Series) -> None:
+    """土地利用種ごとの面積シェアを出す。緑にどこまで含めるかの再検討用。"""
+    shares = by_landuse.div(denom, axis=0)
+    frame = muni.to_frame().set_index("code")
+    for label, index in (
+        ("全53自治体", by_landuse.index),
+        ("区部", frame.index[frame["region"] == "区部"]),
+        ("多摩", frame.index[frame["region"] == "多摩"]),
+    ):
+        # 分母は join_land_use と同じ「海水域を除いた陸地面積」に揃える
+        target = by_landuse.loc[by_landuse.index.intersection(index)].drop(
+            columns=[SEA_CODE], errors="ignore"
+        )
+        total = target.to_numpy().sum()
+        parts = [
+            f"{LANDUSE_LABELS.get(c, c)} {target[c].sum() / total * 100:.1f}%"
+            for c in target.columns
+        ]
+        logger.info("[緑の内訳] %s（面積シェア）: %s", label, " / ".join(parts))
+    for code in GREEN_CODES:
+        if code in shares.columns:
+            top = shares[code].idxmax()
+            logger.info(
+                "[緑の内訳] %s: 全体 %.2f%% / 最大は%s %.1f%%",
+                LANDUSE_LABELS[code],
+                by_landuse[code].sum() / denom.sum() * 100,
+                muni.BY_CODE[top].name,
+                shares.loc[top, code] * 100,
+            )
+
+
+@spatial_handler("D-refresh-02")
+def join_land_use() -> IndicatorFrames:
+    """土地利用細分メッシュから緑被率（山林を含む緑の面積割合）を出す。
+
+    分子・分母をどちらもメッシュ由来にすることで、境界メッシュの帰属誤差が相殺される。
+    分母は自治体に落ちたメッシュの合計から海水域を除いた陸地面積。
+    """
+    boundaries = load_boundaries(planar=True)
+    by_landuse = mesh_area_by_landuse(boundaries)
+    muni.check_coverage(by_landuse.index, "緑被率")
+
+    denom = by_landuse.drop(columns=[SEA_CODE], errors="ignore").sum(axis=1)
+    green = by_landuse.reindex(columns=list(GREEN_CODES), fill_value=0.0).sum(axis=1)
+    logger.info(
+        "メッシュ陸地面積 合計 %.1f km2 / 緑 %.1f km2", denom.sum() / 1e6, green.sum() / 1e6
+    )
+    _log_landuse_breakdown(by_landuse, denom)
+
+    ratio = (green / denom * 100.0).rename("value").rename_axis("code").reset_index()
+
+    # 分母を自治体境界ポリゴンの面積に替えた場合との差。CSVには出さず確認のみ。
+    by_polygon = area_ratio(green.rename("value").rename_axis("code").reset_index(), boundaries)
+    diff = (ratio.set_index("code")["value"] - by_polygon.set_index("code")["value"]).abs()
+    logger.info(
+        "分母をポリゴン面積にした場合との差: 平均 %.2fpt / 最大 %.2fpt (%s)",
+        diff.mean(),
+        diff.max(),
+        muni.BY_CODE[diff.idxmax()].name,
+    )
+    return {"green_coverage_ratio": ratio}
 
 
 # ---------------------------------------------------------------- エントリポイント

@@ -20,7 +20,7 @@ make score          # ウィンザライズ → min-max → 軸スコア → pro
 make all            # 上を順に実行
 
 make demo           # ダミーデータで processed/municipalities.sample.json を生成
-make datasets       # 全8データセットの定義と取得状況
+make datasets       # 全9データセットの定義と取得状況
 make test lint
 ```
 
@@ -82,8 +82,10 @@ uv run python -m analysis.validate_output --demo         # ダミーデータの
       "indicators": {
         "satellite_office_count": { "value": 55, "per_10k": 1.58, "unit": "件",
                                     "score": 96.2, "source": "D-workspace-01", "status": "ok" },
-        "park_area":              { "value": 1181952, "per_capita": 3.27, "unit": "m2",
-                                    "score": 22.6, "source": "D-refresh-01", "status": "ok" }
+        "park_area":              { "value": 1181952, "per_km2": 64871.1, "unit": "m2",
+                                    "score": 22.6, "source": "D-refresh-01", "status": "ok" },
+        "green_coverage_ratio":   { "value": 3.15, "unit": "%",
+                                    "score": 14.8, "source": "D-refresh-02", "status": "ok" }
       }
     }
   ]
