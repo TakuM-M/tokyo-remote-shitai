@@ -320,7 +320,7 @@ def report_coverage(computed: dict[str, pd.DataFrame], axes: pd.DataFrame) -> No
 
 # (区部の中心値, 多摩の中心値, ばらつき)。実データの平均・標準偏差をおおまかになぞる。
 DEMO_PROFILE: dict[str, tuple[float, float, float]] = {
-    "pm25_recent_avg": (5.2, 5.2, 0.4),
+    "pm25_annual_avg": (5.2, 4.8, 0.4),
     "road_noise_leq": (68.0, 66.7, 1.8),
     "park_area": (1_660_000, 1_250_000, 900_000),
     "green_coverage_ratio": (2.5, 27.0, 10.0),
@@ -364,7 +364,7 @@ def demo_values(seed: int = 20260816) -> tuple[pd.DataFrame, pd.DataFrame]:
     # 欠損の見え方を確認するための穴。実データで欠けている指標に合わせてある
     # （PM2.5は測定局の無い自治体、サテライトオフィスは掲載の無い自治体、
     #   公園と地価は檜原村・奥多摩町に原データが無い）。
-    frame.loc[rng.choice(codes, 10, replace=False), "pm25_recent_avg"] = np.nan
+    frame.loc[rng.choice(codes, 10, replace=False), "pm25_annual_avg"] = np.nan
     frame.loc[rng.choice(codes, 12, replace=False), "satellite_office_count"] = np.nan
     frame.loc[["13307"], "park_area"] = np.nan
     frame.loc[["13307", "13308"], "land_price_residential"] = np.nan
