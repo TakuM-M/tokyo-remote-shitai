@@ -30,7 +30,7 @@ all: ingest normalize spatial-join score
 
 ## スキーマ確認用のダミーデータを生成（フロント開発の先行用）
 demo:
-	$(PY) -m pipeline.score --demo
+	$(PY) -m pipeline.04-score --demo
 
 ## ---- 調査用（成果物の生成には関与しない） ----
 
