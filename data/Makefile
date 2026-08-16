@@ -1,7 +1,7 @@
 # src/ をimportパスに通し、サブパッケージをモジュールとして実行する
 PY := PYTHONPATH=src uv run python
 
-.PHONY: setup ingest normalize spatial-join score all demo datasets \
+.PHONY: setup ingest normalize spatial-join impute score all demo datasets \
 	inventory missing stats validate report lint test clean clean-all
 
 setup:
@@ -22,15 +22,19 @@ normalize:
 spatial-join:
 	$(PY) -m pipeline.03-spatial_join
 
+## 規則にもとづく欠損補完 → interim/indicators_imputed/, interim/imputation_log.csv
+impute:
+	$(PY) -m pipeline.04-impute
+
 ## interim/ → processed/municipalities.json（分母換算 → パーセンタイル順位 → 軸スコア）
 score:
-	$(PY) -m pipeline.04-score
+	$(PY) -m pipeline.05-score
 
-all: ingest normalize spatial-join score
+all: ingest normalize spatial-join impute score
 
 ## スキーマ確認用のダミーデータを生成（フロント開発の先行用）
 demo:
-	$(PY) -m pipeline.04-score --demo
+	$(PY) -m pipeline.05-score --demo
 
 ## ---- 調査用（成果物の生成には関与しない） ----
 

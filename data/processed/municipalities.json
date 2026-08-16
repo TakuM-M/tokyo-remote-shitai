@@ -101,7 +101,7 @@
             "label": "NPO密度",
             "unit": "件",
             "direction": "higher_is_better",
-            "definition": "認証NPO法人数 ÷ 人口1万人。",
+            "definition": "認証NPO法人数 ÷ 人口1万人。人口の少ない自治体は全体の中央値に寄せて補正。",
             "source": "D-community-01",
             "weight": 1.0,
             "reference_only": false
@@ -229,7 +229,7 @@
         "quiet": 36.8,
         "refresh": 81.5,
         "workspace": 98.8,
-        "cost": 1.0,
+        "cost": 0.9,
         "community": 99.1
       },
       "indicators": {
@@ -272,7 +272,7 @@
         },
         "land_price_residential": {
           "value": 3631428.5714,
-          "score": 1.0,
+          "score": 0.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -298,8 +298,8 @@
         "quiet": 82.1,
         "refresh": 47.8,
         "workspace": 93.9,
-        "cost": 4.9,
-        "community": 97.2
+        "cost": 4.7,
+        "community": 95.3
       },
       "indicators": {
         "road_noise_leq": {
@@ -341,14 +341,14 @@
         },
         "land_price_residential": {
           "value": 1930000.0,
-          "score": 4.9,
+          "score": 4.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 546.0,
-          "score": 97.2,
+          "score": 95.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 29.6963,
@@ -367,8 +367,8 @@
         "quiet": 27.4,
         "refresh": 51.3,
         "workspace": 96.3,
-        "cost": 2.9,
-        "community": 93.4
+        "cost": 2.8,
+        "community": 97.2
       },
       "indicators": {
         "road_noise_leq": {
@@ -410,14 +410,14 @@
         },
         "land_price_residential": {
           "value": 3013666.6667,
-          "score": 2.9,
+          "score": 2.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 775.0,
-          "score": 93.4,
+          "score": 97.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 28.3753,
@@ -436,8 +436,8 @@
         "quiet": 10.4,
         "refresh": 25.3,
         "workspace": 86.6,
-        "cost": 16.7,
-        "community": 89.6
+        "cost": 16.0,
+        "community": 91.5
       },
       "indicators": {
         "road_noise_leq": {
@@ -479,14 +479,14 @@
         },
         "land_price_residential": {
           "value": 1131571.4286,
-          "score": 16.7,
+          "score": 16.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 731.0,
-          "score": 89.6,
+          "score": 91.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 20.2053,
@@ -505,8 +505,8 @@
         "quiet": 74.5,
         "refresh": 32.7,
         "workspace": 52.4,
-        "cost": 8.8,
-        "community": 87.7
+        "cost": 8.5,
+        "community": 89.6
       },
       "indicators": {
         "road_noise_leq": {
@@ -548,14 +548,14 @@
         },
         "land_price_residential": {
           "value": 1448086.9565,
-          "score": 8.8,
+          "score": 8.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 349.0,
-          "score": 87.7,
+          "score": 89.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 13.912,
@@ -574,7 +574,7 @@
         "quiet": 93.4,
         "refresh": 29.8,
         "workspace": 84.1,
-        "cost": 12.7,
+        "cost": 12.3,
         "community": 85.8
       },
       "indicators": {
@@ -617,7 +617,7 @@
         },
         "land_price_residential": {
           "value": 1320833.3333,
-          "score": 12.7,
+          "score": 12.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -643,7 +643,7 @@
         "quiet": 24.5,
         "refresh": 59.2,
         "workspace": 74.4,
-        "cost": 36.3,
+        "cost": 34.9,
         "community": 50.0
       },
       "indicators": {
@@ -686,7 +686,7 @@
         },
         "land_price_residential": {
           "value": 613272.7273,
-          "score": 36.3,
+          "score": 34.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -712,8 +712,8 @@
         "quiet": 29.2,
         "refresh": 47.9,
         "workspace": 59.8,
-        "cost": 32.4,
-        "community": 21.7
+        "cost": 31.1,
+        "community": 10.4
       },
       "indicators": {
         "road_noise_leq": {
@@ -755,14 +755,14 @@
         },
         "land_price_residential": {
           "value": 661538.4615,
-          "score": 32.4,
+          "score": 31.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 179.0,
-          "score": 21.7,
+          "score": 10.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.2305,
@@ -781,8 +781,8 @@
         "quiet": 74.5,
         "refresh": 21.5,
         "workspace": 81.7,
-        "cost": 14.7,
-        "community": 70.8
+        "cost": 14.2,
+        "community": 74.5
       },
       "indicators": {
         "road_noise_leq": {
@@ -824,14 +824,14 @@
         },
         "land_price_residential": {
           "value": 1244066.6667,
-          "score": 14.7,
+          "score": 14.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 245.0,
-          "score": 70.8,
+          "score": 74.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.7097,
@@ -850,8 +850,8 @@
         "quiet": 12.3,
         "refresh": 18.0,
         "workspace": 69.5,
-        "cost": 10.8,
-        "community": 80.2
+        "cost": 10.4,
+        "community": 84.0
       },
       "indicators": {
         "road_noise_leq": {
@@ -893,14 +893,14 @@
         },
         "land_price_residential": {
           "value": 1404531.25,
-          "score": 10.8,
+          "score": 10.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 198.0,
-          "score": 80.2,
+          "score": 84.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.8856,
@@ -919,8 +919,8 @@
         "quiet": 2.8,
         "refresh": 45.5,
         "workspace": 28.0,
-        "cost": 34.3,
-        "community": 23.6
+        "cost": 33.0,
+        "community": 14.2
       },
       "indicators": {
         "road_noise_leq": {
@@ -962,14 +962,14 @@
         },
         "land_price_residential": {
           "value": 647581.8182,
-          "score": 34.3,
+          "score": 33.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 252.0,
-          "score": 23.6,
+          "score": 14.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.3055,
@@ -988,8 +988,8 @@
         "quiet": 4.7,
         "refresh": 26.5,
         "workspace": 64.6,
-        "cost": 22.5,
-        "community": 63.2
+        "cost": 21.7,
+        "community": 72.6
       },
       "indicators": {
         "road_noise_leq": {
@@ -1031,14 +1031,14 @@
         },
         "land_price_residential": {
           "value": 779853.211,
-          "score": 22.5,
+          "score": 21.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 517.0,
-          "score": 63.2,
+          "score": 72.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.3888,
@@ -1057,8 +1057,8 @@
         "quiet": 42.5,
         "refresh": 41.7,
         "workspace": 91.5,
-        "cost": 6.9,
-        "community": 91.5
+        "cost": 6.6,
+        "community": 93.4
       },
       "indicators": {
         "road_noise_leq": {
@@ -1100,14 +1100,14 @@
         },
         "land_price_residential": {
           "value": 1874080.0,
-          "score": 6.9,
+          "score": 6.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 535.0,
-          "score": 91.5,
+          "score": 93.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 22.405,
@@ -1126,8 +1126,8 @@
         "quiet": 36.8,
         "refresh": 28.8,
         "workspace": 67.1,
-        "cost": 20.6,
-        "community": 72.6
+        "cost": 19.8,
+        "community": 80.2
       },
       "indicators": {
         "road_noise_leq": {
@@ -1169,14 +1169,14 @@
         },
         "land_price_residential": {
           "value": 782703.7037,
-          "score": 20.6,
+          "score": 19.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 214.0,
-          "score": 72.6,
+          "score": 80.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.0042,
@@ -1195,8 +1195,8 @@
         "quiet": 53.8,
         "refresh": 21.9,
         "workspace": 23.2,
-        "cost": 28.4,
-        "community": 67.0
+        "cost": 27.4,
+        "community": 70.8
       },
       "indicators": {
         "road_noise_leq": {
@@ -1238,14 +1238,14 @@
         },
         "land_price_residential": {
           "value": 703177.4194,
-          "score": 28.4,
+          "score": 27.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 325.0,
-          "score": 67.0,
+          "score": 70.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.4122,
@@ -1264,8 +1264,8 @@
         "quiet": 15.1,
         "refresh": 25.8,
         "workspace": 89.0,
-        "cost": 18.6,
-        "community": 84.0
+        "cost": 17.9,
+        "community": 87.7
       },
       "indicators": {
         "road_noise_leq": {
@@ -1307,14 +1307,14 @@
         },
         "land_price_residential": {
           "value": 912130.4348,
-          "score": 18.6,
+          "score": 17.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 338.0,
-          "score": 84.0,
+          "score": 87.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 11.0092,
@@ -1333,8 +1333,8 @@
         "quiet": 6.6,
         "refresh": 46.9,
         "workspace": 76.8,
-        "cost": 24.5,
-        "community": 46.2
+        "cost": 23.6,
+        "community": 44.3
       },
       "indicators": {
         "road_noise_leq": {
@@ -1376,14 +1376,14 @@
         },
         "land_price_residential": {
           "value": 742000.0,
-          "score": 24.5,
+          "score": 23.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 152.0,
-          "score": 46.2,
+          "score": 44.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.1004,
@@ -1402,8 +1402,8 @@
         "quiet": 36.8,
         "refresh": 18.2,
         "workspace": 72.0,
-        "cost": 26.5,
-        "community": 17.9
+        "cost": 25.5,
+        "community": 16.0
       },
       "indicators": {
         "road_noise_leq": {
@@ -1445,14 +1445,14 @@
         },
         "land_price_residential": {
           "value": 718687.5,
-          "score": 26.5,
+          "score": 25.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 73.0,
-          "score": 17.9,
+          "score": 16.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.2001,
@@ -1471,8 +1471,8 @@
         "quiet": 0.9,
         "refresh": 31.8,
         "workspace": 57.3,
-        "cost": 38.2,
-        "community": 14.2
+        "cost": 36.8,
+        "community": 8.5
       },
       "indicators": {
         "road_noise_leq": {
@@ -1514,14 +1514,14 @@
         },
         "land_price_residential": {
           "value": 553553.1915,
-          "score": 38.2,
+          "score": 36.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 183.0,
-          "score": 14.2,
+          "score": 8.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.0558,
@@ -1540,8 +1540,8 @@
         "quiet": 91.5,
         "refresh": 26.2,
         "workspace": 20.7,
-        "cost": 42.2,
-        "community": 31.1
+        "cost": 40.6,
+        "community": 23.6
       },
       "indicators": {
         "road_noise_leq": {
@@ -1583,14 +1583,14 @@
         },
         "land_price_residential": {
           "value": 480544.4444,
-          "score": 42.2,
+          "score": 40.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 272.0,
-          "score": 31.1,
+          "score": 23.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.5598,
@@ -1609,7 +1609,7 @@
         "quiet": 17.9,
         "refresh": 32.7,
         "workspace": 30.5,
-        "cost": 50.0,
+        "cost": 48.1,
         "community": 4.7
       },
       "indicators": {
@@ -1652,7 +1652,7 @@
         },
         "land_price_residential": {
           "value": 410760.5634,
-          "score": 50.0,
+          "score": 48.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -1678,8 +1678,8 @@
         "quiet": 53.8,
         "refresh": 54.4,
         "workspace": 62.2,
-        "cost": 53.9,
-        "community": 8.5
+        "cost": 51.9,
+        "community": 6.6
       },
       "indicators": {
         "road_noise_leq": {
@@ -1721,14 +1721,14 @@
         },
         "land_price_residential": {
           "value": 387545.4545,
-          "score": 53.9,
+          "score": 51.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 123.0,
-          "score": 8.5,
+          "score": 6.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.6201,
@@ -1747,8 +1747,8 @@
         "quiet": 59.4,
         "refresh": 71.3,
         "workspace": 32.9,
-        "cost": 44.1,
-        "community": 2.8
+        "cost": 42.5,
+        "community": 0.9
       },
       "indicators": {
         "road_noise_leq": {
@@ -1790,14 +1790,14 @@
         },
         "land_price_residential": {
           "value": 441115.942,
-          "score": 44.1,
+          "score": 42.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 164.0,
-          "score": 2.8,
+          "score": 0.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.3119,
@@ -1816,8 +1816,8 @@
         "quiet": 45.3,
         "refresh": 58.1,
         "workspace": 11.0,
-        "cost": 89.2,
-        "community": 53.8
+        "cost": 85.8,
+        "community": 55.7
       },
       "indicators": {
         "road_noise_leq": {
@@ -1859,14 +1859,14 @@
         },
         "land_price_residential": {
           "value": 131316.129,
-          "score": 89.2,
+          "score": 85.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 266.0,
-          "score": 53.8,
+          "score": 55.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.6295,
@@ -1885,7 +1885,7 @@
         "quiet": 33.0,
         "refresh": 68.9,
         "workspace": 54.9,
-        "cost": 63.7,
+        "cost": 61.3,
         "community": 61.3
       },
       "indicators": {
@@ -1928,7 +1928,7 @@
         },
         "land_price_residential": {
           "value": 308433.3333,
-          "score": 63.7,
+          "score": 61.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -1954,8 +1954,8 @@
         "quiet": 95.3,
         "refresh": 42.5,
         "workspace": 79.3,
-        "cost": 30.4,
-        "community": 76.4
+        "cost": 29.2,
+        "community": 78.3
       },
       "indicators": {
         "road_noise_leq": {
@@ -1997,14 +1997,14 @@
         },
         "land_price_residential": {
           "value": 692200.0,
-          "score": 30.4,
+          "score": 29.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 93.0,
-          "score": 76.4,
+          "score": 78.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.1556,
@@ -2023,7 +2023,7 @@
         "quiet": 61.3,
         "refresh": 42.0,
         "workspace": 50.0,
-        "cost": 40.2,
+        "cost": 38.7,
         "community": 51.9
       },
       "indicators": {
@@ -2066,7 +2066,7 @@
         },
         "land_price_residential": {
           "value": 492433.3333,
-          "score": 40.2,
+          "score": 38.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -2092,8 +2092,8 @@
         "quiet": 48.1,
         "refresh": 75.9,
         "workspace": null,
-        "cost": 95.1,
-        "community": 16.0
+        "cost": 91.5,
+        "community": 19.8
       },
       "indicators": {
         "road_noise_leq": {
@@ -2135,14 +2135,14 @@
         },
         "land_price_residential": {
           "value": 98566.6667,
-          "score": 95.1,
+          "score": 91.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 41.0,
-          "score": 16.0,
+          "score": 19.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.1729,
@@ -2161,8 +2161,8 @@
         "quiet": 80.2,
         "refresh": 66.3,
         "workspace": 45.1,
-        "cost": 57.8,
-        "community": 27.4
+        "cost": 55.7,
+        "community": 25.5
       },
       "indicators": {
         "road_noise_leq": {
@@ -2204,14 +2204,14 @@
         },
         "land_price_residential": {
           "value": 355590.9091,
-          "score": 57.8,
+          "score": 55.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 93.0,
-          "score": 27.4,
+          "score": 25.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.5208,
@@ -2230,8 +2230,8 @@
         "quiet": 68.9,
         "refresh": 73.0,
         "workspace": null,
-        "cost": 73.5,
-        "community": 0.9
+        "cost": 70.8,
+        "community": 2.8
       },
       "indicators": {
         "road_noise_leq": {
@@ -2273,14 +2273,14 @@
         },
         "land_price_residential": {
           "value": 214294.1176,
-          "score": 73.5,
+          "score": 70.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 22.0,
-          "score": 0.9,
+          "score": 2.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 1.8723,
@@ -2299,7 +2299,7 @@
         "quiet": 45.3,
         "refresh": 71.2,
         "workspace": 35.4,
-        "cost": 46.1,
+        "cost": 44.3,
         "community": 42.5
       },
       "indicators": {
@@ -2342,7 +2342,7 @@
         },
         "land_price_residential": {
           "value": 425102.5641,
-          "score": 46.1,
+          "score": 44.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -2368,7 +2368,7 @@
         "quiet": 40.6,
         "refresh": 83.0,
         "workspace": 42.7,
-        "cost": 85.3,
+        "cost": 82.1,
         "community": 48.1
       },
       "indicators": {
@@ -2411,7 +2411,7 @@
         },
         "land_price_residential": {
           "value": 172625.3165,
-          "score": 85.3,
+          "score": 82.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -2437,8 +2437,8 @@
         "quiet": 74.5,
         "refresh": 50.1,
         "workspace": 25.6,
-        "cost": 52.0,
-        "community": 65.1
+        "cost": 50.0,
+        "community": 63.2
       },
       "indicators": {
         "road_noise_leq": {
@@ -2480,14 +2480,14 @@
         },
         "land_price_residential": {
           "value": 388631.5789,
-          "score": 52.0,
+          "score": 50.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 70.0,
-          "score": 65.1,
+          "score": 63.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.3933,
@@ -2506,8 +2506,8 @@
         "quiet": 63.2,
         "refresh": 38.7,
         "workspace": 6.1,
-        "cost": 67.6,
-        "community": 34.9
+        "cost": 65.1,
+        "community": 29.2
       },
       "indicators": {
         "road_noise_leq": {
@@ -2549,14 +2549,14 @@
         },
         "land_price_residential": {
           "value": 255558.8235,
-          "score": 67.6,
+          "score": 65.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 72.0,
-          "score": 34.9,
+          "score": 29.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.6079,
@@ -2575,8 +2575,8 @@
         "quiet": 53.8,
         "refresh": 68.8,
         "workspace": 3.7,
-        "cost": 71.6,
-        "community": 44.3
+        "cost": 68.9,
+        "community": 46.2
       },
       "indicators": {
         "road_noise_leq": {
@@ -2618,14 +2618,14 @@
         },
         "land_price_residential": {
           "value": 218567.5676,
-          "score": 71.6,
+          "score": 68.9,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 78.0,
-          "score": 44.3,
+          "score": 46.2,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.0888,
@@ -2644,8 +2644,8 @@
         "quiet": 97.2,
         "refresh": 61.5,
         "workspace": 8.5,
-        "cost": 75.5,
-        "community": 29.2
+        "cost": 72.6,
+        "community": 27.4
       },
       "indicators": {
         "road_noise_leq": {
@@ -2687,14 +2687,14 @@
         },
         "land_price_residential": {
           "value": 208681.8182,
-          "score": 75.5,
+          "score": 72.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 54.0,
-          "score": 29.2,
+          "score": 27.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.5395,
@@ -2713,8 +2713,8 @@
         "quiet": 68.9,
         "refresh": 49.8,
         "workspace": 15.9,
-        "cost": 59.8,
-        "community": 55.7
+        "cost": 57.5,
+        "community": 57.5
       },
       "indicators": {
         "road_noise_leq": {
@@ -2756,14 +2756,14 @@
         },
         "land_price_residential": {
           "value": 351000.0,
-          "score": 59.8,
+          "score": 57.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 62.0,
-          "score": 55.7,
+          "score": 57.5,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.8054,
@@ -2782,8 +2782,8 @@
         "quiet": 87.7,
         "refresh": 40.9,
         "workspace": 37.8,
-        "cost": 48.0,
-        "community": 78.3
+        "cost": 46.2,
+        "community": 82.1
       },
       "indicators": {
         "road_noise_leq": {
@@ -2825,14 +2825,14 @@
         },
         "land_price_residential": {
           "value": 411454.5455,
-          "score": 48.0,
+          "score": 46.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 53.0,
-          "score": 78.3,
+          "score": 82.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.8782,
@@ -2851,8 +2851,8 @@
         "quiet": 68.9,
         "refresh": 47.6,
         "workspace": null,
-        "cost": 83.3,
-        "community": 36.8
+        "cost": 80.2,
+        "community": 40.6
       },
       "indicators": {
         "road_noise_leq": {
@@ -2894,14 +2894,14 @@
         },
         "land_price_residential": {
           "value": 173545.4545,
-          "score": 83.3,
+          "score": 80.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 21.0,
-          "score": 36.8,
+          "score": 40.6,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.6593,
@@ -2920,7 +2920,7 @@
         "quiet": 53.8,
         "refresh": 31.2,
         "workspace": null,
-        "cost": 55.9,
+        "cost": 53.8,
         "community": 59.4
       },
       "indicators": {
@@ -2963,7 +2963,7 @@
         },
         "land_price_residential": {
           "value": 377750.0,
-          "score": 55.9,
+          "score": 53.8,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -2989,8 +2989,8 @@
         "quiet": 8.5,
         "refresh": 71.3,
         "workspace": 13.4,
-        "cost": 81.4,
-        "community": 33.0
+        "cost": 78.3,
+        "community": 34.9
       },
       "indicators": {
         "road_noise_leq": {
@@ -3032,14 +3032,14 @@
         },
         "land_price_residential": {
           "value": 181095.2381,
-          "score": 81.4,
+          "score": 78.3,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 30.0,
-          "score": 33.0,
+          "score": 34.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.6069,
@@ -3058,7 +3058,7 @@
         "quiet": 84.0,
         "refresh": 59.3,
         "workspace": 18.3,
-        "cost": 79.4,
+        "cost": 76.4,
         "community": 38.7
       },
       "indicators": {
@@ -3101,7 +3101,7 @@
         },
         "land_price_residential": {
           "value": 201533.3333,
-          "score": 79.4,
+          "score": 76.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
@@ -3127,8 +3127,8 @@
         "quiet": 24.5,
         "refresh": 36.6,
         "workspace": null,
-        "cost": 69.6,
-        "community": 68.9
+        "cost": 67.0,
+        "community": 65.1
       },
       "indicators": {
         "road_noise_leq": {
@@ -3170,14 +3170,14 @@
         },
         "land_price_residential": {
           "value": 236545.4545,
-          "score": 69.6,
+          "score": 67.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 63.0,
-          "score": 68.9,
+          "score": 65.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 5.4363,
@@ -3196,8 +3196,8 @@
         "quiet": 21.7,
         "refresh": 80.7,
         "workspace": null,
-        "cost": 91.2,
-        "community": 12.3
+        "cost": 87.7,
+        "community": 21.7
       },
       "indicators": {
         "road_noise_leq": {
@@ -3239,14 +3239,14 @@
         },
         "land_price_residential": {
           "value": 128486.6667,
-          "score": 91.2,
+          "score": 87.7,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 20.0,
-          "score": 12.3,
+          "score": 21.7,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.8919,
@@ -3265,8 +3265,8 @@
         "quiet": 65.1,
         "refresh": 72.6,
         "workspace": 47.6,
-        "cost": 77.5,
-        "community": 74.5
+        "cost": 74.5,
+        "community": 76.4
       },
       "indicators": {
         "road_noise_leq": {
@@ -3308,14 +3308,14 @@
         },
         "land_price_residential": {
           "value": 202838.7097,
-          "score": 77.5,
+          "score": 74.5,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 86.0,
-          "score": 74.5,
+          "score": 76.4,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 6.0789,
@@ -3334,8 +3334,8 @@
         "quiet": 31.1,
         "refresh": 75.7,
         "workspace": null,
-        "cost": 65.7,
-        "community": 10.4
+        "cost": 63.2,
+        "community": 12.3
       },
       "indicators": {
         "road_noise_leq": {
@@ -3377,14 +3377,14 @@
         },
         "land_price_residential": {
           "value": 268346.1538,
-          "score": 65.7,
+          "score": 63.2,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 27.0,
-          "score": 10.4,
+          "score": 12.3,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.8166,
@@ -3403,8 +3403,8 @@
         "quiet": 53.8,
         "refresh": 41.0,
         "workspace": null,
-        "cost": 87.3,
-        "community": 6.6
+        "cost": 84.0,
+        "community": 17.9
       },
       "indicators": {
         "road_noise_leq": {
@@ -3446,14 +3446,14 @@
         },
         "land_price_residential": {
           "value": 146111.1111,
-          "score": 87.3,
+          "score": 84.0,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 14.0,
-          "score": 6.6,
+          "score": 17.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 2.6192,
@@ -3472,8 +3472,8 @@
         "quiet": 15.1,
         "refresh": 66.2,
         "workspace": null,
-        "cost": 93.1,
-        "community": 25.5
+        "cost": 89.6,
+        "community": 31.1
       },
       "indicators": {
         "road_noise_leq": {
@@ -3515,14 +3515,14 @@
         },
         "land_price_residential": {
           "value": 99356.5217,
-          "score": 93.1,
+          "score": 89.6,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 26.0,
-          "score": 25.5,
+          "score": 31.1,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.3766,
@@ -3541,8 +3541,8 @@
         "quiet": 87.7,
         "refresh": 43.0,
         "workspace": 40.2,
-        "cost": 61.8,
-        "community": 40.6
+        "cost": 59.4,
+        "community": 33.0
       },
       "indicators": {
         "road_noise_leq": {
@@ -3584,14 +3584,14 @@
         },
         "land_price_residential": {
           "value": 328517.2414,
-          "score": 61.8,
+          "score": 59.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 79.0,
-          "score": 40.6,
+          "score": 33.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.7884,
@@ -3610,8 +3610,8 @@
         "quiet": 87.7,
         "refresh": 76.6,
         "workspace": null,
-        "cost": 97.1,
-        "community": 19.8
+        "cost": 93.4,
+        "community": 36.8
       },
       "indicators": {
         "road_noise_leq": {
@@ -3653,14 +3653,14 @@
         },
         "land_price_residential": {
           "value": 96936.3636,
-          "score": 97.1,
+          "score": 93.4,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 10.0,
-          "score": 19.8,
+          "score": 36.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 3.2147,
@@ -3679,8 +3679,8 @@
         "quiet": 78.3,
         "refresh": 75.5,
         "workspace": null,
-        "cost": 99.0,
-        "community": 82.1
+        "cost": 99.1,
+        "community": 67.0
       },
       "indicators": {
         "road_noise_leq": {
@@ -3722,14 +3722,14 @@
         },
         "land_price_residential": {
           "value": 88783.3333,
-          "score": 99.0,
+          "score": 99.1,
           "source": "D-cost-01",
           "unit": "円/m2",
           "status": "ok"
         },
         "npo_count": {
           "value": 12.0,
-          "score": 82.1,
+          "score": 67.0,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 7.5686,
@@ -3748,8 +3748,8 @@
         "quiet": 99.1,
         "refresh": 99.1,
         "workspace": 1.2,
-        "cost": null,
-        "community": 95.3
+        "cost": 96.2,
+        "community": 68.9
       },
       "indicators": {
         "road_noise_leq": {
@@ -3790,15 +3790,19 @@
           "status": "ok"
         },
         "land_price_residential": {
-          "value": null,
-          "score": null,
+          "value": 93675.0,
+          "score": 96.2,
           "source": "D-cost-01",
           "unit": "円/m2",
-          "status": "no_data"
+          "status": "imputed",
+          "imputed_from": [
+            "13205",
+            "13305"
+          ]
         },
         "npo_count": {
           "value": 5.0,
-          "score": 95.3,
+          "score": 68.9,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 28.6205,
@@ -3817,8 +3821,8 @@
         "quiet": 19.8,
         "refresh": 69.7,
         "workspace": null,
-        "cost": null,
-        "community": 57.5
+        "cost": 96.2,
+        "community": 53.8
       },
       "indicators": {
         "road_noise_leq": {
@@ -3859,15 +3863,19 @@
           "status": "no_data"
         },
         "land_price_residential": {
-          "value": null,
-          "score": null,
+          "value": 93675.0,
+          "score": 96.2,
           "source": "D-cost-01",
           "unit": "円/m2",
-          "status": "no_data"
+          "status": "imputed",
+          "imputed_from": [
+            "13205",
+            "13305"
+          ]
         },
         "npo_count": {
           "value": 2.0,
-          "score": 57.5,
+          "score": 53.8,
           "source": "D-community-01",
           "unit": "件",
           "per_10k": 4.8984,

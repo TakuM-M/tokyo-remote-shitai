@@ -1,7 +1,7 @@
 # data — データ加工パイプライン
 
 ```
-原データ ──(ingest)──▶ raw/ ────(normalize, spatial_join)──────▶ interim/ ──(score)──▶ processed/municipalities.json
+原データ ──(ingest)──▶ raw/ ────(normalize, spatial_join, impute)──────▶ interim/ ──(score)──▶ processed/municipalities.json
 ```
 
 ## セットアップ
@@ -16,6 +16,7 @@ uv sync
 make ingest         # 原データを raw/ に取得
 make normalize      # 文字コード変換・自治体コード付与・単位統一 → interim/
 make spatial-join   # 点/線/面を自治体ポリゴンに集約 → interim/indicators/
+make impute         # 規則にもとづく欠損補完 → interim/indicators_imputed/, interim/imputation_log.csv
 make score          # 分母換算 → パーセンタイル順位 → 軸スコア → processed/municipalities.json
 make all            # 上を順に実行
 
@@ -38,7 +39,7 @@ uv run python -m pipeline.01-ingest --only D-workspace-01 D-cost-01
 uv run python -m pipeline.01-ingest --heavy       # 大容量ファイルもあわせて取得
 uv run python -m pipeline.02-normalize --only D-cost-01   # 1データセットだけ正規化
 uv run python -m pipeline.03-spatial_join --boundaries     # 行政区域ポリゴンの整備だけ
-uv run python -m pipeline.04-score --demo
+uv run python -m pipeline.05-score --demo
 
 uv run python -m analysis.missing_report --open          # 欠損レポートを作ってブラウザで開く
 uv run python -m analysis.raw_inventory --verify         # SHA256 を再計算して照合
@@ -91,3 +92,8 @@ uv run python -m analysis.validate_output --demo         # ダミーデータの
   ]
 }
 ```
+
+`status` は `ok` / `imputed` / `no_data` の3値。`imputed` は原データに調査地点が無い自治体を
+近隣自治体の値で埋めたもので、参照元の自治体コードを `imputed_from` に持つ
+（例: 檜原村の地価 `{ "value": 93675.0, "status": "imputed", "imputed_from": ["13205", "13305"] }`）。
+補完の規則は `src/defs/imputation.py`、実行は `make impute`。

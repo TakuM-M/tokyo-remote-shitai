@@ -1,4 +1,4 @@
-"""パイプライン各段で共有する入出力（入力ファイルの解決・指標CSVの書き出し）。
+"""パイプライン各段で共有する入出力（入力ファイルの解決・指標CSVの書き出し・補完ログの形式）。
 
 正規化と空間結合のどちらも同じ形の指標CSVを吐くため、実体をここに置く。
 実行モジュール（`02-normalize` など）は名前にハイフンを含み import できないので、
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 import zipfile
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 from typing import IO
 
@@ -84,3 +84,21 @@ def write_indicators(dataset_id: str, frames: IndicatorFrames) -> None:
         # 欠損行は書かない。score 側で「値が無い＝no_data」として扱う（0で埋めない）。
         out = out.dropna(subset=["value"])
         write_interim_csv(out, indicator_csv(dataset_id, key))
+
+
+# ---------------------------------------------------------------- 補完ログの形式
+
+# 04-impute が書き、05-score が読む1行=1セルの記録。両者で列と区切りを揃えるため、
+# 形式だけをここに置く（互いを import できないため）。
+IMPUTATION_LOG_COLUMNS: tuple[str, ...] = ("indicator", "code", "value", "method", "reference")
+
+# 参照自治体は複数ありうるが、CSVの1セルに収めたいのでカンマ以外で区切る
+REFERENCE_SEPARATOR = "|"
+
+
+def join_references(codes: Iterable[str]) -> str:
+    return REFERENCE_SEPARATOR.join(codes)
+
+
+def split_references(text: object) -> list[str]:
+    return [c for c in str(text or "").split(REFERENCE_SEPARATOR) if c]
