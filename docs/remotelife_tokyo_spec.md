@@ -74,7 +74,7 @@
 | US-2 | 緑の多さより家賃相場を重く見たい、のように評価の軸を自分で決めたい | 重み表示 |
 | US-3 | 気になった自治体の「なぜそのスコアなのか」を知りたい | 詳細パネル（レーダーチャート＋根拠一覧） |
 | US-4 | 今住んでいる街と候補地を並べて比べたい | 比較モード |
-| US-5 | 実際に逃げ場になるサテライトオフィスや図書館の場所を見たい | 施設レイヤーのピン表示 | |
+| US-5 | 実際に逃げ場になるサテライトオフィスや図書館の場所を見たい | 施設レイヤーのピン表示 |
 | US-6 | この結果が信用できるか、元データを確認したい | 出典リンク・更新日の表示 |
 
 ---
@@ -126,7 +126,7 @@ min-max にかけると残りの自治体が1桁点に潰れるため。実数�
 #### 軸1: しずけさ（Quiet）
 | 指標 | 定義 | 出典 | 方向 | 重み | カバー |
 |---|---|---|---|---|---|
-| 道路交通騒音 | 幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を、平成20〜25年度の全地点をまとめて自治体内で平均 | D-quiet-02 | 低いほど良 | 1.0 | 53/53 |
+| 道路交通騒音 | 幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を、平成20〜25年度の全地点をまとめて自治体内で平均 | D-quiet-01 | 低いほど良 | 1.0 | 53/53 |
 
 年度をまたいで混ぜるのは、調査地点が毎年入れ替わるため。1年度あたりの地点数は自治体によって1〜40件と幅があり、単年だけを採ると「その年にどの道路を測ったか」がそのまま値になる（奥多摩町は平成25年度の4地点で68.8dB、6年度13地点なら64.5dB）。6年度分3,785地点を使うと1自治体あたり平均71地点になる。値は6年間の平均であって特定年度の状態ではないため、年度ごとの変化を追う用途には使えない。
 
@@ -136,7 +136,7 @@ min-max にかけると残りの自治体が1桁点に潰れるため。実数�
 | 指標 | 定義 | 出典 | 方向 | 重み | カバー |
 |---|---|---|---|---|---|
 | 緑・水辺率 | 土地利用細分メッシュ（100m）の田・その他の農用地・森林・荒地・河川地及び湖沼の面積 / 海水域を除く全メッシュ面積 | D-refresh-02 | 高いほど良 | 0.5 | 53/53 |
-| PM2.5 | 大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、各月を等重みで平均した年平均値を自治体内で平均 | D-quiet-01 | 低いほど良 | 0.3 | 43/53 |
+| PM2.5 | 大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、各月を等重みで平均した年平均値を自治体内で平均 | D-refresh-03 | 低いほど良 | 0.3 | 43/53 |
 | 公園面積比 | 公園緑地のポリゴン面積 / 総面積 | D-refresh-01 | 高いほど良 | 0.2 | 52/53 |
 
 #### 軸3: しごとば（Workspace）
@@ -148,9 +148,11 @@ min-max にかけると残りの自治体が1桁点に潰れるため。実数�
 | 図書館 | 都内の公立図書館数 / 総面積(km2) | D-workspace-02 | 高いほど良 | 0.4 | 53/53 |
 
 #### 軸4: くらしのコスト（Cost）
-| 指標 | 定義 | 出典 | 方向 | カバー |
-|---|---|---|---|---|
-| 地価水準 | 地価公示（住宅地）の自治体内平均 ㎡単価 | D-cost-01 | 低いほど良 | 51/53 |
+| 指標 | 定義 | 出典 | 方向 | 重み | カバー |
+|---|---|---|---|---|---|
+| 地価水準 | 地価公示（住宅地）の自治体内平均 ㎡単価 | D-cost-01 | 低いほど良 | 1.0 | 51/53 |
+
+欠けている2自治体（檜原村・奥多摩町）は 6.2 の規則で補完され、出力上は53自治体すべてに値が入る。
 
 #### 軸5: つながり（Community）
 「地域に根を張る団体がいくつあるか」（NPO密度）と「実際に開かれている講座・行事がいくつあるか」（社会教育事業）で、測っている側面が違う。順位相関も0.06とほぼ無関係で、どちらを主に置くかを決める根拠が無いため等重みにしている。
@@ -196,14 +198,20 @@ min-max にかけると残りの自治体が1桁点に潰れるため。実数�
 
 ### 6.1 使用オープンデータ一覧
 
-一覧・取得先・データ構造は [data.md](./data.md)、ライセンス判定は [data_license_check.md](./data_license_check.md)、採否や差替の経緯は [dev_note.md](./dev_note.md) を参照。
+一覧・取得先・データ構造は [data.md](./data.md)、ライセンス判定は [data_license_check.md](./data_license_check.md) を参照。
 
-### 6.2 中間データのスキーマ（`municipalities.json`）
-```json
+### 6.2 出力データのスキーマ（`municipalities.json`）
+
+全フィールドの説明は [data/README.md](../data/README.md)。要点だけ抜き出すと次の形になる。
+
+```jsonc
 {
   "meta": {
-    "generated_at": "2026-09-01",
+    "generated_at": "2026-08-16",
     "version": "0.2",
+    "axes": [ /* 軸と指標の定義。label / unit / direction / definition / weight */ ],
+    "default_weights": { "quiet": 1.0, "refresh": 1.0, "workspace": 1.0, "cost": 1.0, "community": 1.0 },
+    "presets": [ /* 重みのワンタップ切替。key / label / weights */ ],
     "sources": [
       { "id": "D-workspace-01", "name": "「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ",
         "org": "東京都産業労働局", "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000012d0000000019",
@@ -213,41 +221,47 @@ min-max にかけると残りの自治体が1桁点に潰れるため。実数�
   },
   "municipalities": [
     {
-      "code": "13104",
-      "name": "新宿区",
-      "area_km2": 18.22,
-      "population": 349000,
+      "code": "13101",
+      "name": "千代田区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 11.66,
+      "population": 66670,
       "scores": {
-        "quiet": 28.4, "refresh": 51.2, "workspace": 94.7,
-        "cost": 12.5, "community": 76.3
+        "quiet": 43.4, "refresh": 81.5, "workspace": 85.3,
+        "cost": 0.9, "community": 83.0
       },
       "indicators": {
-        "satellite_office_count":   { "value": 55,   "per_km2": 4.7, "score": 96.2, "source": "D-workspace-01" },
-        "pm25_annual_avg":          { "value": 9.8,  "unit": "μg/m3", "score": 31.0, "source": "D-quiet-01" },
-        "land_price_residential":   { "value": 812000, "unit": "円/m2", "score": 8.4, "source": "D-cost-01" },
-        "park_area":                { "value": 1181952, "unit": "m2", "per_km2": 64871.1, "score": 22.6, "source": "D-refresh-01" },
-        "green_coverage_ratio":     { "value": 3.15, "unit": "%", "score": 14.8, "source": "D-refresh-02" }
+        "satellite_office_count":   { "value": 54, "unit": "件", "per_km2": 4.6312, "score": 98.8, "source": "D-workspace-01", "status": "ok" },
+        "pm25_annual_avg":          { "value": null, "unit": "μg/m3", "score": null, "source": "D-refresh-03", "status": "no_data" },
+        "land_price_residential":   { "value": 3631428.5714, "unit": "円/m2", "score": 0.9, "source": "D-cost-01", "status": "ok" },
+        "park_area":                { "value": 1551728.7139, "unit": "m2", "per_km2": 133081.3648, "score": 99.0, "source": "D-refresh-01", "status": "ok" },
+        "green_coverage_ratio":     { "value": 19.9085, "unit": "%", "score": 74.5, "source": "D-refresh-02", "status": "ok" }
       }
     }
   ]
 }
 ```
+- `meta.axes` / `default_weights` / `presets` は画面の説明表示と重みのワンタップ切替のために持たせる。指標は全53自治体・全9指標ぶんが必ず並び、値の有無は `status` で表す。
 - **欠損は `null` + `status: "no_data"` とし、0で埋めない**。地図上はハッチング（斜線）で「データなし」を明示する（例: 檜原村の `park_area` は原データに1件も無いため `{ "value": null, "score": null, "status": "no_data" }`）。
 - 例外として、**原データに調査地点が置かれていないだけで実態は周辺自治体と変わらない欠損**は、根拠を明示した規則にかぎり近隣自治体の値で補完する。補完値は `status: "imputed"` と `imputed_from`（参照した自治体コードの配列）を付けて実測値と区別する。規則は `data/src/defs/imputation.py` に対象・参照・方法・理由をまとめて持つ。
   - 現在の規則は1件。`land_price_residential` の檜原村(13307)・奥多摩町(13308) ← 青梅市(13205)・日の出町(13305) の平均。地価公示に両自治体の調査地点が無く、隣接する西多摩の山間部で住宅地の性格が近いため。
   - 出力例: `{ "value": 93675.0, "score": 96.2, "status": "imputed", "imputed_from": ["13205", "13305"] }`
   - 規則の無い欠損は従来どおり `no_data` のまま。0埋めとの違いは「推定値だと分かる推定値」であること。
-- `area_km2` と `population`（全指標の分母）はD-common-01から取る。1ファイルに両方が入っている。
+- `area_km2` と `population` はD-common-01から取る。1ファイルに両方が入っている。「◯◯あたり」に換算する指標（公園面積比・サテライトオフィス・図書館・NPO密度・社会教育事業）の分母になる。
 
 ### 6.3 データ加工パイプライン
+
+実体は `data/src/pipeline/`。実行順が名前から分かるよう連番を付けてある。
+
 1. [原データ (CSV/GIS/API)]
-        ↓  ingest.py（ダウンロード + 生データを raw/<データセットID>/ に保存）
+        ↓  01-ingest.py（ダウンロード + 生データを raw/<データセットID>/ に保存）
 2. [raw/]
-        ↓  normalize.py（文字コード変換、自治体コード付与、単位統一）
+        ↓  02-normalize.py（文字コード変換、自治体コード付与、単位統一）
 3. [interim/]
-        ↓  spatial_join.py（GeoPandas: 点/線データを自治体ポリゴンに集約）
-        ↓  impute.py（規則にもとづく欠損補完。埋めたセルは imputation_log.csv に記録）
-        ↓  score.py（分母換算 → パーセンタイル順位 → 軸スコア算出）
+        ↓  03-spatial_join.py（GeoPandas: 点/線/面データを自治体ポリゴンに集約）
+        ↓  04-impute.py（規則にもとづく欠損補完。埋めたセルは imputation_log.csv に記録）
+        ↓  05-score.py（分母換算 → パーセンタイル順位 → 軸スコア算出）
 4. [municipalities.json]  ← フロントはこれ1本を読むだけ
 
 - フロント側では重み計算のみ行うため、スライダー操作は完全にクライアント完結（高速・サーバ不要）。
@@ -257,7 +271,7 @@ min-max にかけると残りの自治体が1桁点に潰れるため。実数�
 
 ## 7. 技術構成
 - データ構築
-  - Python, pandas, GeoPandas, requests 
+  - Python（pandas / GeoPandas / shapely / pyproj / requests）。パッケージ管理は uv、静的チェックは ruff
 - **バックエンドなし**が基本方針。ハッカソンの短期開発とその後の維持コストの両方に効く。
 
 ---
@@ -282,4 +296,3 @@ min-max にかけると残りの自治体が1桁点に潰れるため。実数�
 - テーマ一覧: https://odhackathon.metro.tokyo.lg.jp/issues/
 - 東京都オープンデータカタログサイト: https://portal.data.metro.tokyo.lg.jp/
 - 個別データセットurlは [data.md](./data.md) を参照
-- 作業中の判断・積み残しは [dev_note.md](./dev_note.md)

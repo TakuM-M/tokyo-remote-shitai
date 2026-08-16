@@ -76,7 +76,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="道路交通騒音",
         axis="quiet",
         direction="lower_is_better",
-        dataset_id="D-quiet-02",
+        dataset_id="D-quiet-01",
         unit="dB",
         definition=(
             "幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を、"
@@ -133,7 +133,7 @@ INDICATORS: tuple[Indicator, ...] = (
         label="PM2.5",
         axis="refresh",
         direction="lower_is_better",
-        dataset_id="D-quiet-01",
+        dataset_id="D-refresh-03",
         unit="μg/m3",
         weight=0.3,
         definition=(

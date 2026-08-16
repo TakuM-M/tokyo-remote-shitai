@@ -130,6 +130,134 @@ def mean_by_municipality(df: pd.DataFrame, value_col: str, label: str = "") -> p
 
 # ---------------------------------------------------------------- しずけさ
 
+# 自動車交通騒音調査（D-quiet-01）は1年度1CSV。年度によって列名が揺れる
+# （「測定地点の住所」/「測定地点住所」、「昼間等価騒音レベル(Leq)(dB)」/
+# 「昼間等価騒音レベル(dB)」）ため、いずれも部分一致で拾う。
+NOISE_DAY = ("昼間",)
+NOISE_NIGHT = ("夜間",)
+
+
+def read_noise_year(path: Path, year: int) -> pd.DataFrame:
+    """1年度分のCSVを 自治体コード × 昼間Leq の地点表にする。
+
+    昼間の値が数値の行だけを採る（「欠測」「-」の行は落とす）。
+    夜間が「-」の地点は昼間しか測っていないだけなので残す。
+    """
+    df = read_csv(path)
+    address = pick_column(df, "address")
+    day = pick_from(df, NOISE_DAY, label="昼間等価騒音レベル")
+    night = pick_from(df, NOISE_NIGHT, label="夜間等価騒音レベル")
+
+    points = muni.attach_code(df, name_col=address)
+    points["leq_day"] = points[day].map(parse_number)
+
+    # 列が1つ足りない行が混じる（平成25年度に2件）。pandas が末尾を空で埋めるため、
+    # 昼間・夜間の値が1列ずれて入り、夜間の欄だけが空になる。昼間の値も信用できない。
+    # 夜間を「-」と書いた地点は空欄ではないので、この条件では落ちない。
+    shifted = points[night].fillna("").astype(str).str.strip() == ""
+    valid = points.loc[~shifted].dropna(subset=["leq_day"])
+    logger.info(
+        "[D-quiet-01] %d年度: 地点 %d件（うち有効 %d件） / %d自治体",
+        year,
+        len(points),
+        len(valid),
+        valid["code"].nunique(),
+    )
+    return valid.loc[:, ["code", "leq_day"]].assign(year=year)
+
+
+def load_noise_points() -> pd.DataFrame:
+    """取得済みの年度をすべて読んで1つの地点表にする。"""
+    resources = sorted(
+        datasets.get("D-quiet-01").resources, key=lambda r: r.year or 0, reverse=True
+    )
+    frames = []
+    for res in resources:
+        try:
+            path = raw_path("D-quiet-01", res.key)
+        except FileNotFoundError:
+            logger.warning("[D-quiet-01] 未取得のためスキップ: %s", res.filename)
+            continue
+        frames.append(read_noise_year(path, int(res.year)))
+    if not frames:
+        raise FileNotFoundError(
+            f"{RAW_DIR / 'D-quiet-01'} にCSVがありません。先に ingest を実行してください。"
+        )
+    return pd.concat(frames, ignore_index=True)
+
+
+def aggregate_noise(points: pd.DataFrame) -> pd.DataFrame:
+    """自治体ごとに、全年度の測定地点をまとめて平均する。
+
+    年度をまたいで1つに混ぜるのは、この調査が毎年ちがう地点を測るため。1年度あたりの
+    地点数は自治体によって1〜40件と幅があり、少ない自治体では「その年にどの道路を
+    測ったか」がそのまま値になる。奥多摩町は平成25年度に測った4地点のうち2つが
+    都道奥多摩青梅線の70〜71dB区間で平均68.8dBだが、6年度13地点では64.5dBまで下がる
+    （台東区は逆に、平成24年度は20地点あるのに平成25年度は6地点で、その6地点が
+    たまたま静かだった）。6年度分を合わせれば1自治体あたり平均71地点になり、
+    道路の選ばれ方の偏りが薄まる。
+
+    値は6年間（平成20〜25年度）の平均であって特定年度の状態ではない。年度ごとの
+    変化を追う用途には使えないが、ここで欲しいのは自治体間の相対的な静けさなので
+    それでよい。
+
+    dB は対数量なので、音響的には地点をエネルギー合成するのが正しい。ただしそれだと
+    自治体内で最も大きい1地点にほぼ支配される。ここで見たいのは「幹線道路沿いの地点は
+    平均してどのくらいうるさいか」なので、地点を等しく扱う算術平均にする。
+    """
+    result = (
+        points.groupby("code")
+        .agg(value=("leq_day", "mean"), points=("leq_day", "size"), years=("year", "nunique"))
+        .reset_index()
+    )
+    result["value"] = result["value"].round(1)
+    return result.loc[:, ["code", "value", "points", "years"]]
+
+
+def log_noise_coverage(points: pd.DataFrame, result: pd.DataFrame) -> None:
+    """何年度分の何地点を使ったかを残す。地点の少ない自治体は値が振れやすい。"""
+    years = sorted(int(y) for y in points["year"].unique())
+    logger.info(
+        "[D-quiet-01] %d〜%d年度の %d地点を %d/53 自治体に集約（1自治体あたり平均 %.0f地点）",
+        years[0],
+        years[-1],
+        len(points),
+        len(result),
+        result["points"].mean(),
+    )
+    for row in result.nsmallest(5, "points").itertuples():
+        logger.info(
+            "  地点が少ない: %s %d地点（%d年度分）",
+            muni.BY_CODE[row.code].name,
+            row.points,
+            row.years,
+        )
+    muni.check_coverage(result["code"], "road_noise_leq")
+
+
+@handler("D-quiet-01")
+def normalize_road_noise() -> IndicatorFrames:
+    """自動車交通騒音調査の昼間等価騒音レベルを自治体ごとに平均する。
+
+    調査地点は年度ごとに入れ替わり、単年では測定のない自治体が出る
+    （平成25年度は檜原村が欠測）。平成20〜25年度の6年分を合わせると53自治体
+    すべてが埋まるので、以下の手順で埋める:
+
+        1. 年度ごとに、測定地点を住所から自治体に割り当てて昼間Leqを拾う
+        2. 自治体ごとに、6年度分の地点をまとめて平均する
+        3. どの年度にも値が無い自治体は欠損のまま残す（0では埋めない）
+
+    使った地点数と年度数も値に並べて書き、値が何本の測定に支えられているかを
+    後から追えるようにする。
+    """
+    points = load_noise_points()
+    result = aggregate_noise(points)
+    log_noise_coverage(points, result)
+    return {"road_noise_leq": result}
+
+
+# ---------------------------------------------------------------- いきぬき
+
 # 大気測定局マスタ・1分値CSVはどちらもヘッダ行を持たないため列名を与える。
 # 局マスタが市区町村コードを持つので、緯度経度はあっても空間結合は要らない。
 # むしろ区境に建つ局は座標だけだと隣の自治体に落ちる（甲州街道大原局は
@@ -175,7 +303,7 @@ def pm25_monthly_station_means() -> pd.DataFrame:
     months = []
     for month in PM25_MONTHS:
         totals: pd.DataFrame | None = None
-        for fh in iter_zip_members("D-quiet-01", pm25_resource_key(month)):
+        for fh in iter_zip_members("D-refresh-03", pm25_resource_key(month)):
             raw = pd.read_csv(
                 fh,
                 header=None,
@@ -196,7 +324,7 @@ def pm25_monthly_station_means() -> pd.DataFrame:
         frame["pm25"] = frame["sum"] / frame["minutes"]
         months.append(frame[["局コード", "month", "pm25", "minutes"]])
         logger.info(
-            "[D-quiet-01] %s: %d局 / 有効 %.1f万分",
+            "[D-refresh-03] %s: %d局 / 有効 %.1f万分",
             month,
             len(frame),
             frame["minutes"].sum() / 10_000,
@@ -217,7 +345,7 @@ def pm25_station_annual_means() -> pd.DataFrame:
     by_station = measured.groupby("局コード")["pm25"].agg(["mean", "count"])
     enough = by_station[by_station["count"] >= PM25_MIN_MONTHS]
     logger.info(
-        "[D-quiet-01] 局別の年平均: %d局中 %d局が%dか月以上そろった",
+        "[D-refresh-03] 局別の年平均: %d局中 %d局が%dか月以上そろった",
         len(by_station),
         len(enough),
         PM25_MIN_MONTHS,
@@ -225,139 +353,15 @@ def pm25_station_annual_means() -> pd.DataFrame:
     return enough["mean"].rename("pm25").reset_index()
 
 
-@handler("D-quiet-01")
+@handler("D-refresh-03")
 def normalize_pm25() -> IndicatorFrames:
     """大気測定局の1分値を局ごとに年平均し、さらに自治体ごとに平均する。"""
-    master = read_csv(raw_path("D-quiet-01", "stations"), header=None, names=STATION_COLUMNS)
+    master = read_csv(raw_path("D-refresh-03", "stations"), header=None, names=STATION_COLUMNS)
     stations = master.merge(pm25_station_annual_means(), on="局コード", how="inner")
-    logger.info("[D-quiet-01] 測定局 %d局のうち年平均値を作れた局: %d", len(master), len(stations))
+    logger.info(
+        "[D-refresh-03] 測定局 %d局のうち年平均値を作れた局: %d", len(master), len(stations)
+    )
     return {"pm25_annual_avg": mean_by_municipality(stations, "pm25")}
-
-
-# 自動車交通騒音調査（D-quiet-02）は1年度1CSV。年度によって列名が揺れる
-# （「測定地点の住所」/「測定地点住所」、「昼間等価騒音レベル(Leq)(dB)」/
-# 「昼間等価騒音レベル(dB)」）ため、いずれも部分一致で拾う。
-NOISE_DAY = ("昼間",)
-NOISE_NIGHT = ("夜間",)
-
-
-def read_noise_year(path: Path, year: int) -> pd.DataFrame:
-    """1年度分のCSVを 自治体コード × 昼間Leq の地点表にする。
-
-    昼間の値が数値の行だけを採る（「欠測」「-」の行は落とす）。
-    夜間が「-」の地点は昼間しか測っていないだけなので残す。
-    """
-    df = read_csv(path)
-    address = pick_column(df, "address")
-    day = pick_from(df, NOISE_DAY, label="昼間等価騒音レベル")
-    night = pick_from(df, NOISE_NIGHT, label="夜間等価騒音レベル")
-
-    points = muni.attach_code(df, name_col=address)
-    points["leq_day"] = points[day].map(parse_number)
-
-    # 列が1つ足りない行が混じる（平成25年度に2件）。pandas が末尾を空で埋めるため、
-    # 昼間・夜間の値が1列ずれて入り、夜間の欄だけが空になる。昼間の値も信用できない。
-    # 夜間を「-」と書いた地点は空欄ではないので、この条件では落ちない。
-    shifted = points[night].fillna("").astype(str).str.strip() == ""
-    valid = points.loc[~shifted].dropna(subset=["leq_day"])
-    logger.info(
-        "[D-quiet-02] %d年度: 地点 %d件（うち有効 %d件） / %d自治体",
-        year,
-        len(points),
-        len(valid),
-        valid["code"].nunique(),
-    )
-    return valid.loc[:, ["code", "leq_day"]].assign(year=year)
-
-
-def load_noise_points() -> pd.DataFrame:
-    """取得済みの年度をすべて読んで1つの地点表にする。"""
-    resources = sorted(
-        datasets.get("D-quiet-02").resources, key=lambda r: r.year or 0, reverse=True
-    )
-    frames = []
-    for res in resources:
-        try:
-            path = raw_path("D-quiet-02", res.key)
-        except FileNotFoundError:
-            logger.warning("[D-quiet-02] 未取得のためスキップ: %s", res.filename)
-            continue
-        frames.append(read_noise_year(path, int(res.year)))
-    if not frames:
-        raise FileNotFoundError(
-            f"{RAW_DIR / 'D-quiet-02'} にCSVがありません。先に ingest を実行してください。"
-        )
-    return pd.concat(frames, ignore_index=True)
-
-
-def aggregate_noise(points: pd.DataFrame) -> pd.DataFrame:
-    """自治体ごとに、全年度の測定地点をまとめて平均する。
-
-    年度をまたいで1つに混ぜるのは、この調査が毎年ちがう地点を測るため。1年度あたりの
-    地点数は自治体によって1〜40件と幅があり、少ない自治体では「その年にどの道路を
-    測ったか」がそのまま値になる。奥多摩町は平成25年度に測った4地点のうち2つが
-    都道奥多摩青梅線の70〜71dB区間で平均68.8dBだが、6年度13地点では64.5dBまで下がる
-    （台東区は逆に、平成24年度は20地点あるのに平成25年度は6地点で、その6地点が
-    たまたま静かだった）。6年度分を合わせれば1自治体あたり平均71地点になり、
-    道路の選ばれ方の偏りが薄まる。
-
-    値は6年間（平成20〜25年度）の平均であって特定年度の状態ではない。年度ごとの
-    変化を追う用途には使えないが、ここで欲しいのは自治体間の相対的な静けさなので
-    それでよい。
-
-    dB は対数量なので、音響的には地点をエネルギー合成するのが正しい。ただしそれだと
-    自治体内で最も大きい1地点にほぼ支配される。ここで見たいのは「幹線道路沿いの地点は
-    平均してどのくらいうるさいか」なので、地点を等しく扱う算術平均にする。
-    """
-    result = (
-        points.groupby("code")
-        .agg(value=("leq_day", "mean"), points=("leq_day", "size"), years=("year", "nunique"))
-        .reset_index()
-    )
-    result["value"] = result["value"].round(1)
-    return result.loc[:, ["code", "value", "points", "years"]]
-
-
-def log_noise_coverage(points: pd.DataFrame, result: pd.DataFrame) -> None:
-    """何年度分の何地点を使ったかを残す。地点の少ない自治体は値が振れやすい。"""
-    years = sorted(int(y) for y in points["year"].unique())
-    logger.info(
-        "[D-quiet-02] %d〜%d年度の %d地点を %d/53 自治体に集約（1自治体あたり平均 %.0f地点）",
-        years[0],
-        years[-1],
-        len(points),
-        len(result),
-        result["points"].mean(),
-    )
-    for row in result.nsmallest(5, "points").itertuples():
-        logger.info(
-            "  地点が少ない: %s %d地点（%d年度分）",
-            muni.BY_CODE[row.code].name,
-            row.points,
-            row.years,
-        )
-    muni.check_coverage(result["code"], "road_noise_leq")
-
-
-@handler("D-quiet-02")
-def normalize_road_noise() -> IndicatorFrames:
-    """自動車交通騒音調査の昼間等価騒音レベルを自治体ごとに平均する。
-
-    調査地点は年度ごとに入れ替わり、単年では測定のない自治体が出る
-    （平成25年度は檜原村が欠測）。平成20〜25年度の6年分を合わせると53自治体
-    すべてが埋まるので、以下の手順で埋める:
-
-        1. 年度ごとに、測定地点を住所から自治体に割り当てて昼間Leqを拾う
-        2. 自治体ごとに、6年度分の地点をまとめて平均する
-        3. どの年度にも値が無い自治体は欠損のまま残す（0では埋めない）
-
-    使った地点数と年度数も値に並べて書き、値が何本の測定に支えられているかを
-    後から追えるようにする。
-    """
-    points = load_noise_points()
-    result = aggregate_noise(points)
-    log_noise_coverage(points, result)
-    return {"road_noise_leq": result}
 
 
 # ---------------------------------------------------------------- しごとば

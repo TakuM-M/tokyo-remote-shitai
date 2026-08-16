@@ -14,7 +14,7 @@
             "unit": "dB",
             "direction": "lower_is_better",
             "definition": "幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を、平成20〜25年度の全地点をまとめて自治体内で平均。",
-            "source": "D-quiet-02",
+            "source": "D-quiet-01",
             "weight": 1.0,
             "reference_only": false
           }
@@ -51,7 +51,7 @@
             "unit": "μg/m3",
             "direction": "lower_is_better",
             "definition": "大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、各月を等重みで平均した年平均値を自治体内で平均。",
-            "source": "D-quiet-01",
+            "source": "D-refresh-03",
             "weight": 0.3,
             "reference_only": false
           }
@@ -174,15 +174,6 @@
     "sources": [
       {
         "id": "D-quiet-01",
-        "name": "PM2.5(微小粒子状物質)モニタリングデータ(1分値)",
-        "org": "東京都環境局",
-        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d2000000067",
-        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
-        "updated_at": "2025年6月〜2026年5月（月別ZIP12か月分）",
-        "notes": "公開されているのは1分値の速報値のみ。既定の配布ZIPは直近50日分しか入らないため、月別ZIP（…_PM2.5_YYYYMM.zip）を12か月分取得して年平均値を組み立てている。測定局は全自治体にはないため、局のない自治体は近傍局で補完する（補完した旨を画面に出す）。"
-      },
-      {
-        "id": "D-quiet-02",
         "name": "自動車交通騒音調査結果",
         "org": "東京都環境局",
         "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000003",
@@ -207,6 +198,15 @@
         "license": "国土数値情報 利用約款（公共データ利用規約 PDL1.0）",
         "updated_at": "平成28年度（2016年度）",
         "notes": "100mメッシュ（3次メッシュの1/10細分）1つが1ポリゴンで、土地利用種のコードを持つ。2次メッシュコードは 上2桁=緯度×1.5・下2桁=経度-100 で、都本土部（東経138.94〜139.92）に必要なのは 5339 と 5338 の2枚。1枚あたり約46万ポリゴン。CRSは EPSG:4612（JGD2000）。最新は令和3年度版だが、そちらは都市地域を対象にした -u 版しか無く、都市計画区域外の奥多摩町・檜原村が落ちる。山林を数えるのが目的なので、全国をカバーする通常版の最終年次である平成28年度版を使う。属性名が CP932 のまま格納されており、既定の読み方だと化ける（列順は メッシュ, 土地利用種, 撮影年月日）。緑とみなすのは 田(0100)・その他の農用地(0200)・森林(0500)・荒地(0600)・河川地及び湖沼(1100) の5種。川辺・湖畔は息抜きに行ける場所なので水面も入れる。ゴルフ場(1600) は私有地で立ち入れず気分転換の場にならないので含めない。【限界1】100mメッシュに分類を1つだけ割り当てる形式のため、市街地の街路樹・庭・社寺林・街区公園は建物用地メッシュに吸収されて消え、区部の緑が構造的に過小評価される。実測でも23区は0.88%（豊島区）〜19.91%（千代田区）に収まり、拾えているのは皇居・明治神宮のようなまとまった緑と大きな河川だけ。区部の解像度は公園面積比が担う。【限界2】面積加重した値は区部8.1%・多摩部57.6%で、東京都公表の「みどり率」（区部24.0%・多摩部67.4%）とは定義も分解能も異なる。水面を含めたことで差は縮んだが、みどり率がさらに含む公園区域はこちらでは公園面積比が別に持つ。区部に残る差はメッシュの分解能によるもので、みどり率の代用にはならない。"
+      },
+      {
+        "id": "D-refresh-03",
+        "name": "PM2.5(微小粒子状物質)モニタリングデータ(1分値)",
+        "org": "東京都環境局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d2000000067",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "2025年6月〜2026年5月（月別ZIP12か月分）",
+        "notes": "外に出て過ごすときの空気の質として、いきぬき軸で使う。公開されているのは1分値の速報値のみ。既定の配布ZIPは直近50日分しか入らないため、月別ZIP（…_PM2.5_YYYYMM.zip）を12か月分取得して年平均値を組み立てている。測定局は全自治体にはないため、局のない自治体は近傍局で補完する（補完した旨を画面に出す）。"
       },
       {
         "id": "D-workspace-01",
@@ -274,7 +274,7 @@
         "road_noise_leq": {
           "value": 68.3,
           "score": 43.4,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -296,7 +296,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -359,7 +359,7 @@
         "road_noise_leq": {
           "value": 68.0,
           "score": 49.1,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -381,7 +381,7 @@
         "pm25_annual_avg": {
           "value": 5.5091,
           "score": 10.5,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -444,7 +444,7 @@
         "road_noise_leq": {
           "value": 69.0,
           "score": 17.9,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -466,7 +466,7 @@
         "pm25_annual_avg": {
           "value": 4.197,
           "score": 96.5,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -529,7 +529,7 @@
         "road_noise_leq": {
           "value": 69.5,
           "score": 12.3,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -551,7 +551,7 @@
         "pm25_annual_avg": {
           "value": 5.4125,
           "score": 15.1,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -614,7 +614,7 @@
         "road_noise_leq": {
           "value": 66.9,
           "score": 75.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -636,7 +636,7 @@
         "pm25_annual_avg": {
           "value": 5.111,
           "score": 45.3,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -699,7 +699,7 @@
         "road_noise_leq": {
           "value": 67.9,
           "score": 51.9,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -721,7 +721,7 @@
         "pm25_annual_avg": {
           "value": 5.6529,
           "score": 1.2,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -784,7 +784,7 @@
         "road_noise_leq": {
           "value": 69.0,
           "score": 17.9,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -806,7 +806,7 @@
         "pm25_annual_avg": {
           "value": 4.7433,
           "score": 68.6,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -869,7 +869,7 @@
         "road_noise_leq": {
           "value": 68.8,
           "score": 24.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -891,7 +891,7 @@
         "pm25_annual_avg": {
           "value": 5.3148,
           "score": 26.7,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -954,7 +954,7 @@
         "road_noise_leq": {
           "value": 68.6,
           "score": 35.8,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -976,7 +976,7 @@
         "pm25_annual_avg": {
           "value": 5.4277,
           "score": 12.8,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1039,7 +1039,7 @@
         "road_noise_leq": {
           "value": 69.9,
           "score": 10.4,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1061,7 +1061,7 @@
         "pm25_annual_avg": {
           "value": 5.1921,
           "score": 36.0,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1124,7 +1124,7 @@
         "road_noise_leq": {
           "value": 70.2,
           "score": 7.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1146,7 +1146,7 @@
         "pm25_annual_avg": {
           "value": 4.7014,
           "score": 70.9,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1209,7 +1209,7 @@
         "road_noise_leq": {
           "value": 70.2,
           "score": 7.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1231,7 +1231,7 @@
         "pm25_annual_avg": {
           "value": 5.2149,
           "score": 31.4,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1294,7 +1294,7 @@
         "road_noise_leq": {
           "value": 68.6,
           "score": 35.8,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1316,7 +1316,7 @@
         "pm25_annual_avg": {
           "value": 5.3847,
           "score": 17.4,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1379,7 +1379,7 @@
         "road_noise_leq": {
           "value": 69.0,
           "score": 17.9,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1401,7 +1401,7 @@
         "pm25_annual_avg": {
           "value": 4.6177,
           "score": 77.9,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1464,7 +1464,7 @@
         "road_noise_leq": {
           "value": 68.7,
           "score": 30.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1486,7 +1486,7 @@
         "pm25_annual_avg": {
           "value": 5.1616,
           "score": 38.4,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1549,7 +1549,7 @@
         "road_noise_leq": {
           "value": 68.6,
           "score": 35.8,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1571,7 +1571,7 @@
         "pm25_annual_avg": {
           "value": 4.5905,
           "score": 80.2,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1634,7 +1634,7 @@
         "road_noise_leq": {
           "value": 70.3,
           "score": 4.7,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1656,7 +1656,7 @@
         "pm25_annual_avg": {
           "value": 5.2461,
           "score": 29.1,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1719,7 +1719,7 @@
         "road_noise_leq": {
           "value": 68.4,
           "score": 40.6,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1741,7 +1741,7 @@
         "pm25_annual_avg": {
           "value": 5.6275,
           "score": 5.8,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1804,7 +1804,7 @@
         "road_noise_leq": {
           "value": 70.9,
           "score": 0.9,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1826,7 +1826,7 @@
         "pm25_annual_avg": {
           "value": 5.5101,
           "score": 8.1,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1889,7 +1889,7 @@
         "road_noise_leq": {
           "value": 65.9,
           "score": 89.6,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1911,7 +1911,7 @@
         "pm25_annual_avg": {
           "value": 5.1415,
           "score": 40.7,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -1974,7 +1974,7 @@
         "road_noise_leq": {
           "value": 68.8,
           "score": 24.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -1996,7 +1996,7 @@
         "pm25_annual_avg": {
           "value": 5.6311,
           "score": 3.5,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2059,7 +2059,7 @@
         "road_noise_leq": {
           "value": 66.7,
           "score": 83.0,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2081,7 +2081,7 @@
         "pm25_annual_avg": {
           "value": 5.3708,
           "score": 19.8,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2144,7 +2144,7 @@
         "road_noise_leq": {
           "value": 68.2,
           "score": 46.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2166,7 +2166,7 @@
         "pm25_annual_avg": {
           "value": 4.7638,
           "score": 66.3,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2229,7 +2229,7 @@
         "road_noise_leq": {
           "value": 68.8,
           "score": 24.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2251,7 +2251,7 @@
         "pm25_annual_avg": {
           "value": 5.3235,
           "score": 24.4,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2314,7 +2314,7 @@
         "road_noise_leq": {
           "value": 68.8,
           "score": 24.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2336,7 +2336,7 @@
         "pm25_annual_avg": {
           "value": 4.7757,
           "score": 64.0,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2399,7 +2399,7 @@
         "road_noise_leq": {
           "value": 67.1,
           "score": 71.7,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2421,7 +2421,7 @@
         "pm25_annual_avg": {
           "value": 4.3552,
           "score": 87.2,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2484,7 +2484,7 @@
         "road_noise_leq": {
           "value": 68.0,
           "score": 49.1,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2506,7 +2506,7 @@
         "pm25_annual_avg": {
           "value": 5.0792,
           "score": 50.0,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2569,7 +2569,7 @@
         "road_noise_leq": {
           "value": 67.8,
           "score": 54.7,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2591,7 +2591,7 @@
         "pm25_annual_avg": {
           "value": 4.3144,
           "score": 94.2,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2654,7 +2654,7 @@
         "road_noise_leq": {
           "value": 67.4,
           "score": 64.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2676,7 +2676,7 @@
         "pm25_annual_avg": {
           "value": 4.3382,
           "score": 89.5,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2739,7 +2739,7 @@
         "road_noise_leq": {
           "value": 68.3,
           "score": 43.4,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2761,7 +2761,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -2824,7 +2824,7 @@
         "road_noise_leq": {
           "value": 66.7,
           "score": 83.0,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2846,7 +2846,7 @@
         "pm25_annual_avg": {
           "value": 4.1761,
           "score": 98.8,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2909,7 +2909,7 @@
         "road_noise_leq": {
           "value": 69.1,
           "score": 14.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -2931,7 +2931,7 @@
         "pm25_annual_avg": {
           "value": 4.4693,
           "score": 82.6,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -2994,7 +2994,7 @@
         "road_noise_leq": {
           "value": 66.6,
           "score": 86.8,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3016,7 +3016,7 @@
         "pm25_annual_avg": {
           "value": 4.6497,
           "score": 75.6,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3079,7 +3079,7 @@
         "road_noise_leq": {
           "value": 67.4,
           "score": 64.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3101,7 +3101,7 @@
         "pm25_annual_avg": {
           "value": 5.1339,
           "score": 43.0,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3164,7 +3164,7 @@
         "road_noise_leq": {
           "value": 66.8,
           "score": 79.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3186,7 +3186,7 @@
         "pm25_annual_avg": {
           "value": 4.8009,
           "score": 61.6,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3249,7 +3249,7 @@
         "road_noise_leq": {
           "value": 65.5,
           "score": 91.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3271,7 +3271,7 @@
         "pm25_annual_avg": {
           "value": 4.697,
           "score": 73.3,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3334,7 +3334,7 @@
         "road_noise_leq": {
           "value": 67.3,
           "score": 68.9,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3356,7 +3356,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -3419,7 +3419,7 @@
         "road_noise_leq": {
           "value": 67.7,
           "score": 57.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3441,7 +3441,7 @@
         "pm25_annual_avg": {
           "value": 5.1069,
           "score": 47.7,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3504,7 +3504,7 @@
         "road_noise_leq": {
           "value": 67.6,
           "score": 59.4,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3526,7 +3526,7 @@
         "pm25_annual_avg": {
           "value": 4.3272,
           "score": 91.9,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3589,7 +3589,7 @@
         "road_noise_leq": {
           "value": 67.4,
           "score": 64.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3611,7 +3611,7 @@
         "pm25_annual_avg": {
           "value": 5.1958,
           "score": 33.7,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3674,7 +3674,7 @@
         "road_noise_leq": {
           "value": 70.4,
           "score": 2.8,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3696,7 +3696,7 @@
         "pm25_annual_avg": {
           "value": 4.8943,
           "score": 57.0,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3759,7 +3759,7 @@
         "road_noise_leq": {
           "value": 65.3,
           "score": 93.4,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3781,7 +3781,7 @@
         "pm25_annual_avg": {
           "value": 5.0453,
           "score": 52.3,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3844,7 +3844,7 @@
         "road_noise_leq": {
           "value": 68.6,
           "score": 35.8,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3866,7 +3866,7 @@
         "pm25_annual_avg": {
           "value": 5.329,
           "score": 22.1,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -3929,7 +3929,7 @@
         "road_noise_leq": {
           "value": 68.7,
           "score": 30.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -3951,7 +3951,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -4014,7 +4014,7 @@
         "road_noise_leq": {
           "value": 67.8,
           "score": 54.7,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4036,7 +4036,7 @@
         "pm25_annual_avg": {
           "value": 4.8324,
           "score": 59.3,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -4099,7 +4099,7 @@
         "road_noise_leq": {
           "value": 66.9,
           "score": 75.5,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4121,7 +4121,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -4184,7 +4184,7 @@
         "road_noise_leq": {
           "value": 67.1,
           "score": 71.7,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4206,7 +4206,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -4269,7 +4269,7 @@
         "road_noise_leq": {
           "value": 67.4,
           "score": 64.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4291,7 +4291,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -4354,7 +4354,7 @@
         "road_noise_leq": {
           "value": 66.8,
           "score": 79.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4376,7 +4376,7 @@
         "pm25_annual_avg": {
           "value": 4.3976,
           "score": 84.9,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -4439,7 +4439,7 @@
         "road_noise_leq": {
           "value": 66.6,
           "score": 86.8,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4461,7 +4461,7 @@
         "pm25_annual_avg": {
           "value": 5.0427,
           "score": 54.7,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "ok"
         },
@@ -4524,7 +4524,7 @@
         "road_noise_leq": {
           "value": 65.2,
           "score": 95.3,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4546,7 +4546,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -4609,7 +4609,7 @@
         "road_noise_leq": {
           "value": 63.0,
           "score": 99.1,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4631,7 +4631,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },
@@ -4698,7 +4698,7 @@
         "road_noise_leq": {
           "value": 64.5,
           "score": 97.2,
-          "source": "D-quiet-02",
+          "source": "D-quiet-01",
           "unit": "dB",
           "status": "ok"
         },
@@ -4720,7 +4720,7 @@
         "pm25_annual_avg": {
           "value": null,
           "score": null,
-          "source": "D-quiet-01",
+          "source": "D-refresh-03",
           "unit": "μg/m3",
           "status": "no_data"
         },

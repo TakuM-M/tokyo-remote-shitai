@@ -1,15 +1,16 @@
 # 使用データ一覧（全11件）
 ## 1. 一覧
 
-判定は利用可否。◎ カタログ掲載でそのまま使える ／ ○ カタログ掲載だが個別条件あり ／ △ 都庁以外の自治体データで個別確認が要る。
-判定の根拠と個別条件の中身は [data_license_check.md](./data_license_check.md) の3節にある。
+判定は利用可否。◎ カタログ掲載でそのまま使える ／ ○ カタログ掲載だが個別条件あり（D-refresh-01 は注意事項PDFの確認が要る）。
+判定の根拠は [data_license_check.md](./data_license_check.md) を参照。
+「用途」はその出典を使っている軸で、IDのジャンル部分と一致する。
 
 | # | データセット名称 | 出所 | 用途 | 形式 | 判定 | 状態 |
 |---|---|---|---|---|---|---|
-| D-quiet-01 | PM2.5(微小粒子状物質)モニタリングデータ(1分値) | 環境局 | しずけさ | CSV/ZIP | ◎ | 使用 |
-| D-quiet-02 | 自動車交通騒音調査結果 | 環境局 | しずけさ | CSV | ◎ | 使用（平成20〜25年度の6年分） |
+| D-quiet-01 | 自動車交通騒音調査結果 | 環境局 | しずけさ | CSV | ◎ | 使用（平成20〜25年度の6年分） |
 | D-refresh-01 | 緑のオープンデータ（GISデータ） | 都市整備局 | いきぬき | SHP | ○ | 使用 |
 | D-refresh-02 | 土地利用細分メッシュ（国土数値情報 L03-b） | 国土交通省 | いきぬき | SHP | ◎ | 使用（平成28年度版） |
+| D-refresh-03 | PM2.5(微小粒子状物質)モニタリングデータ(1分値) | 環境局 | いきぬき | CSV/ZIP | ◎ | 使用 |
 | D-workspace-01 | 「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ | 産業労働局 | しごとば | CSV | ◎ | 使用 |
 | D-workspace-02 | 施設関連情報_図書館 | 教育庁 | しごとば | CSV | ◎ | 使用 |
 | D-cost-01 | 地価公示（東京都分） | 財務局 | コスト | CSV | ◎ | 使用 | 
@@ -24,16 +25,16 @@
 
 | # | key | カタログ | 実ファイル |
 |---|---|---|---|
-| D-quiet-01 | stations | [t000009d2000000067](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d2000000067) | `.../taikikankyo5g/catalogdata/mast/130001_tokyo_airpollution_station_master.csv` |
-| D-quiet-01 | pm25_202506 … pm25_202605（12件） | 〃 | `.../taikikankyo5g/catalogdata/data/130001_tokyo_airpollution_PM2.5_YYYYMM.zip` |
-| D-quiet-02 | h25 | [t000009d1900000003](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000003) | `.../kankyo/vehicle/noise/H25/H25_kekka.csv` |
-| D-quiet-02 | h24 | [t000009d1900000004](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000004) | `.../kankyo/vehicle/noise/H24/H24_kekka.csv` |
-| D-quiet-02 | h23 | [t000009d1900000005](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000005) | `.../kankyo/vehicle/noise/H23/H23_kekka.csv` |
-| D-quiet-02 | h22 | [t000009d1900000006](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000006) | `.../kankyo/vehicle/noise/H22/H22_kekka2.csv`（この年度だけ `kekka2`） |
-| D-quiet-02 | h21 | [t000009d1900000007](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000007) | `.../kankyo/vehicle/noise/H21/H21_kekka.csv` |
-| D-quiet-02 | h20 | [t000009d1900000008](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000008) | `.../kankyo/vehicle/noise/H20/H20_kekka.csv` |
+| D-quiet-01 | h25 | [t000009d1900000003](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000003) | `.../kankyo/vehicle/noise/H25/H25_kekka.csv` |
+| D-quiet-01 | h24 | [t000009d1900000004](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000004) | `.../kankyo/vehicle/noise/H24/H24_kekka.csv` |
+| D-quiet-01 | h23 | [t000009d1900000005](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000005) | `.../kankyo/vehicle/noise/H23/H23_kekka.csv` |
+| D-quiet-01 | h22 | [t000009d1900000006](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000006) | `.../kankyo/vehicle/noise/H22/H22_kekka2.csv`（この年度だけ `kekka2`） |
+| D-quiet-01 | h21 | [t000009d1900000007](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000007) | `.../kankyo/vehicle/noise/H21/H21_kekka.csv` |
+| D-quiet-01 | h20 | [t000009d1900000008](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000008) | `.../kankyo/vehicle/noise/H20/H20_kekka.csv` |
 | D-refresh-01 | notice / parks | [t000008d2000000024](https://catalog.data.metro.tokyo.lg.jp/dataset/t000008d2000000024) | `.../toshiseibi/green_chuui.pdf`、`01_kouenryokuchi.zip` |
 | D-refresh-02 | mesh_5339 / mesh_5338 | [国土数値情報 L03-b](https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-L03-b.html) | `.../ksj/gml/data/L03-b/L03-b-16/L03-b-16_5339-jgd_GML.zip`、`…_5338-jgd_GML.zip` |
+| D-refresh-03 | stations | [t000009d2000000067](https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d2000000067) | `.../taikikankyo5g/catalogdata/mast/130001_tokyo_airpollution_station_master.csv` |
+| D-refresh-03 | pm25_202506 … pm25_202605（12件） | 〃 | `.../taikikankyo5g/catalogdata/data/130001_tokyo_airpollution_PM2.5_YYYYMM.zip` |
 | D-workspace-01 | offices | [t000012d0000000019](https://catalog.data.metro.tokyo.lg.jp/dataset/t000012d0000000019) | `.../sangyouroudou/tokyo-telework2401.csv` |
 | D-workspace-02 | libraries | [t000021d2000000003](https://catalog.data.metro.tokyo.lg.jp/dataset/t000021d2000000003) | `.../kyouiku/R3/skshubetu_4.csv` |
 | D-cost-01 | points | [t000004d0000000004](https://catalog.data.metro.tokyo.lg.jp/dataset/t000004d0000000004) | `.../documents/d/zaimu/12_R8kouji_chiten_opendata` |
@@ -49,10 +50,10 @@
 
 | # | 自治体の特定 | 文字コード | 年次・時点 | 構造 |
 |---|---|---|---|---|
-| D-quiet-01 | コード列（局マスタ） | CP932 | 2025年6月〜2026年5月 | 局マスタCSV（ヘッダ行なし。局コード／局名／市区町村コード／緯度経度）と、1分値の月別ZIP12か月分。既定の配布ZIP `…_PM2.5.zip` は直近50日分しか入らず年平均値が作れないため、`…_PM2.5_YYYYMM.zip` を12か月ぶん取る。1分値CSVはヘッダ行なしの8列（局コード／項目コード／年／月／日／時／分／値）で欠測は「欠測」。1か月あたり8ファイル・約350万行。展開すると12か月で1GBを超えるので ZIP のまま読む（`Resource.extract=False`） |
-| D-quiet-02 | 住所（測定地点） | CP932 | 平成20〜25年度 | 1年度1CSV・1行1測定地点で約600地点。住所／緯度経度／道路名／道路種別／車線数／昼間・夜間の等価騒音レベル(Leq)。列名は年度で揺れる（「測定地点の住所」/「測定地点住所」など）。調査地点が年度ごとに入れ替わるため単年では欠測の自治体が出る。6年分で53自治体すべてが埋まる。1年度あたりの地点数は自治体によって1〜40件と偏るので、単年ではなく6年度分の地点をまとめて平均する |
+| D-quiet-01 | 住所（測定地点） | CP932 | 平成20〜25年度 | 1年度1CSV・1行1測定地点で約600地点。住所／緯度経度／道路名／道路種別／車線数／昼間・夜間の等価騒音レベル(Leq)。列名は年度で揺れる（「測定地点の住所」/「測定地点住所」など）。調査地点が年度ごとに入れ替わるため単年では欠測の自治体が出る。6年分で53自治体すべてが埋まる。1年度あたりの地点数は自治体によって1〜40件と偏るので、単年ではなく6年度分の地点をまとめて平均する |
 | D-refresh-01 | 空間結合 | — | 令和8年2月2日時点 | 公園・緑地等のシェープファイル14レイヤ（うち1つは点データ）。ZIP内は日本語ディレクトリ。座標系は EPSG:6677 で単位はメートル。属性の「面積m2」は調書ベースの数値でポリゴン面積と乖離し、欠損は -9999。同梱の樹林地3レイヤ（`03_jurinchi.zip`）は市街地の樹林のみで山林を含まないため使わない |
 | D-refresh-02 | 空間結合（メッシュ重心） | CP932（属性名） | 平成28年度 | シェープファイル2枚（1次メッシュ 5339 / 5338）で計約92万ポリゴン。1ポリゴン＝100mメッシュ（3次メッシュの1/10細分）で、属性は メッシュ／土地利用種／撮影年月日 の3列。座標系は EPSG:4612。属性名が CP932 のまま格納されており `encoding="cp932"` の指定が要る。土地利用種は12区分（田0100／その他の農用地0200／森林0500／荒地0600／建物用地0700／道路0901／鉄道0902／その他の用地1000／河川地及び湖沼1100／海浜1400／海水域1500／ゴルフ場1600）。最新は令和3年度版だが都市地域限定の `-u` 版しかなく、都市計画区域外の奥多摩町・檜原村が落ちるため通常版の最終年次を使う |
+| D-refresh-03 | コード列（局マスタ） | CP932 | 2025年6月〜2026年5月 | 局マスタCSV（ヘッダ行なし。局コード／局名／市区町村コード／緯度経度）と、1分値の月別ZIP12か月分。既定の配布ZIP `…_PM2.5.zip` は直近50日分しか入らず年平均値が作れないため、`…_PM2.5_YYYYMM.zip` を12か月ぶん取る。1分値CSVはヘッダ行なしの8列（局コード／項目コード／年／月／日／時／分／値）で欠測は「欠測」。1か月あたり8ファイル・約350万行。展開すると12か月で1GBを超えるので ZIP のまま読む（`Resource.extract=False`） |
 | D-workspace-01 | コード列（区市町村コード） | UTF-8 BOM | — | CSV。5桁コードが入るので空間結合は不要 |
 | D-workspace-02 | 自治体名（区市町村名） | CP932 | 令和3年3月（カタログ登録時点） | CSV・1行1施設で417件。区市町村名／施設区分／施設名／所在地／緯度経度／電話番号。島しょ部を含む58自治体が載り、本土53自治体はすべて1館以上ある。末尾に注記の行が1行入る |
 | D-cost-01 | コード列（都道府県市区町村コード） | CP932 | 令和8年地価公示 | CSV。1行目が表題でヘッダは2行目。用途は「標準地番号（用途）」で区分し、住宅地は 0 |

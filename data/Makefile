@@ -1,8 +1,8 @@
 # src/ をimportパスに通し、サブパッケージをモジュールとして実行する
 PY := PYTHONPATH=src uv run python
 
-.PHONY: setup ingest normalize spatial-join impute score all demo datasets \
-	inventory missing stats validate report lint test clean clean-all
+.PHONY: setup ingest ingest-heavy normalize spatial-join impute score all demo \
+	missing lint test clean clean-all
 
 setup:
 	uv sync
@@ -38,13 +38,9 @@ demo:
 
 ## ---- 調査用（成果物の生成には関与しない） ----
 
-## 指標×自治体の欠損レポート
+## 指標×自治体の欠損レポート → analysis/missing_report.html, missing_matrix.csv
 missing:
 	$(PY) -m analysis.missing_report
-
-## 上記の結果を1枚のHTMLにまとめて analysis/report.html に書き出す
-report:
-	$(PY) -m analysis.html
 
 ## 静的チェック（lint ルールと整形崩れの両方）
 lint:

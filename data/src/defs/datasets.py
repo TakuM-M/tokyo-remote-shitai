@@ -82,7 +82,7 @@ class Dataset:
         }
 
 
-# PM2.5(D-quiet-01)の集計対象期間。既定のZIPは直近50日分しか入っておらず、
+# PM2.5(D-refresh-03)の集計対象期間。既定のZIPは直近50日分しか入っておらず、
 # それだけでは季節変動を含む年平均値にならないため、月別ZIPを12か月分そろえる。
 # 2025年6月〜2026年5月。ちょうど1年ぶんにして、どの月も1回だけ入るようにしている。
 PM25_MONTHS: tuple[str, ...] = (
@@ -104,7 +104,7 @@ _PM25_BASE = "https://www.taiki.kankyo.metro.tokyo.lg.jp/taikikankyo5g/catalogda
 
 
 def pm25_resource_key(month: str) -> str:
-    """`PM25_MONTHS` の要素から D-quiet-01 のリソースキーを作る。"""
+    """`PM25_MONTHS` の要素から D-refresh-03 のリソースキーを作る。"""
     return f"pm25_{month}"
 
 
@@ -125,32 +125,6 @@ _DATASETS: tuple[Dataset, ...] = (
     # しずけさ
     Dataset(
         id="D-quiet-01",
-        name="PM2.5(微小粒子状物質)モニタリングデータ(1分値)",
-        org="東京都環境局",
-        # IDは しずけさ 用に採ったときの名残。PM2.5は「外で過ごすときの空気の質」として
-        # いきぬき軸で使っている。IDを変えると raw/ と interim/ のパスまで動くので据え置く。
-        axes=("refresh",),
-        format="CSV/ZIP",
-        catalog_id="t000009d2000000067",
-        license=LICENSE_CC_BY,
-        updated_at="2025年6月〜2026年5月（月別ZIP12か月分）",
-        resources=(
-            Resource(
-                key="stations",
-                url="https://www.taiki.kankyo.metro.tokyo.lg.jp/taikikankyo5g/catalogdata/mast/130001_tokyo_airpollution_station_master.csv",
-                filename="stations.csv",
-                notes="局コード・局名・市区町村コード(5桁)・緯度経度。ヘッダ行なし。",
-            ),
-            *_pm25_monthly_resources(),
-        ),
-        notes=(
-            "公開されているのは1分値の速報値のみ。既定の配布ZIPは直近50日分しか入らないため、"
-            "月別ZIP（…_PM2.5_YYYYMM.zip）を12か月分取得して年平均値を組み立てている。"
-            "測定局は全自治体にはないため、局のない自治体は近傍局で補完する（補完した旨を画面に出す）。"
-        ),
-    ),
-    Dataset(
-        id="D-quiet-02",
         name="自動車交通騒音調査結果",
         org="東京都環境局",
         axes=("quiet",),
@@ -303,6 +277,31 @@ _DATASETS: tuple[Dataset, ...] = (
             "水面を含めたことで差は縮んだが、みどり率がさらに含む公園区域はこちらでは"
             "公園面積比が別に持つ。区部に残る差はメッシュの分解能によるもので、"
             "みどり率の代用にはならない。"
+        ),
+    ),
+    Dataset(
+        id="D-refresh-03",
+        name="PM2.5(微小粒子状物質)モニタリングデータ(1分値)",
+        org="東京都環境局",
+        axes=("refresh",),
+        format="CSV/ZIP",
+        catalog_id="t000009d2000000067",
+        license=LICENSE_CC_BY,
+        updated_at="2025年6月〜2026年5月（月別ZIP12か月分）",
+        resources=(
+            Resource(
+                key="stations",
+                url="https://www.taiki.kankyo.metro.tokyo.lg.jp/taikikankyo5g/catalogdata/mast/130001_tokyo_airpollution_station_master.csv",
+                filename="stations.csv",
+                notes="局コード・局名・市区町村コード(5桁)・緯度経度。ヘッダ行なし。",
+            ),
+            *_pm25_monthly_resources(),
+        ),
+        notes=(
+            "外に出て過ごすときの空気の質として、いきぬき軸で使う。"
+            "公開されているのは1分値の速報値のみ。既定の配布ZIPは直近50日分しか入らないため、"
+            "月別ZIP（…_PM2.5_YYYYMM.zip）を12か月分取得して年平均値を組み立てている。"
+            "測定局は全自治体にはないため、局のない自治体は近傍局で補完する（補完した旨を画面に出す）。"
         ),
     ),
     # しごとば
