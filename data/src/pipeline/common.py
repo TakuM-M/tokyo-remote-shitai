@@ -8,7 +8,10 @@
 from __future__ import annotations
 
 import logging
+import zipfile
+from collections.abc import Iterator
 from pathlib import Path
+from typing import IO
 
 import pandas as pd
 
@@ -43,6 +46,23 @@ def extracted_dir(dataset_id: str, key: str) -> Path:
     if not out.is_dir():
         raise FileNotFoundError(f"{out} がありません。先に ingest を実行してください。")
     return out
+
+
+def iter_zip_members(dataset_id: str, key: str, suffix: str = ".csv") -> Iterator[IO[bytes]]:
+    """展開せずに置いている zip（`Resource.extract=False`）の中身を1件ずつ開く。
+
+    使う列がごく一部で、展開すると桁違いに嵩むデータ向け。読む順を安定させるため
+    格納名でソートして返す。
+    """
+    path = raw_path(dataset_id, key)
+    with zipfile.ZipFile(path) as z:
+        names = sorted(n for n in z.namelist() if n.lower().endswith(suffix))
+        if not names:
+            raise FileNotFoundError(f"{path} に {suffix} が入っていません。")
+        for name in names:
+            logger.debug("zip内を読む: %s!%s", path.name, name)
+            with z.open(name) as fh:
+                yield fh
 
 
 # ---------------------------------------------------------------- 出力

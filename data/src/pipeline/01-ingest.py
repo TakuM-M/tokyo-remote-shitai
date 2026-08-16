@@ -62,7 +62,7 @@ def fetch(ds: Dataset, res: Resource) -> Path:
     )
 
     # xlsx なども zip なので、拡張子で本当の配布形式を見分ける
-    if dest.suffix.lower() == ".zip" and zipfile.is_zipfile(dest):
+    if res.extract and dest.suffix.lower() == ".zip" and zipfile.is_zipfile(dest):
         _extract_zip(ds, dest)
     return dest
 

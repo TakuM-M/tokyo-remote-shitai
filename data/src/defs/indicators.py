@@ -63,15 +63,15 @@ class Indicator:
 INDICATORS: tuple[Indicator, ...] = (
     # 軸1: しずけさ
     Indicator(
-        key="pm25_recent_avg",
+        key="pm25_annual_avg",
         label="PM2.5",
         axis="quiet",
         direction="lower_is_better",
         dataset_id="D-quiet-01",
         unit="μg/m3",
         definition=(
-            "大気測定局の1分値（直近50日の速報値）を局ごとに平均し、自治体内で平均。"
-            "原データは速報値のみで年平均値は作れないため、期間平均になる。"
+            "大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、"
+            "各月を等重みで平均した年平均値を自治体内で平均。"
         ),
     ),
     Indicator(

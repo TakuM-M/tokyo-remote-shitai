@@ -102,7 +102,7 @@
 #### 軸1: しずけさ（Quiet）
 | 指標 | 定義 | 出典 | 方向 | カバー |
 |---|---|---|---|---|
-| PM2.5 | 大気測定局の測定値（速報値）を自治体内で平均 | D-quiet-01 | 低いほど良 | 43/53 |
+| PM2.5 | 大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、各月を等重みで平均した年平均値を自治体内で平均 | D-quiet-01 | 低いほど良 | 43/53 |
 | 道路交通騒音 | 幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を自治体内で平均 | D-quiet-02 | 低いほど良 | 53/53 |
 
 #### 軸2: いきぬき（Refresh）
@@ -189,7 +189,7 @@
       },
       "indicators": {
         "satellite_office_count":   { "value": 55,   "per_10k": 1.58, "score": 96.2, "source": "D-workspace-01" },
-        "pm25_recent_avg":          { "value": 9.8,  "unit": "μg/m3", "score": 31.0, "source": "D-quiet-01" },
+        "pm25_annual_avg":          { "value": 9.8,  "unit": "μg/m3", "score": 31.0, "source": "D-quiet-01" },
         "land_price_residential":   { "value": 812000, "unit": "円/m2", "score": 8.4, "source": "D-cost-01" },
         "park_area":                { "value": 1181952, "unit": "m2", "per_km2": 64871.1, "score": 22.6, "source": "D-refresh-01" },
         "green_coverage_ratio":     { "value": 3.15, "unit": "%", "score": 14.8, "source": "D-refresh-02" }

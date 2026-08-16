@@ -36,6 +36,9 @@ class Resource:
     heavy: bool = False
     # 年度別に分かれて配布されるデータで、そのファイルが表す年度（西暦）
     year: int | None = None
+    # zip配布のうち、展開せず zip のまま読むもの。
+    # 展開後が巨大なわりに使う列がごく一部のデータで指定する（PM2.5の1分値）。
+    extract: bool = True
     notes: str = ""
 
 
@@ -79,6 +82,45 @@ class Dataset:
         }
 
 
+# PM2.5(D-quiet-01)の集計対象期間。既定のZIPは直近50日分しか入っておらず、
+# それだけでは季節変動を含む年平均値にならないため、月別ZIPを12か月分そろえる。
+# 2025年6月〜2026年5月。ちょうど1年ぶんにして、どの月も1回だけ入るようにしている。
+PM25_MONTHS: tuple[str, ...] = (
+    "202506",
+    "202507",
+    "202508",
+    "202509",
+    "202510",
+    "202511",
+    "202512",
+    "202601",
+    "202602",
+    "202603",
+    "202604",
+    "202605",
+)
+
+_PM25_BASE = "https://www.taiki.kankyo.metro.tokyo.lg.jp/taikikankyo5g/catalogdata/data/"
+
+
+def pm25_resource_key(month: str) -> str:
+    """`PM25_MONTHS` の要素から D-quiet-01 のリソースキーを作る。"""
+    return f"pm25_{month}"
+
+
+def _pm25_monthly_resources() -> tuple[Resource, ...]:
+    return tuple(
+        Resource(
+            key=pm25_resource_key(m),
+            url=f"{_PM25_BASE}130001_tokyo_airpollution_PM2.5_{m}.zip",
+            filename=f"pm25_1min_{m}.zip",
+            extract=False,
+            notes=f"{m[:4]}年{int(m[4:])}月分の1分値（1か月あたり約11MB）。",
+        )
+        for m in PM25_MONTHS
+    )
+
+
 _DATASETS: tuple[Dataset, ...] = (
     # しずけさ
     Dataset(
@@ -89,7 +131,7 @@ _DATASETS: tuple[Dataset, ...] = (
         format="CSV/ZIP",
         catalog_id="t000009d2000000067",
         license=LICENSE_CC_BY,
-        updated_at="直近50日分・日次更新",
+        updated_at="2025年6月〜2026年5月（月別ZIP12か月分）",
         resources=(
             Resource(
                 key="stations",
@@ -97,16 +139,11 @@ _DATASETS: tuple[Dataset, ...] = (
                 filename="stations.csv",
                 notes="局コード・局名・市区町村コード(5桁)・緯度経度。ヘッダ行なし。",
             ),
-            Resource(
-                key="pm25",
-                url="https://www.taiki.kankyo.metro.tokyo.lg.jp/taikikankyo5g/catalogdata/data/130001_tokyo_airpollution_PM2.5.zip",
-                filename="pm25_1min_recent50days.zip",
-                notes="速報値。月別ZIPは …_PM2.5_YYYYMM.zip で遡れる。",
-            ),
+            *_pm25_monthly_resources(),
         ),
         notes=(
-            "公開されているのは1分値の速報値のみで、年平均値はこのデータからは作れない。"
-            "直近50日平均か、月別ZIPを複数取得して期間平均をとる。"
+            "公開されているのは1分値の速報値のみ。既定の配布ZIPは直近50日分しか入らないため、"
+            "月別ZIP（…_PM2.5_YYYYMM.zip）を12か月分取得して年平均値を組み立てている。"
             "測定局は全自治体にはないため、局のない自治体は近傍局で補完する（補完した旨を画面に出す）。"
         ),
     ),

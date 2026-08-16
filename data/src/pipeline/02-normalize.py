@@ -12,7 +12,8 @@ from core import municipalities as muni
 from core.config import BASE_CSV, RAW_DIR, ensure_dirs, setup_logging
 from core.io_utils import ha_to_km2, parse_number, read_csv, write_interim_csv
 from defs import datasets
-from pipeline.common import IndicatorFrames, extracted_dir, raw_path, write_indicators
+from defs.datasets import PM25_MONTHS, pm25_resource_key
+from pipeline.common import IndicatorFrames, iter_zip_members, raw_path, write_indicators
 
 logger = logging.getLogger(__name__)
 
@@ -143,38 +144,90 @@ STATION_COLUMNS = (
 )
 PM25_COLUMNS = ("局コード", "項目コード", "年", "月", "日", "時", "分", "値")
 
+# 1分値は zip の中を直接読むため、Path 前提の文字コード自動判定（io_utils.read_csv）は
+# 使えない。中身は数字と「欠測」だけで、配布は CP932 固定。
+PM25_ENCODING = "cp932"
 
-def pm25_station_means() -> pd.DataFrame:
-    """1分値CSVから測定局ごとの平均濃度(μg/m3)を出す。
+# 月内の有効分数がこれを下回る局は、その月は動いていなかったとみなして年平均から外す。
+# 1か月は約4.3万分（=フル稼働）で、実データは 2万分以下 と 3.2万分以上 にはっきり割れる。
+# その谷にしきい値を置いているので、多少ずらしても結果は動かない。
+PM25_MIN_MINUTES_PER_MONTH = 30_000
 
-    - 公開されているのは直近50日分の速報値だけなので、年平均ではなく期間平均になる。
+# 年平均として認める最低月数。PM2.5は月平均で 3.4〜7.1μg/m3 と2倍動くため、
+# 欠測月が多い局の平均は「どの季節が欠けたか」で上下してしまう。
+# 実データでは 2か月欠けで +0.15μg/m3 程度、4か月（冬まるごと）欠けで +0.21μg/m3 ずれる。
+# 自治体間の開きが 4.2〜5.7μg/m3 なので、2か月欠けまでを許容範囲としている。
+PM25_MIN_MONTHS = 10
+
+
+def pm25_monthly_station_means() -> pd.DataFrame:
+    """月別ZIPを 局コード × 月 の平均濃度(μg/m3)にする。
+
     - 値が「欠測」の行は平均から除く（0では埋めない）。
     - 1分値は器差でわずかに負に振れることがあるが、平均すれば打ち消し合うので残す。
-    - 8ファイルで計800万行あるため、ファイルごとに局別の合計・件数まで畳んでから足す。
+    - 1か月あたり8ファイル・約350万行あるため、ファイルごとに局別の合計・件数まで
+      畳んでから足し合わせる。展開すると12か月で1GBを超えるので zip のまま読む。
     """
-    totals: pd.DataFrame | None = None
-    paths = sorted(extracted_dir("D-quiet-01", "pm25").glob("*.csv"))
-    if not paths:
-        raise FileNotFoundError("展開済みの1分値CSVがありません。先に ingest を実行してください。")
-    for path in paths:
-        raw = read_csv(path, header=None, names=PM25_COLUMNS, usecols=["局コード", "値"])
-        # 機械出力で表記ゆれが無く、欠損は「欠測」の1種類だけなので to_numeric で足りる
-        raw["_v"] = pd.to_numeric(raw["値"], errors="coerce")
-        part = raw.dropna(subset=["_v"]).groupby("局コード")["_v"].agg(["sum", "count"])
-        totals = part if totals is None else totals.add(part, fill_value=0)
+    months = []
+    for month in PM25_MONTHS:
+        totals: pd.DataFrame | None = None
+        for fh in iter_zip_members("D-quiet-01", pm25_resource_key(month)):
+            raw = pd.read_csv(
+                fh,
+                header=None,
+                names=PM25_COLUMNS,
+                usecols=["局コード", "値"],
+                dtype=str,
+                keep_default_na=False,
+                encoding=PM25_ENCODING,
+            )
+            # 機械出力で表記ゆれが無く、欠損は「欠測」の1種類だけなので to_numeric で足りる
+            raw["_v"] = pd.to_numeric(raw["値"], errors="coerce")
+            part = raw.dropna(subset=["_v"]).groupby("局コード")["_v"].agg(["sum", "count"])
+            totals = part if totals is None else totals.add(part, fill_value=0)
+        # zip が空なら iter_zip_members が投げるので、ここに来た時点で totals は埋まっている
+        assert totals is not None
+        frame = totals.rename(columns={"count": "minutes"}).reset_index()
+        frame["month"] = month
+        frame["pm25"] = frame["sum"] / frame["minutes"]
+        months.append(frame[["局コード", "month", "pm25", "minutes"]])
         logger.info(
-            "[D-quiet-01] %s: %d行中 有効 %d行", path.name, len(raw), int(part["count"].sum())
+            "[D-quiet-01] %s: %d局 / 有効 %.1f万分",
+            month,
+            len(frame),
+            frame["minutes"].sum() / 10_000,
         )
-    return (totals["sum"] / totals["count"]).rename("pm25").reset_index()
+    return pd.concat(months, ignore_index=True)
+
+
+def pm25_station_annual_means() -> pd.DataFrame:
+    """測定局ごとの年平均濃度(μg/m3)を出す。
+
+    月平均を出してから月を等重みで平均する。1分値をまとめて通期平均すると、
+    欠測の多い月ほど重みが軽くなり、季節変動の入り方が局ごとにばらつくため。
+    測っていた月が `PM25_MIN_MONTHS` に満たない局は、年平均とは呼べないので落とす
+    （その結果どの局も無くなった自治体は、0で埋めずに no_data とする）。
+    """
+    monthly = pm25_monthly_station_means()
+    measured = monthly[monthly["minutes"] >= PM25_MIN_MINUTES_PER_MONTH]
+    by_station = measured.groupby("局コード")["pm25"].agg(["mean", "count"])
+    enough = by_station[by_station["count"] >= PM25_MIN_MONTHS]
+    logger.info(
+        "[D-quiet-01] 局別の年平均: %d局中 %d局が%dか月以上そろった",
+        len(by_station),
+        len(enough),
+        PM25_MIN_MONTHS,
+    )
+    return enough["mean"].rename("pm25").reset_index()
 
 
 @handler("D-quiet-01")
 def normalize_pm25() -> IndicatorFrames:
-    """大気測定局の1分値を局ごとに平均し、さらに自治体ごとに平均する。"""
+    """大気測定局の1分値を局ごとに年平均し、さらに自治体ごとに平均する。"""
     master = read_csv(raw_path("D-quiet-01", "stations"), header=None, names=STATION_COLUMNS)
-    stations = master.merge(pm25_station_means(), on="局コード", how="inner")
-    logger.info("[D-quiet-01] 測定局 %d局のうち PM2.5 の値がある局: %d", len(master), len(stations))
-    return {"pm25_recent_avg": mean_by_municipality(stations, "pm25")}
+    stations = master.merge(pm25_station_annual_means(), on="局コード", how="inner")
+    logger.info("[D-quiet-01] 測定局 %d局のうち年平均値を作れた局: %d", len(master), len(stations))
+    return {"pm25_annual_avg": mean_by_municipality(stations, "pm25")}
 
 
 # 自動車交通騒音調査（D-quiet-02）は1年度1CSV。年度によって列名が揺れる
