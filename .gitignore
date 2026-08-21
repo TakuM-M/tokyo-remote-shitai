@@ -1,0 +1,25 @@
+.claude/
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.ruff_cache/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# パイプラインの中間生成物（生データと中間データはコミットしない）
+data/raw/*
+!data/raw/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+
+# processed/ は成果物なのでコミットする（サンプルを除く）
+data/processed/municipalities.sample.json
+
+# 調査レポート（make report でいつでも作り直せる）
+data/analysis/

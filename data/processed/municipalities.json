@@ -1,0 +1,4773 @@
+{
+  "meta": {
+    "generated_at": "2026-08-16",
+    "version": "0.2",
+    "axes": [
+      {
+        "key": "quiet",
+        "label": "しずけさ",
+        "description": "道路交通騒音の小ささ",
+        "indicators": [
+          {
+            "key": "road_noise_leq",
+            "label": "道路交通騒音",
+            "unit": "dB",
+            "direction": "lower_is_better",
+            "definition": "幹線道路沿いの測定地点の昼間等価騒音レベル(Leq)を、平成20〜25年度の全地点をまとめて自治体内で平均。",
+            "source": "D-quiet-01",
+            "weight": 1.0,
+            "reference_only": false
+          }
+        ]
+      },
+      {
+        "key": "refresh",
+        "label": "いきぬき",
+        "description": "緑と水辺の多さ・大気のきれいさ",
+        "indicators": [
+          {
+            "key": "park_area",
+            "label": "公園面積比",
+            "unit": "m2",
+            "direction": "higher_is_better",
+            "definition": "公園緑地のポリゴン面積 ÷ 総面積。海上公園は開園区域のみ、計画決定区域・予定地・霊園・葬儀所は含めない。",
+            "source": "D-refresh-01",
+            "weight": 0.2,
+            "reference_only": false
+          },
+          {
+            "key": "green_coverage_ratio",
+            "label": "緑・水辺率",
+            "unit": "%",
+            "direction": "higher_is_better",
+            "definition": "土地利用細分メッシュ（100m）のうち田・その他の農用地・森林・荒地・河川地及び湖沼の面積 ÷ 海水域を除く全メッシュ面積。",
+            "source": "D-refresh-02",
+            "weight": 0.5,
+            "reference_only": false
+          },
+          {
+            "key": "pm25_annual_avg",
+            "label": "PM2.5",
+            "unit": "μg/m3",
+            "direction": "lower_is_better",
+            "definition": "大気測定局の1分値（2025年6月〜2026年5月）を局ごとに月平均し、各月を等重みで平均した年平均値を自治体内で平均。",
+            "source": "D-refresh-03",
+            "weight": 0.3,
+            "reference_only": false
+          }
+        ]
+      },
+      {
+        "key": "workspace",
+        "label": "しごとば",
+        "description": "家以外で作業できる場所の多さ",
+        "indicators": [
+          {
+            "key": "satellite_office_count",
+            "label": "サテライトオフィス",
+            "unit": "件",
+            "direction": "higher_is_better",
+            "definition": "TOKYOテレワークアプリ掲載施設数 ÷ 総面積(km2)。",
+            "source": "D-workspace-01",
+            "weight": 0.6,
+            "reference_only": false
+          },
+          {
+            "key": "library_count",
+            "label": "図書館",
+            "unit": "件",
+            "direction": "higher_is_better",
+            "definition": "都内の公立図書館数 ÷ 総面積(km2)。",
+            "source": "D-workspace-02",
+            "weight": 0.4,
+            "reference_only": false
+          }
+        ]
+      },
+      {
+        "key": "cost",
+        "label": "くらしのコスト",
+        "description": "住居費の負担の軽さ",
+        "indicators": [
+          {
+            "key": "land_price_residential",
+            "label": "地価水準",
+            "unit": "円/m2",
+            "direction": "lower_is_better",
+            "definition": "地価公示（用途:住宅地）の自治体内平均㎡単価。",
+            "source": "D-cost-01",
+            "weight": 1.0,
+            "reference_only": false
+          }
+        ]
+      },
+      {
+        "key": "community",
+        "label": "つながり",
+        "description": "地域活動やNPOなど人とつながる機会",
+        "indicators": [
+          {
+            "key": "npo_count",
+            "label": "NPO密度",
+            "unit": "件",
+            "direction": "higher_is_better",
+            "definition": "認証NPO法人数 ÷ 人口1万人。人口の少ない自治体は全体の中央値に寄せて補正。",
+            "source": "D-community-01",
+            "weight": 1.0,
+            "reference_only": false
+          },
+          {
+            "key": "social_education_program_count",
+            "label": "社会教育事業",
+            "unit": "件",
+            "direction": "higher_is_better",
+            "definition": "社会教育の学級・講座・事業の年間開催数 ÷ 人口1万人。人口の少ない自治体は全体の中央値に寄せて補正。",
+            "source": "D-community-02",
+            "weight": 1.0,
+            "reference_only": false
+          }
+        ]
+      }
+    ],
+    "default_weights": {
+      "quiet": 1.0,
+      "refresh": 1.0,
+      "workspace": 1.0,
+      "cost": 1.0,
+      "community": 1.0
+    },
+    "presets": [
+      {
+        "key": "full_remote",
+        "label": "フルリモート集中型",
+        "weights": {
+          "quiet": 2.0,
+          "refresh": 1.5,
+          "workspace": 1.5,
+          "cost": 1.0,
+          "community": 0.5
+        }
+      },
+      {
+        "key": "nature",
+        "label": "移住検討・自然重視",
+        "weights": {
+          "quiet": 1.5,
+          "refresh": 2.0,
+          "workspace": 0.8,
+          "cost": 1.5,
+          "community": 1.0
+        }
+      },
+      {
+        "key": "community",
+        "label": "コミュニティ重視",
+        "weights": {
+          "quiet": 1.0,
+          "refresh": 1.0,
+          "workspace": 1.5,
+          "cost": 1.0,
+          "community": 2.0
+        }
+      }
+    ],
+    "sources": [
+      {
+        "id": "D-quiet-01",
+        "name": "自動車交通騒音調査結果",
+        "org": "東京都環境局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d1900000003",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "平成20〜25年度（2008〜2013年度）",
+        "notes": "幹線道路沿いの測定地点ごとに昼間・夜間の等価騒音レベル(Leq)が入る。住所列の先頭が自治体名なので空間結合は不要。1年度あたり約600地点だが調査地点は年度ごとに入れ替わり、単年では測定のない自治体が出る（平成25年度は檜原村が欠測）。6年分を合わせると53自治体すべてが埋まるため、自治体ごとに6年度分の地点をまとめて平均する。単年だと1自治体あたりの地点数が1〜40件と偏り、その年に測った道路がそのまま値になってしまうため（奥多摩町は平成25年度の4地点で68.8dB、6年度13地点では64.5dB）。文字コードは CP932。"
+      },
+      {
+        "id": "D-refresh-01",
+        "name": "緑のオープンデータ（GISデータ）",
+        "org": "東京都都市整備局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000008d2000000024",
+        "license": "東京都オープンデータ利用規約（個別の注意事項あり）",
+        "updated_at": "令和8年2月2日時点",
+        "notes": "本土部のみで島しょ部は欠損。注意事項PDFの制限は精度に関するもので二次利用は妨げないが、「宅地化農地」「市街化調整区域内農地」だけは東京都地形図（国土地理院承認）由来のため別途手続きが要る。この2レイヤは使わない。同梱の樹林地（03_jurinchi.zip・約474MB）も使わない。市街地の樹林だけで山林を含まず（檜原村0.01km2・奥多摩町0.01km2）、緑の総量は D-refresh-02 の緑・水辺率で測るため。公園側は海上公園の3レイヤが同じ公園を重複収録し水域も含むので開園区域のみを使い、計画決定区域・予定地・霊園・葬儀所・点データは外す。檜原村は都市計画区域外で公園調書に載らず、公園レイヤに1件も無い（値は0でなく欠損）。"
+      },
+      {
+        "id": "D-refresh-02",
+        "name": "土地利用細分メッシュ（国土数値情報 L03-b）",
+        "org": "国土交通省 国土数値情報ダウンロードサイト",
+        "url": "https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-L03-b.html",
+        "license": "国土数値情報 利用約款（公共データ利用規約 PDL1.0）",
+        "updated_at": "平成28年度（2016年度）",
+        "notes": "100mメッシュ（3次メッシュの1/10細分）1つが1ポリゴンで、土地利用種のコードを持つ。2次メッシュコードは 上2桁=緯度×1.5・下2桁=経度-100 で、都本土部（東経138.94〜139.92）に必要なのは 5339 と 5338 の2枚。1枚あたり約46万ポリゴン。CRSは EPSG:4612（JGD2000）。最新は令和3年度版だが、そちらは都市地域を対象にした -u 版しか無く、都市計画区域外の奥多摩町・檜原村が落ちる。山林を数えるのが目的なので、全国をカバーする通常版の最終年次である平成28年度版を使う。属性名が CP932 のまま格納されており、既定の読み方だと化ける（列順は メッシュ, 土地利用種, 撮影年月日）。緑とみなすのは 田(0100)・その他の農用地(0200)・森林(0500)・荒地(0600)・河川地及び湖沼(1100) の5種。川辺・湖畔は息抜きに行ける場所なので水面も入れる。ゴルフ場(1600) は私有地で立ち入れず気分転換の場にならないので含めない。【限界1】100mメッシュに分類を1つだけ割り当てる形式のため、市街地の街路樹・庭・社寺林・街区公園は建物用地メッシュに吸収されて消え、区部の緑が構造的に過小評価される。実測でも23区は0.88%（豊島区）〜19.91%（千代田区）に収まり、拾えているのは皇居・明治神宮のようなまとまった緑と大きな河川だけ。区部の解像度は公園面積比が担う。【限界2】面積加重した値は区部8.1%・多摩部57.6%で、東京都公表の「みどり率」（区部24.0%・多摩部67.4%）とは定義も分解能も異なる。水面を含めたことで差は縮んだが、みどり率がさらに含む公園区域はこちらでは公園面積比が別に持つ。区部に残る差はメッシュの分解能によるもので、みどり率の代用にはならない。"
+      },
+      {
+        "id": "D-refresh-03",
+        "name": "PM2.5(微小粒子状物質)モニタリングデータ(1分値)",
+        "org": "東京都環境局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000009d2000000067",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "2025年6月〜2026年5月（月別ZIP12か月分）",
+        "notes": "外に出て過ごすときの空気の質として、いきぬき軸で使う。公開されているのは1分値の速報値のみ。既定の配布ZIPは直近50日分しか入らないため、月別ZIP（…_PM2.5_YYYYMM.zip）を12か月分取得して年平均値を組み立てている。測定局は全自治体にはないため、局のない自治体は近傍局で補完する（補完した旨を画面に出す）。"
+      },
+      {
+        "id": "D-workspace-01",
+        "name": "「TOKYOテレワークアプリ」掲載サテライトオフィス一覧データ",
+        "org": "東京都産業労働局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000012d0000000019",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": null,
+        "notes": "「区市町村コード」列に5桁コードが入っているので空間結合は不要。UTF-8 BOM付き。掲載許諾済みの施設のみ収録のため網羅性に限界がある。その旨を画面に明記する。"
+      },
+      {
+        "id": "D-workspace-02",
+        "name": "施設関連情報_図書館",
+        "org": "東京都教育庁",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000021d2000000003",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "令和3年3月（カタログ登録時点）",
+        "notes": "都内の公立図書館一覧。「区市町村名」列があるので空間結合は不要。文字コードは CP932。島しょ部を含む58自治体が載り、本土53自治体はすべて1館以上ある（最少は狛江市・檜原村の1館、最多は世田谷区の18館）。末尾に注記の行が1行あるが、自治体名が空なのでコード解決の段階で落ちる。同名のデータセットがカタログに2件あり、もう一方（t000021d2000000019）は無関係な特別支援教育の統計CSVが同じデータセットに混在している。図書館CSV1件だけを持つこちらを使う。更新頻度は「随時」だが、リソースの登録は令和3年3月から動いていない。"
+      },
+      {
+        "id": "D-cost-01",
+        "name": "地価公示（東京都分）",
+        "org": "東京都財務局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000004d0000000004",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "令和8年地価公示",
+        "notes": "1行目が表題で、ヘッダは2行目。「都道府県市区町村コード」に5桁コードが入る。用途は「標準地番号（用途）」で区分され、住宅地は 0。文字コードは CP932。"
+      },
+      {
+        "id": "D-community-01",
+        "name": "特定非営利活動法人（ＮＰＯ法人）情報",
+        "org": "東京都生活文化スポーツ局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t313360d0000000052",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "月次更新",
+        "notes": "認証NPO法人 約9,300件。「主たる事務所」の住所から自治体を判定する。1行目が表題、2行目がヘッダで、ヘッダのセルに改行が入る。文字コードは CP932。表題行の日付表記は更新されていないので、鮮度の判断には使わない。"
+      },
+      {
+        "id": "D-community-02",
+        "name": "東京都統計年鑑　令和5年　17　教育・文化・スポーツ",
+        "org": "東京都総務局",
+        "url": "https://catalog.data.metro.tokyo.lg.jp/dataset/t000003d2000001028",
+        "license": "CC BY 4.0（東京都オープンデータ利用規約）",
+        "updated_at": "令和5年度（施設数は令和5年5月1日現在）",
+        "notes": "章まるごとが1データセットで、使うのは表17-8のみ。「地域コード」に5桁コードが入るので空間結合は不要。UTF-8 BOM付き。1行1自治体で、総数・区部・市部・郡部・島部の集計行と島しょ部が同じ表に混ざるが、自治体コードに解決できないか対象外なので落ちる。末尾5行は注記。採るのは「学級・事業数（総数）」で、学級・講座（対象別）と分野別事業数の合計にあたる。同じ表にある「施設数」は使わない。図書館数との順位相関が0.80あり、しごとば軸の図書館密度と同じものを測ってしまうため。原資料は都教育庁生涯学習課「区市町村生涯学習・社会教育行政データブック」。自治体によって事業の数え方が揃っていない可能性があり（施設数が近い新宿区41件と品川区526件のような開きがある）、生の件数ではなく順位に直してから使う。年次を上げるときはURLの 2023 と tn23 を差し替える。"
+      }
+    ]
+  },
+  "municipalities": [
+    {
+      "code": "13101",
+      "name": "千代田区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 11.66,
+      "population": 66670.0,
+      "scores": {
+        "quiet": 43.4,
+        "refresh": 81.5,
+        "workspace": 85.3,
+        "cost": 0.9,
+        "community": 83.0
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.3,
+          "score": 43.4,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1551728.7139,
+          "score": 99.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 133081.3648,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 19.9085,
+          "score": 74.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": 54.0,
+          "score": 98.8,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 4.6312,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 5.0,
+          "score": 65.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4288,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 3631428.5714,
+          "score": 0.9,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 698.0,
+          "score": 99.1,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 104.6948,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 70.0,
+          "score": 67.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 10.4995,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13102",
+      "name": "中央区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 10.21,
+      "population": 183861.0,
+      "scores": {
+        "quiet": 49.1,
+        "refresh": 47.8,
+        "workspace": 71.1,
+        "cost": 4.7,
+        "community": 80.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.0,
+          "score": 49.1,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 669847.6111,
+          "score": 70.2,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 65607.0138,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 12.8802,
+          "score": 61.3,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.5091,
+          "score": 10.5,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 35.0,
+          "score": 93.9,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 3.428,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 3.0,
+          "score": 36.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2938,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 1930000.0,
+          "score": 4.7,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 546.0,
+          "score": 95.3,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 29.6963,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 181.0,
+          "score": 65.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.8444,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13103",
+      "name": "港区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 20.36,
+      "population": 273125.0,
+      "scores": {
+        "quiet": 17.9,
+        "refresh": 51.3,
+        "workspace": 82.3,
+        "cost": 2.8,
+        "community": 56.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 69.0,
+          "score": 17.9,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1123928.3261,
+          "score": 52.9,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 55202.7665,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 5.888,
+          "score": 23.6,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.197,
+          "score": 96.5,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 74.0,
+          "score": 96.3,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 3.6346,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 8.0,
+          "score": 61.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3929,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 3013666.6667,
+          "score": 2.8,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 775.0,
+          "score": 97.2,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 28.3753,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 56.0,
+          "score": 16.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.0503,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13104",
+      "name": "新宿区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 18.22,
+      "population": 361787.0,
+      "scores": {
+        "quiet": 12.3,
+        "refresh": 25.3,
+        "workspace": 87.8,
+        "cost": 16.0,
+        "community": 47.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 69.5,
+          "score": 12.3,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1181951.8081,
+          "score": 68.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 64871.1201,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 4.4155,
+          "score": 14.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.4125,
+          "score": 15.1,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 31.0,
+          "score": 86.6,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 1.7014,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 12.0,
+          "score": 89.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.6586,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 1131571.4286,
+          "score": 16.0,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 731.0,
+          "score": 91.5,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 20.2053,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 41.0,
+          "score": 2.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 1.1333,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13105",
+      "name": "文京区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 11.29,
+      "population": 250863.0,
+      "scores": {
+        "quiet": 75.5,
+        "refresh": 32.7,
+        "workspace": 71.1,
+        "cost": 8.5,
+        "community": 70.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.9,
+          "score": 75.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 545777.858,
+          "score": 41.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 48341.7058,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 5.8823,
+          "score": 21.7,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.111,
+          "score": 45.3,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 4.0,
+          "score": 52.4,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.3543,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 10.0,
+          "score": 99.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.8857,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 1448086.9565,
+          "score": 8.5,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 349.0,
+          "score": 89.6,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 13.912,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 210.0,
+          "score": 51.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 8.3711,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13106",
+      "name": "台東区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 10.11,
+      "population": 228742.0,
+      "scores": {
+        "quiet": 51.9,
+        "refresh": 29.8,
+        "workspace": 66.7,
+        "cost": 12.3,
+        "community": 67.0
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.9,
+          "score": 51.9,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 737749.6897,
+          "score": 83.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 72972.274,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 6.0952,
+          "score": 25.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.6529,
+          "score": 1.2,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 16.0,
+          "score": 84.1,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 1.5826,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 3.0,
+          "score": 40.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2967,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 1320833.3333,
+          "score": 12.3,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 258.0,
+          "score": 85.8,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 11.2791,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 170.0,
+          "score": 48.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 7.432,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13107",
+      "name": "墨田区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 13.77,
+      "population": 285803.0,
+      "scores": {
+        "quiet": 17.9,
+        "refresh": 59.2,
+        "workspace": 57.8,
+        "cost": 34.9,
+        "community": 29.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 69.0,
+          "score": 17.9,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 784517.3862,
+          "score": 58.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 56972.9402,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 12.1202,
+          "score": 53.8,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.7433,
+          "score": 68.6,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 11.0,
+          "score": 74.4,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.7988,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 4.0,
+          "score": 33.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2905,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 613272.7273,
+          "score": 34.9,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 127.0,
+          "score": 50.0,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.4436,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 49.0,
+          "score": 8.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 1.7145,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13108",
+      "name": "江東区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 42.99,
+      "population": 554093.0,
+      "scores": {
+        "quiet": 24.5,
+        "refresh": 47.9,
+        "workspace": 44.6,
+        "cost": 31.1,
+        "community": 7.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.8,
+          "score": 24.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 4485381.6385,
+          "score": 93.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 104335.465,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 10.1085,
+          "score": 42.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.3148,
+          "score": 26.7,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 17.0,
+          "score": 59.8,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.3954,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 11.0,
+          "score": 21.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2559,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 661538.4615,
+          "score": 31.1,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 179.0,
+          "score": 10.4,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.2305,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 88.0,
+          "score": 4.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 1.5882,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13109",
+      "name": "品川区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 22.85,
+      "population": 429096.0,
+      "scores": {
+        "quiet": 35.8,
+        "refresh": 21.5,
+        "workspace": 75.8,
+        "cost": 14.2,
+        "community": 76.4
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.6,
+          "score": 35.8,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1324249.8412,
+          "score": 62.5,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 57954.0412,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 3.2984,
+          "score": 10.4,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.4277,
+          "score": 12.8,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 32.0,
+          "score": 81.7,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 1.4004,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 10.0,
+          "score": 67.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4376,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 1244066.6667,
+          "score": 14.2,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 245.0,
+          "score": 74.5,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 5.7097,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 526.0,
+          "score": 78.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 12.2583,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13110",
+      "name": "目黒区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 14.67,
+      "population": 287556.0,
+      "scores": {
+        "quiet": 10.4,
+        "refresh": 18.0,
+        "workspace": 75.3,
+        "cost": 10.4,
+        "community": 51.0
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 69.9,
+          "score": 10.4,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 507992.1583,
+          "score": 24.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 34627.959,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 2.1426,
+          "score": 4.7,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.1921,
+          "score": 36.0,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 11.0,
+          "score": 69.5,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.7498,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 8.0,
+          "score": 84.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5453,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 1404531.25,
+          "score": 10.4,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 198.0,
+          "score": 84.0,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 6.8856,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 65.0,
+          "score": 17.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.2604,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13111",
+      "name": "大田区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 61.86,
+      "population": 762357.0,
+      "scores": {
+        "quiet": 7.5,
+        "refresh": 45.5,
+        "workspace": 26.2,
+        "cost": 33.0,
+        "community": 12.3
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 70.2,
+          "score": 7.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 3083566.5,
+          "score": 43.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 49847.5024,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 7.2678,
+          "score": 31.1,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.7014,
+          "score": 70.9,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 11.0,
+          "score": 28.0,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.1778,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 16.0,
+          "score": 23.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2586,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 647581.8182,
+          "score": 33.0,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 252.0,
+          "score": 14.2,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.3055,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 180.0,
+          "score": 10.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3611,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13112",
+      "name": "世田谷区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 58.05,
+      "population": 959397.0,
+      "scores": {
+        "quiet": 7.5,
+        "refresh": 26.5,
+        "workspace": 55.8,
+        "cost": 21.7,
+        "community": 49.0
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 70.2,
+          "score": 7.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 2915778.5189,
+          "score": 45.2,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 50228.7428,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 4.489,
+          "score": 16.0,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.2149,
+          "score": 31.4,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 33.0,
+          "score": 64.6,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.5685,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 18.0,
+          "score": 42.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3101,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 779853.211,
+          "score": 21.7,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 517.0,
+          "score": 72.6,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 5.3888,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 435.0,
+          "score": 25.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 4.5341,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13113",
+      "name": "渋谷区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 15.11,
+      "population": 238786.0,
+      "scores": {
+        "quiet": 35.8,
+        "refresh": 41.7,
+        "workspace": 91.5,
+        "cost": 6.6,
+        "community": 56.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.6,
+          "score": 35.8,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1652427.3669,
+          "score": 95.2,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 109359.8522,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 8.8635,
+          "score": 34.9,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.3847,
+          "score": 17.4,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 43.0,
+          "score": 91.5,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 2.8458,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 10.0,
+          "score": 91.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.6618,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 1874080.0,
+          "score": 6.6,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 535.0,
+          "score": 93.4,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 22.405,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 65.0,
+          "score": 19.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.7221,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13114",
+      "name": "中野区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 15.59,
+      "population": 356415.0,
+      "scores": {
+        "quiet": 17.9,
+        "refresh": 28.8,
+        "workspace": 71.6,
+        "cost": 19.8,
+        "community": 58.5
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 69.0,
+          "score": 17.9,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 467671.2156,
+          "score": 20.2,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 29998.1537,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 1.9502,
+          "score": 2.8,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.6177,
+          "score": 77.9,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 9.0,
+          "score": 67.1,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.5773,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 8.0,
+          "score": 78.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5131,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 782703.7037,
+          "score": 19.8,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 214.0,
+          "score": 80.2,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 6.0042,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 202.0,
+          "score": 36.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.6676,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13115",
+      "name": "杉並区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 34.06,
+      "population": 600500.0,
+      "scores": {
+        "quiet": 30.2,
+        "refresh": 21.9,
+        "workspace": 36.9,
+        "cost": 27.4,
+        "community": 42.5
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.7,
+          "score": 30.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1412417.0505,
+          "score": 35.6,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 41468.4983,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 2.4563,
+          "score": 6.6,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.1616,
+          "score": 38.4,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 6.0,
+          "score": 23.2,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.1762,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 13.0,
+          "score": 57.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3817,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 703177.4194,
+          "score": 27.4,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 325.0,
+          "score": 70.8,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 5.4122,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 139.0,
+          "score": 14.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3147,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13116",
+      "name": "豊島区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 13.01,
+      "population": 307015.0,
+      "scores": {
+        "quiet": 35.8,
+        "refresh": 25.8,
+        "workspace": 88.5,
+        "cost": 17.9,
+        "community": 63.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.6,
+          "score": 35.8,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 230481.8484,
+          "score": 6.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 17715.7455,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 0.8766,
+          "score": 0.9,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.5905,
+          "score": 80.2,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 25.0,
+          "score": 89.0,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 1.9216,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 8.0,
+          "score": 87.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.6149,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 912130.4348,
+          "score": 17.9,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 338.0,
+          "score": 87.7,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 11.0092,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 180.0,
+          "score": 38.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.8629,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13117",
+      "name": "北区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 20.61,
+      "population": 370696.0,
+      "scores": {
+        "quiet": 4.7,
+        "refresh": 46.9,
+        "workspace": 84.2,
+        "cost": 23.6,
+        "community": 38.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 70.3,
+          "score": 4.7,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1061526.5401,
+          "score": 47.1,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 51505.4119,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 12.701,
+          "score": 57.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.2461,
+          "score": 29.1,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 19.0,
+          "score": 76.8,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.9219,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 15.0,
+          "score": 95.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.7278,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 742000.0,
+          "score": 23.6,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 152.0,
+          "score": 44.3,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.1004,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 201.0,
+          "score": 33.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.4222,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13118",
+      "name": "荒川区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 10.16,
+      "population": 228121.0,
+      "scores": {
+        "quiet": 40.6,
+        "refresh": 18.2,
+        "workspace": 80.6,
+        "cost": 25.5,
+        "community": 51.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.4,
+          "score": 40.6,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 467001.7897,
+          "score": 37.5,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 45964.7431,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 5.4412,
+          "score": 17.9,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.6275,
+          "score": 5.8,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 8.0,
+          "score": 72.0,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.7874,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 7.0,
+          "score": 93.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.689,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 718687.5,
+          "score": 25.5,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 73.0,
+          "score": 16.0,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.2001,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 343.0,
+          "score": 87.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 15.0359,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13119",
+      "name": "板橋区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 32.22,
+      "population": 598863.0,
+      "scores": {
+        "quiet": 0.9,
+        "refresh": 31.8,
+        "workspace": 55.1,
+        "cost": 36.8,
+        "community": 15.1
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 70.9,
+          "score": 0.9,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1890341.338,
+          "score": 64.4,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 58669.8119,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 8.6233,
+          "score": 33.0,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.5101,
+          "score": 8.1,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 12.0,
+          "score": 57.3,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.3724,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 12.0,
+          "score": 51.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3724,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 553553.1915,
+          "score": 36.8,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 183.0,
+          "score": 8.5,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.0558,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 232.0,
+          "score": 21.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 3.874,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13120",
+      "name": "練馬区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 48.08,
+      "population": 764094.0,
+      "scores": {
+        "quiet": 89.6,
+        "refresh": 26.2,
+        "workspace": 22.6,
+        "cost": 40.6,
+        "community": 15.1
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 65.9,
+          "score": 89.6,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 2221074.7715,
+          "score": 39.4,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 46195.3987,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 4.2388,
+          "score": 12.3,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.1415,
+          "score": 40.7,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 5.0,
+          "score": 20.7,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.104,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 13.0,
+          "score": 25.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2704,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 480544.4444,
+          "score": 40.6,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 272.0,
+          "score": 23.6,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.5598,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 176.0,
+          "score": 6.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3034,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13121",
+      "name": "足立区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 53.25,
+      "population": 707720.0,
+      "scores": {
+        "quiet": 24.5,
+        "refresh": 32.7,
+        "workspace": 30.0,
+        "cost": 48.1,
+        "community": 8.5
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.8,
+          "score": 24.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 3358404.607,
+          "score": 66.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 63068.6311,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 9.6143,
+          "score": 36.8,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.6311,
+          "score": 3.5,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 10.0,
+          "score": 30.5,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.1878,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 15.0,
+          "score": 29.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2817,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 410760.5634,
+          "score": 48.1,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 179.0,
+          "score": 4.7,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 2.5292,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 168.0,
+          "score": 12.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 2.3738,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13122",
+      "name": "葛飾区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 34.8,
+      "population": 469442.0,
+      "scores": {
+        "quiet": 83.0,
+        "refresh": 54.4,
+        "workspace": 58.8,
+        "cost": 51.9,
+        "community": 15.1
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.7,
+          "score": 83.0,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 2458331.4392,
+          "score": 79.8,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 70641.708,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 15.8329,
+          "score": 65.1,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.3708,
+          "score": 19.8,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 14.0,
+          "score": 62.2,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.4023,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 13.0,
+          "score": 53.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3736,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 387545.4545,
+          "score": 51.9,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 123.0,
+          "score": 6.6,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 2.6201,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 193.0,
+          "score": 23.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 4.1113,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13123",
+      "name": "江戸川区",
+      "kind": "区",
+      "region": "区部",
+      "area_km2": 49.9,
+      "population": 709372.0,
+      "scores": {
+        "quiet": 46.2,
+        "refresh": 71.3,
+        "workspace": 26.9,
+        "cost": 42.5,
+        "community": 0.9
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.2,
+          "score": 46.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 4056963.1162,
+          "score": 89.4,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 81301.8661,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 16.0446,
+          "score": 67.0,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.7638,
+          "score": 66.3,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 11.0,
+          "score": 32.9,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.2204,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 12.0,
+          "score": 17.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2405,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 441115.942,
+          "score": 42.5,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 164.0,
+          "score": 0.9,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 2.3119,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 54.0,
+          "score": 0.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 0.7612,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13201",
+      "name": "八王子市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 186.38,
+      "population": 574576.0,
+      "scores": {
+        "quiet": 24.5,
+        "refresh": 58.1,
+        "workspace": 8.5,
+        "cost": 85.8,
+        "community": 65.1
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.8,
+          "score": 24.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 7133428.6831,
+          "score": 29.8,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 38273.5738,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 56.5814,
+          "score": 89.6,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.3235,
+          "score": 24.4,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 12.0,
+          "score": 11.0,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0644,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 6.0,
+          "score": 4.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0322,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 131316.129,
+          "score": 85.8,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 266.0,
+          "score": 55.7,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.6295,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 659.0,
+          "score": 74.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 11.4693,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13202",
+      "name": "立川市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 24.36,
+      "population": 189836.0,
+      "scores": {
+        "quiet": 24.5,
+        "refresh": 68.9,
+        "workspace": 52.9,
+        "cost": 61.3,
+        "community": 70.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.8,
+          "score": 24.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1630083.2554,
+          "score": 76.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 66916.3898,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 16.3009,
+          "score": 68.9,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.7757,
+          "score": 64.0,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 9.0,
+          "score": 54.9,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.3695,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 9.0,
+          "score": 50.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3695,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 308433.3333,
+          "score": 61.3,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 95.0,
+          "score": 61.3,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 5.0043,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 247.0,
+          "score": 80.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 13.0112,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13203",
+      "name": "武蔵野市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 10.98,
+      "population": 151083.0,
+      "scores": {
+        "quiet": 71.7,
+        "refresh": 42.5,
+        "workspace": 58.5,
+        "cost": 29.2,
+        "community": 74.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.1,
+          "score": 71.7,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 633676.3094,
+          "score": 60.6,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 57711.8679,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 2.7567,
+          "score": 8.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.3552,
+          "score": 87.2,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 12.0,
+          "score": 79.3,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 1.0929,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 3.0,
+          "score": 27.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2732,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 692200.0,
+          "score": 29.2,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 93.0,
+          "score": 78.3,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 6.1556,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 172.0,
+          "score": 70.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 11.3845,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13204",
+      "name": "三鷹市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 16.42,
+      "population": 195553.0,
+      "scores": {
+        "quiet": 49.1,
+        "refresh": 42.0,
+        "workspace": 49.2,
+        "cost": 38.7,
+        "community": 60.4
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.0,
+          "score": 49.1,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 674281.789,
+          "score": 33.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 41064.6644,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 9.9364,
+          "score": 40.6,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.0792,
+          "score": 50.0,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 5.0,
+          "score": 50.0,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.3045,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 6.0,
+          "score": 48.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3654,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 492433.3333,
+          "score": 38.7,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 87.0,
+          "score": 51.9,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.4489,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 208.0,
+          "score": 68.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 10.6365,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13205",
+      "name": "青梅市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 103.31,
+      "population": 129221.0,
+      "scores": {
+        "quiet": 54.7,
+        "refresh": 75.9,
+        "workspace": 12.3,
+        "cost": 91.5,
+        "community": 56.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.8,
+          "score": 54.7,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1104501.277,
+          "score": 4.8,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 10691.1362,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 74.6107,
+          "score": 93.4,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.3144,
+          "score": 94.2,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 12.0,
+          "score": 12.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.1162,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 98566.6667,
+          "score": 91.5,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 41.0,
+          "score": 19.8,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.1729,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 233.0,
+          "score": 93.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 18.0311,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13206",
+      "name": "府中市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 29.43,
+      "population": 264144.0,
+      "scores": {
+        "quiet": 64.2,
+        "refresh": 66.3,
+        "workspace": 54.6,
+        "cost": 55.7,
+        "community": 34.0
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.4,
+          "score": 64.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1951392.5478,
+          "score": 72.1,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 66306.2368,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 11.9729,
+          "score": 50.0,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.3382,
+          "score": 89.5,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 8.0,
+          "score": 45.1,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.2718,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 13.0,
+          "score": 68.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4417,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 355590.9091,
+          "score": 55.7,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 93.0,
+          "score": 25.5,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.5208,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 174.0,
+          "score": 42.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 6.5873,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13207",
+      "name": "昭島市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 17.34,
+      "population": 117505.0,
+      "scores": {
+        "quiet": 43.4,
+        "refresh": 73.0,
+        "workspace": 31.1,
+        "cost": 70.8,
+        "community": 23.5
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.3,
+          "score": 43.4,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1159925.4726,
+          "score": 74.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 66893.0492,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 19.4594,
+          "score": 72.6,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 5.0,
+          "score": 31.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2884,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 214294.1176,
+          "score": 70.8,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 22.0,
+          "score": 2.8,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 1.8723,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 77.0,
+          "score": 44.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 6.5529,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13208",
+      "name": "調布市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 21.58,
+      "population": 247057.0,
+      "scores": {
+        "quiet": 83.0,
+        "refresh": 71.2,
+        "workspace": 51.8,
+        "cost": 44.3,
+        "community": 64.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.7,
+          "score": 83.0,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1516707.1089,
+          "score": 77.9,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 70282.9986,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 12.0161,
+          "score": 51.9,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.1761,
+          "score": 98.8,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 5.0,
+          "score": 35.4,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.2317,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 11.0,
+          "score": 76.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5097,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 425102.5641,
+          "score": 44.3,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 100.0,
+          "score": 42.5,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.0476,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 345.0,
+          "score": 85.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 13.9644,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13209",
+      "name": "町田市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 71.55,
+      "population": 421872.0,
+      "scores": {
+        "quiet": 14.2,
+        "refresh": 83.0,
+        "workspace": 29.8,
+        "cost": 82.1,
+        "community": 37.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 69.1,
+          "score": 14.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 5726984.4047,
+          "score": 85.6,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 80041.7108,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 27.1712,
+          "score": 82.1,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.4693,
+          "score": 82.6,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 19.0,
+          "score": 42.7,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.2655,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 8.0,
+          "score": 10.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.1118,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 172625.3165,
+          "score": 82.1,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 187.0,
+          "score": 48.1,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.4326,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 227.0,
+          "score": 27.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.3808,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13210",
+      "name": "小金井市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 11.3,
+      "population": 129790.0,
+      "scores": {
+        "quiet": 86.8,
+        "refresh": 50.1,
+        "workspace": 43.7,
+        "cost": 50.0,
+        "community": 80.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.6,
+          "score": 86.8,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 905188.2169,
+          "score": 87.5,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 80105.1519,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 5.7349,
+          "score": 19.8,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.6497,
+          "score": 75.6,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 2.0,
+          "score": 25.6,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.177,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 5.0,
+          "score": 70.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4425,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 388631.5789,
+          "score": 50.0,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 70.0,
+          "score": 63.2,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 5.3933,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 238.0,
+          "score": 97.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 18.3373,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13211",
+      "name": "小平市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 20.51,
+      "population": 199564.0,
+      "scores": {
+        "quiet": 64.2,
+        "refresh": 38.7,
+        "workspace": 36.5,
+        "cost": 65.1,
+        "community": 56.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.4,
+          "score": 64.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 576439.4921,
+          "score": 18.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 28105.2897,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 10.1833,
+          "score": 44.3,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.1339,
+          "score": 43.0,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 1.0,
+          "score": 6.1,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0488,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 11.0,
+          "score": 82.1,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5363,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 255558.8235,
+          "score": 65.1,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 72.0,
+          "score": 29.2,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.6079,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 275.0,
+          "score": 84.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 13.78,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13212",
+      "name": "日野市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 27.55,
+      "population": 190763.0,
+      "scores": {
+        "quiet": 79.2,
+        "refresh": 68.8,
+        "workspace": 10.1,
+        "cost": 68.9,
+        "community": 46.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.8,
+          "score": 79.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1517568.2336,
+          "score": 51.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 55084.1464,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 26.1398,
+          "score": 80.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.8009,
+          "score": 61.6,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 1.0,
+          "score": 3.7,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0363,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 7.0,
+          "score": 19.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2541,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 218567.5676,
+          "score": 68.9,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 78.0,
+          "score": 46.2,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.0888,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 129.0,
+          "score": 46.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 6.7623,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13213",
+      "name": "東村山市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 17.14,
+      "population": 152566.0,
+      "scores": {
+        "quiet": 91.5,
+        "refresh": 61.5,
+        "workspace": 19.1,
+        "cost": 72.6,
+        "community": 41.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 65.5,
+          "score": 91.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 941181.3969,
+          "score": 49.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 54911.4001,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 12.7134,
+          "score": 59.4,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.697,
+          "score": 73.3,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 1.0,
+          "score": 8.5,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0583,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 5.0,
+          "score": 34.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2917,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 208681.8182,
+          "score": 72.6,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 54.0,
+          "score": 27.4,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.5395,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 136.0,
+          "score": 55.7,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 8.9142,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13214",
+      "name": "国分寺市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 11.46,
+      "population": 129022.0,
+      "scores": {
+        "quiet": 68.9,
+        "refresh": 49.8,
+        "workspace": 41.6,
+        "cost": 57.5,
+        "community": 76.4
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.3,
+          "score": 68.9,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 318728.8849,
+          "score": 16.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 27812.2936,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 15.7844,
+          "score": 63.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": 1.0,
+          "score": 15.9,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0873,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 6.0,
+          "score": 80.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5236,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 351000.0,
+          "score": 57.5,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 62.0,
+          "score": 57.5,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.8054,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 234.0,
+          "score": 95.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 18.1364,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13215",
+      "name": "国立市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 8.15,
+      "population": 77055.0,
+      "scores": {
+        "quiet": 57.5,
+        "refresh": 40.9,
+        "workspace": 61.6,
+        "cost": 46.2,
+        "community": 86.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.7,
+          "score": 57.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 208973.2511,
+          "score": 12.5,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 25640.8897,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 10.8426,
+          "score": 48.1,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.1069,
+          "score": 47.7,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 2.0,
+          "score": 37.8,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.2454,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 7.0,
+          "score": 97.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.8589,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 411454.5455,
+          "score": 46.2,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 53.0,
+          "score": 82.1,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 6.8782,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 149.0,
+          "score": 91.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 19.3368,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13218",
+      "name": "福生市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 10.16,
+      "population": 57388.0,
+      "scores": {
+        "quiet": 59.4,
+        "refresh": 47.6,
+        "workspace": 63.2,
+        "cost": 80.2,
+        "community": 69.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.6,
+          "score": 59.4,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 394566.0949,
+          "score": 31.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 38835.2456,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 7.1506,
+          "score": 27.4,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.3272,
+          "score": 91.9,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 4.0,
+          "score": 63.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3937,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 173545.4545,
+          "score": 80.2,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 21.0,
+          "score": 40.6,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.6593,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 192.0,
+          "score": 99.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 33.4565,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13219",
+      "name": "狛江市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 6.39,
+      "population": 84076.0,
+      "scores": {
+        "quiet": 64.2,
+        "refresh": 31.2,
+        "workspace": 14.2,
+        "cost": 53.8,
+        "community": 47.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.4,
+          "score": 64.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 128509.0268,
+          "score": 8.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 20110.9588,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 9.8692,
+          "score": 38.7,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.1958,
+          "score": 33.7,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 1.0,
+          "score": 14.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.1565,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 377750.0,
+          "score": 53.8,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 42.0,
+          "score": 59.4,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.9955,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 39.0,
+          "score": 34.9,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 4.6387,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13220",
+      "name": "東大和市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 13.42,
+      "population": 83173.0,
+      "scores": {
+        "quiet": 2.8,
+        "refresh": 71.3,
+        "workspace": 14.4,
+        "cost": 78.3,
+        "community": 53.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 70.4,
+          "score": 2.8,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 756654.2876,
+          "score": 56.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 56382.5848,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 31.2556,
+          "score": 85.8,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.8943,
+          "score": 57.0,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 1.0,
+          "score": 13.4,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0745,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 3.0,
+          "score": 16.0,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2235,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 181095.2381,
+          "score": 78.3,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 30.0,
+          "score": 34.9,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.6069,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 107.0,
+          "score": 72.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 12.8648,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13221",
+      "name": "清瀬市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 10.23,
+      "population": 75276.0,
+      "scores": {
+        "quiet": 93.4,
+        "refresh": 59.3,
+        "workspace": 45.3,
+        "cost": 76.4,
+        "community": 49.0
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 65.3,
+          "score": 93.4,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 310518.8993,
+          "score": 22.1,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 30353.7536,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 24.4142,
+          "score": 78.3,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.0453,
+          "score": 52.3,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 1.0,
+          "score": 18.3,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0978,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 6.0,
+          "score": 85.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5865,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 201533.3333,
+          "score": 76.4,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 28.0,
+          "score": 38.7,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.7196,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 72.0,
+          "score": 59.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.5648,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13222",
+      "name": "東久留米市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 12.88,
+      "population": 115888.0,
+      "scores": {
+        "quiet": 35.8,
+        "refresh": 36.6,
+        "workspace": 44.3,
+        "cost": 67.0,
+        "community": 63.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.6,
+          "score": 35.8,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 314778.3205,
+          "score": 10.6,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 24439.3106,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 12.368,
+          "score": 55.7,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.329,
+          "score": 22.1,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 4.0,
+          "score": 44.3,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3106,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 236545.4545,
+          "score": 67.0,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 63.0,
+          "score": 65.1,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 5.4363,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 111.0,
+          "score": 61.3,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.5782,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13223",
+      "name": "武蔵村山市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 15.32,
+      "population": 69158.0,
+      "scores": {
+        "quiet": 30.2,
+        "refresh": 80.7,
+        "workspace": 59.4,
+        "cost": 87.7,
+        "community": 25.4
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 68.7,
+          "score": 30.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1250389.7863,
+          "score": 91.3,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 81618.1323,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 23.8074,
+          "score": 76.4,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 6.0,
+          "score": 59.4,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3916,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 128486.6667,
+          "score": 87.7,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 20.0,
+          "score": 21.7,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 2.8919,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 27.0,
+          "score": 29.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 3.9041,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13224",
+      "name": "多摩市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 21.01,
+      "population": 141473.0,
+      "scores": {
+        "quiet": 54.7,
+        "refresh": 72.6,
+        "workspace": 50.8,
+        "cost": 74.5,
+        "community": 69.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.8,
+          "score": 54.7,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 2313252.7988,
+          "score": 97.1,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 110102.4654,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 18.6557,
+          "score": 70.8,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.8324,
+          "score": 59.3,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 6.0,
+          "score": 47.6,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.2856,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 8.0,
+          "score": 55.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3808,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 202838.7097,
+          "score": 74.5,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 86.0,
+          "score": 76.4,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 6.0789,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 138.0,
+          "score": 63.2,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 9.7545,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13225",
+      "name": "稲城市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 17.97,
+      "population": 95861.0,
+      "scores": {
+        "quiet": 75.5,
+        "refresh": 75.7,
+        "workspace": 46.2,
+        "cost": 63.2,
+        "community": 26.4
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.9,
+          "score": 75.5,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1006517.4819,
+          "score": 54.8,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 56010.9895,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 29.9883,
+          "score": 84.0,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 6.0,
+          "score": 46.2,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.3339,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 268346.1538,
+          "score": 63.2,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 27.0,
+          "score": 12.3,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 2.8166,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 53.0,
+          "score": 40.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.5288,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13227",
+      "name": "羽村市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 9.9,
+      "population": 53452.0,
+      "scores": {
+        "quiet": 71.7,
+        "refresh": 41.0,
+        "workspace": 74.5,
+        "cost": 84.0,
+        "community": 47.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.1,
+          "score": 71.7,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 368100.4455,
+          "score": 27.9,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 37181.8632,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 10.5826,
+          "score": 46.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 5.0,
+          "score": 74.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.5051,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 146111.1111,
+          "score": 84.0,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 14.0,
+          "score": 17.9,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 2.6192,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 75.0,
+          "score": 76.4,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 14.0313,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13228",
+      "name": "あきる野市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 73.47,
+      "population": 77001.0,
+      "scores": {
+        "quiet": 64.2,
+        "refresh": 66.2,
+        "workspace": 6.6,
+        "cost": 89.6,
+        "community": 56.6
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 67.4,
+          "score": 64.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 464099.6916,
+          "score": 2.9,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 6316.8598,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 74.498,
+          "score": 91.5,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 4.0,
+          "score": 6.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0544,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 99356.5217,
+          "score": 89.6,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 26.0,
+          "score": 31.1,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.3766,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 114.0,
+          "score": 82.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 14.805,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13229",
+      "name": "西東京市",
+      "kind": "市",
+      "region": "多摩",
+      "area_km2": 15.75,
+      "population": 208529.0,
+      "scores": {
+        "quiet": 79.2,
+        "refresh": 43.0,
+        "workspace": 53.2,
+        "cost": 59.4,
+        "community": 32.0
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.8,
+          "score": 79.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 428808.0529,
+          "score": 14.4,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 27225.9081,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 7.1759,
+          "score": 29.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 4.3976,
+          "score": 84.9,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": 4.0,
+          "score": 40.2,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.254,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 7.0,
+          "score": 72.6,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.4444,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 328517.2414,
+          "score": 59.4,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 79.0,
+          "score": 33.0,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.7884,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 107.0,
+          "score": 31.1,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 5.1312,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13303",
+      "name": "瑞穂町",
+      "kind": "町",
+      "region": "多摩",
+      "area_km2": 16.85,
+      "population": 31107.0,
+      "scores": {
+        "quiet": 86.8,
+        "refresh": 76.6,
+        "workspace": 38.7,
+        "cost": 93.4,
+        "community": 63.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 66.6,
+          "score": 86.8,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1190752.2596,
+          "score": 81.7,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 70667.7899,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 35.9876,
+          "score": 87.7,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": 5.0427,
+          "score": 54.7,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "ok"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 5.0,
+          "score": 38.7,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.2967,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 96936.3636,
+          "score": 93.4,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 10.0,
+          "score": 36.8,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 3.2147,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 72.0,
+          "score": 89.6,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 23.1459,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13305",
+      "name": "日の出町",
+      "kind": "町",
+      "region": "多摩",
+      "area_km2": 28.07,
+      "population": 15855.0,
+      "scores": {
+        "quiet": 95.3,
+        "refresh": 75.5,
+        "workspace": 8.5,
+        "cost": 99.1,
+        "community": 58.5
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 65.2,
+          "score": 95.3,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 1015402.9156,
+          "score": 26.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 36173.955,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 81.52,
+          "score": 95.3,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 2.0,
+          "score": 8.5,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0713,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 88783.3333,
+          "score": 99.1,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "ok"
+        },
+        "npo_count": {
+          "value": 12.0,
+          "score": 67.0,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 7.5686,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 13.0,
+          "score": 50.0,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 8.1993,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13307",
+      "name": "檜原村",
+      "kind": "村",
+      "region": "多摩",
+      "area_km2": 105.41,
+      "population": 1747.0,
+      "scores": {
+        "quiet": 99.1,
+        "refresh": 99.1,
+        "workspace": 1.8,
+        "cost": 96.2,
+        "community": 63.2
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 63.0,
+          "score": 99.1,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "green_coverage_ratio": {
+          "value": 98.9972,
+          "score": 99.1,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": 1.0,
+          "score": 1.2,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": 0.0095,
+          "status": "ok"
+        },
+        "library_count": {
+          "value": 1.0,
+          "score": 2.8,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0095,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 93675.0,
+          "score": 96.2,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "imputed",
+          "imputed_from": [
+            "13205",
+            "13305"
+          ]
+        },
+        "npo_count": {
+          "value": 5.0,
+          "score": 68.9,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 28.6205,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 5.0,
+          "score": 57.5,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 28.6205,
+          "status": "ok"
+        }
+      }
+    },
+    {
+      "code": "13308",
+      "name": "奥多摩町",
+      "kind": "町",
+      "region": "多摩",
+      "area_km2": 225.53,
+      "population": 4083.0,
+      "scores": {
+        "quiet": 97.2,
+        "refresh": 69.7,
+        "workspace": 0.9,
+        "cost": 96.2,
+        "community": 53.8
+      },
+      "indicators": {
+        "road_noise_leq": {
+          "value": 64.5,
+          "score": 97.2,
+          "source": "D-quiet-01",
+          "unit": "dB",
+          "status": "ok"
+        },
+        "park_area": {
+          "value": 450806.4239,
+          "score": 1.0,
+          "source": "D-refresh-01",
+          "unit": "m2",
+          "per_km2": 1998.8756,
+          "status": "ok"
+        },
+        "green_coverage_ratio": {
+          "value": 98.7678,
+          "score": 97.2,
+          "source": "D-refresh-02",
+          "unit": "%",
+          "status": "ok"
+        },
+        "pm25_annual_avg": {
+          "value": null,
+          "score": null,
+          "source": "D-refresh-03",
+          "unit": "μg/m3",
+          "status": "no_data"
+        },
+        "satellite_office_count": {
+          "value": null,
+          "score": null,
+          "source": "D-workspace-01",
+          "unit": "件",
+          "per_km2": null,
+          "status": "no_data"
+        },
+        "library_count": {
+          "value": 2.0,
+          "score": 0.9,
+          "source": "D-workspace-02",
+          "unit": "件",
+          "per_km2": 0.0089,
+          "status": "ok"
+        },
+        "land_price_residential": {
+          "value": 93675.0,
+          "score": 96.2,
+          "source": "D-cost-01",
+          "unit": "円/m2",
+          "status": "imputed",
+          "imputed_from": [
+            "13205",
+            "13305"
+          ]
+        },
+        "npo_count": {
+          "value": 2.0,
+          "score": 53.8,
+          "source": "D-community-01",
+          "unit": "件",
+          "per_10k": 4.8984,
+          "status": "ok"
+        },
+        "social_education_program_count": {
+          "value": 5.0,
+          "score": 53.8,
+          "source": "D-community-02",
+          "unit": "件",
+          "per_10k": 12.2459,
+          "status": "ok"
+        }
+      }
+    }
+  ]
+}
