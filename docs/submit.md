@@ -110,9 +110,7 @@
 
 ### 3-8. デモの操作動画（URL） `任意`
 
-> 
-
-TODO: 操作動画(60秒)
+> https://drive.google.com/drive/u/0/folders/1cdZlPoJNP1rCnduWY2EVH8FvNqmSuF4P
 
 ---
 
