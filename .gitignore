@@ -23,3 +23,6 @@ data/processed/municipalities.sample.json
 
 # 調査レポート（make report でいつでも作り直せる）
 data/analysis/
+
+# 応募用の素材（動画・スライドなど容量が大きいものはコミットしない）
+docs/figure/
