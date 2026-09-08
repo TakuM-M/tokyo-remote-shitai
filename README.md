@@ -3,7 +3,7 @@
 東京都のオープンデータをもとに、**リモートワークのしやすさ**で都内53市区町村（23区・多摩地域）を比較できる可視化地図サービスです。
 
 [都知事杯オープンデータ・ハッカソン2026](https://odhackathon.metro.tokyo.lg.jp/) 応募作品（チーム: Metropolitan(s)）。
-
+![スクリーンショット](docs/fig/demo.png)
 - デモ: https://tiny-surf-65f3.syut-htnk-dev.workers.dev/
 
 ## 背景と解決方法
